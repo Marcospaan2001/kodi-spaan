@@ -122,6 +122,14 @@ def launch(params=None):
             return {'results':rows}
 
         def focus_details(self):
+            welcoming = self.section == 'home' and self.getFocusId() != 60
+            self.setProperty('welcome', 'true' if welcoming else '')
+            if welcoming:
+                self.setProperty('title', 'Een avond voor ons samen')
+                self.setProperty('overview', 'Welkom bij Familie Krispijn. Kies een film of serie en maak het gezellig.')
+                self.setProperty('detail', 'ONZE EIGEN BIOSCOOP')
+                self.getControl(201).setImage('')
+                return
             if not self.rows:return
             pos=self.getControl(60).getSelectedPosition()
             if not 0<=pos<len(self.rows):return

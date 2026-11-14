@@ -4,9 +4,9 @@
 
 1. Controleer Kodi 21.2 onder Instellingen > Systeeminfo.
 2. Voeg in Bestandsbeheer de bron `https://marcospaan2001.github.io/kodi-spaan/` toe met de naam `spaan`.
-3. Kies Add-ons > Installeren vanuit zip-bestand > spaan > `repository.spaan-1.0.7.zip`.
-4. Installeer vanuit Spaan Repository de video-add-on **Krispijn Video 1.1.0**.
-5. Installeer voor de rest van Kodi **Familie Krispijn (Kodi 21) 1.1.0** onder Uiterlijk > Skin.
+3. Kies Add-ons > Installeren vanuit zip-bestand > spaan > `repository.spaan-1.0.8.zip`.
+4. Installeer vanuit Spaan Repository de video-add-on **Krispijn Video 1.1.1**.
+5. Installeer voor de rest van Kodi **Familie Krispijn (Kodi 21) 1.1.1** onder Uiterlijk > Skin.
 6. Open Krispijn Video. De eigen interface opent direct, ook wanneer je een andere Kodi-skin gebruikt.
 7. Open Instellen > Real-Debrid en koppel je account. De add-on controleert het account en toont de uitslag. Een opgeslagen koppeling en een gecontroleerd actief abonnement zijn verschillende statussen.
 
@@ -50,3 +50,12 @@ De zelfstandige Krispijn Video-interface vereist geen specifieke skin.
 De video-add-on is gebaseerd op POV 6.11.03 van kodifitzwell onder GPL-3.0.
 De skins zijn gebaseerd op Arctic Fuse van jurialmunkey onder CC BY-NC-SA 4.0.
 De bronvermelding en licenties staan in de broncode en credits, buiten de gewone navigatie.
+
+## Eigen welkom in 1.1.1
+
+De startdiavoorstelling van de Kodi 21-skin is vervangen door een vaste donkere
+achtergrond met het Familie Krispijn-logo. In de video-add-on toont Filmavond
+een grote galerij van alle zeven portretten zolang de navigatie actief is.
+Ga naar de filmrij voor de titel, score en beschrijving. Geen extra netwerkverzoeken
+of verplichte wachttijd. Het allereerste Kodi-logo van de Android-app valt buiten
+de skin en wordt door deze update niet vervangen.

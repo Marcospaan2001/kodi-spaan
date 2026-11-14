@@ -47,3 +47,23 @@ def apply_portraits(skin_dir):
     for tag, value in [('left','400'),('top','650'),('width','1120'),('height','48'),('font','font_main'),('align','center'),('textcolor','ffb9bdc8'),('label','Een avond voor ons samen')]:
         ET.SubElement(label,tag).text=value
     path.write_bytes(ET.tostring(tree, encoding='utf-8', xml_declaration=True))
+
+    # De startup heeft een eigen achtergrondinclude, los van Background.Image.
+    background = skin_dir / '1080i/Includes_Background.xml'
+    bt = ET.parse(background)
+    node = bt.getroot().find("include[@name='Background_StartUp']/definition")
+    if node is None:
+        raise ValueError('Startupachtergrond ontbreekt')
+    node.clear()
+    node.append(ET.fromstring('<control type="image"><width>1920</width><height>1080</height><texture colordiffuse="ff101217">common/white.png</texture></control>'))
+    background.write_bytes(ET.tostring(bt.getroot(),encoding='utf-8',xml_declaration=True))
+    shutil.copyfile(ROOT / 'video-mod/icon.png', skin_dir / 'extras/krispijn/brand.png')
+    objects = skin_dir / '1080i/Includes_Objects.xml'
+    ot = ET.parse(objects)
+    logo = ot.getroot().find("include[@name='Object_StartUp_Logo']")
+    if logo is None:
+        raise ValueError('Startuplogo ontbreekt')
+    logo.clear()
+    logo.set('name','Object_StartUp_Logo')
+    logo.append(ET.fromstring('<control type="image"><left>710</left><top>375</top><width>500</width><height>230</height><aspectratio>keep</aspectratio><texture>special://skin/extras/krispijn/brand.png</texture></control>'))
+    objects.write_bytes(ET.tostring(ot.getroot(),encoding='utf-8',xml_declaration=True))
