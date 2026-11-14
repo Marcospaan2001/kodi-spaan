@@ -1,0 +1,3 @@
+# Geen regeleinde-conversie: de md5 van addons.xml moet exact kloppen met wat
+# GitHub Pages serveert, en skin-XML komt ongewijzigd van upstream.
+* -text
