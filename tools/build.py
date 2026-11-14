@@ -23,6 +23,7 @@ import zipfile
 from pathlib import Path
 
 from make_skin import load_configs, make_skin
+from extra_downloads import prepare_downloads
 
 ROOT = Path(__file__).resolve().parent.parent
 DOCS = ROOT / "docs"
@@ -135,6 +136,11 @@ code {{ background: #1b2130; padding: .1rem .35rem; border-radius: .25rem; }}
 <h1>Spaan Repository</h1>
 <p>Voeg deze pagina in Kodi toe als bron en installeer daarna vanuit zip:</p>
 <p><a href="{name}">{name}</a></p>
+<p>Extra installatiepakketten, ongewijzigd van de makers:</p>
+<ul>
+<li><a href="downloads/repository.thecrew-0.3.8.zip">The Crew Repository 0.3.8</a></li>
+<li><a href="downloads/service.subtitles.opensubtitles-com-1.0.90.zip">OpenSubtitles.com 1.0.90 (Kodi 21)</a></li>
+</ul>
 <p>Uitleg: <a href="https://github.com/Marcospaan2001/kodi-spaan/blob/main/docs/SETUP.md">SETUP.md</a></p>
 </body>
 </html>
@@ -172,6 +178,7 @@ def main():
     md5 = write_addons_xml(addons)
     print(f"  addons.xml: {len(addons)} addon(s), md5 {md5}")
     if repo_zip_name:
+        prepare_downloads(DOCS)
         write_index(repo_zip_name)
         print(f"  index.html verwijst naar {repo_zip_name}")
     else:

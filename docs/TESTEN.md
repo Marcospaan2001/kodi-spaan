@@ -153,3 +153,11 @@ Kleine updates (22.0 naar 22.1) geven zelden problemen. Bij een nieuwe hoofdvers
 Meet voor en na drie keer: koude start, dezelfde add-on openen, bladeren in
 dezelfde lijst en terugkeren naar Home na afspelen. Vergelijk de middelste meting.
 Meet eerste installatie apart. Gebruik hetzelfde netwerk en wis geen caches.
+
+## Extra downloads
+
+- [ ] De bestaande spaan-bron toont beide installatiepakketten.
+- [ ] The Crew-repository installeert en biedt The Crew aan op Kodi 21.
+- [ ] OpenSubtitles.com installeert met zijn afhankelijkheden.
+- [ ] Aanmelden en Nederlandse ondertitels downloaden werkt.
+- [ ] Beide skin-zips zijn ongewijzigd.

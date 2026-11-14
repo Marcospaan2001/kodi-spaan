@@ -169,3 +169,23 @@ Ratings blijven standaard aan. Kodi 22 en de familieafbeeldingen zijn ongewijzig
 
 Kleurtextuurgeneratie blijft intact vanwege themawisselingen en profielen.
 De prestatiewinst moet nog op de Shield worden gemeten.
+
+## Extra installatiepakketten, repository 1.0.2
+
+Op verzoek worden het originele The Crew-repositorypakket 0.3.8 en
+OpenSubtitles.com 1.0.90 uit de officiele Kodi 21-repository aangeboden.
+Dit vervangt de eerdere afspraak om geen The Crew-pakket aan te bieden.
+Externe code wordt niet aangepast. De bouw controleert SHA256, zip-integriteit,
+addon-id en versie. De pakketten staan onder docs/downloads.
+
+Installeer via Add-ons > Installeren vanuit zip-bestand > spaan.
+Kies The Crew Repository of OpenSubtitles.com, eventueel via downloads.
+Installeer The Crew daarna vanuit zijn eigen repository.
+OpenSubtitles.com installeert rechtstreeks en ontvangt updates via Kodi.
+
+Vul je eigen OpenSubtitles.com-account in bij de add-oninstellingen.
+Kies bij Instellingen > Speler > Taal Nederlands als ondertiteltaal en
+OpenSubtitles.com als standaard ondertitelservice voor films en series.
+
+Beide skins blijven ongewijzigd. Dit verhelpt geen Kodi-opstartcrash.
+Accountgegevens en familieportretten blijven buiten de openbare repository.
