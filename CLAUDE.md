@@ -131,3 +131,17 @@ OpenSubtitles.com als standaard ondertitelservice voor films en series.
 
 Beide skins blijven ongewijzigd. Dit verhelpt geen Kodi-opstartcrash.
 Accountgegevens en familieportretten blijven buiten de openbare repository.
+
+## Actuele gebruikerskeuzes, release 1.0.6
+
+Marco heeft toestemming gegeven om de zeven aangeleverde gestileerde portretten
+uit portretten.zip openbaar mee te leveren. Deze staan in skin-mod/portraits.
+Echte aanvullende fotos blijven lokaal. Dit vervangt de oude afspraak voor deze
+zeven bestanden. Kodi 21 toont ze bij opstarten, het add-onstartmenu en laden.
+
+Krispijn Video is nu een eigen GPL-3.0-fork van de vastgezette POV-bron.
+Geen verplichte Trakt-, IMDb- of MDBList-registratie. Gebruik de meegeleverde
+TMDb-scores en lokale kijkvoortgang. De gebruiker koppelt Real-Debrid zelf.
+Nu in de bioscoop en Trending laden uitsluitend wanneer ze worden geopend.
+Bronnen en licenties blijven behouden, ook waar de normale interface eigen
+branding toont. De echte Kodi-interface moet op de Shield worden getest.

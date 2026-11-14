@@ -61,11 +61,23 @@ def portraits():
     xbmcgui.Dialog().ok('Familieportretten', f'{len(copied)} portretten staan nu lokaal op dit apparaat. De bronmap is niet meer nodig.')
 
 
-if mode in ('krispijn.home', 'navigator.main'):
+if mode in ('krispijn.cinema', 'krispijn.trending', 'krispijn.hub', 'krispijn.hubhome', 'krispijn.continue', 'krispijn.newmovies', 'krispijn.newshows', 'krispijn.search', 'krispijn.query', 'krispijn.results'):
+    try:
+        from modules.krispijn_hub import run
+        run(params)
+    except Exception as error:
+        xbmc.log('Krispijn hub fout: ' + type(error).__name__, xbmc.LOGERROR)
+        xbmcgui.Dialog().notification('Krispijn Video', 'De hub kon niet laden. Controleer de verbinding en probeer opnieuw.')
+        if int(sys.argv[1]) >= 0:
+            xbmcplugin.endOfDirectory(int(sys.argv[1]), succeeded=False)
+elif mode in ('krispijn.home', 'navigator.main'):
     rows = []
     if not addon.getSetting('rd.token'):
         rows.append(('Begin hier: Real-Debrid koppelen', {'mode': 'krispijn.rd'}, False))
     rows.extend([
+        ('Filmhub', {'mode': 'krispijn.hub'}, False),
+        ('Nu in de bioscoop', {'mode': 'krispijn.cinema'}, True),
+        ('Trending', {'mode': 'krispijn.trending'}, True),
         ('Films', {'mode': 'krispijn.movies'}, True),
         ('Series', {'mode': 'krispijn.tv'}, True),
         ('Zoeken', {'mode': 'krispijn.search'}, True),
@@ -119,15 +131,14 @@ elif mode == 'krispijn.search':
         ('Series zoeken', {'mode': 'search_history', 'action': 'tvshow'}, True),
     ])
 elif mode == 'krispijn.resume':
-    directory([
-        ('Films hervatten', {'mode': 'build_movie_list', 'action': 'in_progress_movies'}, True),
-        ('Series hervatten', {'mode': 'build_tvshow_list', 'action': 'in_progress_tvshows'}, True),
-    ])
+    from modules.krispijn_hub import continued
+    continued()
 elif mode == 'krispijn.settings':
     directory([
         ('Real-Debrid koppelen of ontkoppelen', {'mode': 'krispijn.rd'}, False),
         ('OpenSubtitles instellen (optioneel)', {'mode': 'krispijn.subtitles'}, False),
         ('Familieportretten kiezen', {'mode': 'krispijn.portraits'}, False),
+        ('Filmhub als startscherm aan/uit', {'mode': 'krispijn.hubhome'}, False),
         ('Uitgebreide instellingen', {'mode': 'open_settings'}, False),
     ])
 elif mode == 'krispijn.rd':

@@ -304,6 +304,9 @@ def make_skin(cfg):
     id_files = replace_addon_id(cfg, skin_dir)
     overlay_files = apply_overlay(cfg, skin_dir)
     patches, upstream_version = patch_skin(cfg, skin_dir)
+    if cfg["kodi"] == "omega":
+        from portraits import apply_portraits
+        apply_portraits(skin_dir)
     check_xml(skin_dir)
     print(f"  skin-mod {cfg['id']} {cfg['version']} op basis van {cfg['upstream_name']} {upstream_version}: "
           f"id vervangen in {id_files} bestanden, {overlay_files} overlay-bestanden, {patches} wijzigingen")

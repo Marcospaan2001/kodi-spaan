@@ -98,3 +98,45 @@ Verwijdert het voor Kodi 21 ongeldige offscreen-argument bij getVideoInfoTag.
 Voegt Nederlandse genres, gecombineerde genres en verdere filters toe.
 Gebruikt eigen logo en achtergrond; bron- en licentievermeldingen blijven behouden.
 De skins wijzigen niet. Real-Debrid-autorisatie en afspelen nog op de Shield testen.
+
+## Filmhub en gecombineerd zoeken, Krispijn Video 1.0.2
+
+Gebruik Familie Krispijn (Kodi 21) 1.0.3 en Spaan Repository 1.0.6.
+Open Krispijn Video > Filmhub. Het scherm heeft drie horizontale posterrijen:
+Verder kijken, Nieuwe films en Nieuwe series. Elke rij is beperkt tot acht items.
+Nieuwe releases zijn catalogusinformatie; beschikbaarheid voor afspelen wordt
+pas bij het ophalen van bronnen bepaald.
+
+Verder kijken combineert lokale film- en afleveringsvoortgang. Er verschijnt per
+serie maximaal de nieuwste onafgemaakte aflevering. Volledig bekeken titels
+vallen weg. Deze voortgang vereist geen extern account en is niet automatisch
+beschikbaar voor video die via een andere add-on is afgespeeld.
+
+Onder Instellen > Filmhub als startscherm aan/uit zet je de hub als startscherm.
+De optie wijzigt bestaande rijen en instellingen niet. De keuze werkt in de
+Kodi 21-variant. De Kodi 22-skin is niet aangepast.
+
+Zoeken toont bekende film- en serietitels als suggesties. Kies Zoek een film of
+serie en voer minstens twee letters in op het Kodi-toetsenbord. De resultaten
+combineren films en series, met poster, jaartal en TMDb-score. Films starten de
+bestaande afspeelroute; series openen de seizoenen. Er is nog geen autocomplete
+bij iedere toetsaanslag in het standaard Kodi-toetsenbord.
+
+Prestatiekeuzes: acht titels per hubrij, maximaal veertig gecombineerde zoekresultaten per pagina,
+maximaal twee gelijktijdige zoekverzoeken en hergebruik van de bestaande
+TMDb-cache. Voor hervatbare items worden maximaal drie metadatawerkers gebruikt.
+Er komt geen extra periodieke achtergrondservice bij. Bij terugkeer in de hub
+ververst de inhoud zodat nieuw opgeslagen kijkvoortgang kan worden gelezen.
+
+Nog op de Shield testen: navigeren met de afstandsbediening, een lege
+Verder kijken-rij, hervatten van zowel een film als een aflevering, terugkeren
+na afspelen, gecombineerde zoekresultaten en de keuze voor het startscherm.
+De oplossing is hier gebouwd en op contracten getest; de complete Kodi-interface
+is niet op een echte Shield geverifieerd. De eerdere functionaliteit van 1.0.1
+moet ook nog op de Shield worden bevestigd.
+
+Nu in de bioscoop gebruikt de Nederlandse regio van TMDb. Trending combineert
+films en series. Beide openen op verzoek en ondersteunen volgende pagina.
+De zeven stilstaande portretten zijn met toestemming meegeleverd in de Kodi 21-skin.
+Een gekozen eigen fotomap blijft voorrang houden. Er zijn geen extra timers,
+netwerkdownloads of opzettelijke wachttijden voor deze portretten.

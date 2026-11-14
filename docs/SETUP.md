@@ -194,3 +194,11 @@ Accountgegevens en familieportretten blijven buiten de openbare repository.
 
 De extra installatiepakketten staan ook direct in de hoofdmap van de bron.
 De links tonen de volledige zipbestandsnamen voor de Kodi-bestandsbrowser.
+
+## Meegeleverde portretten, Kodi 21-versie 1.0.3
+
+De zeven aangeleverde familieportretten, inclusief de hond, worden met toestemming
+meegeleverd. Ze verschijnen bij het starten van de skin, in het startmenu van
+Krispijn Video en bij het laden. Een zelf gekozen fotomap blijft voorrang houden.
+Film- en serieposters worden niet vervangen. Er is geen extra account of service.
+Het gaat om stilstaande portretten met beweging vanuit de skin.

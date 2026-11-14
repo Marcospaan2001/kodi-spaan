@@ -11,7 +11,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 UPSTREAM_ID = 'plugin.video.pov'
 ADDON_ID = 'plugin.video.krispijn'
-VERSION = '1.0.1'
+VERSION = '1.0.2'
 URL = 'https://raw.githubusercontent.com/kodifitzwell/repo/2c8390c6e65213853a862a00044597946b946132/plugin.video.pov/plugin.video.pov-6.11.03.zip'
 SHA256 = '9ac93ad045910774503cbfeeb45b63bbd9b23837c9e76749885076c9b11edfba'
 
@@ -59,6 +59,21 @@ def make_pov():
                 )
             target.parent.mkdir(parents=True, exist_ok=True)
             target.write_bytes(content)
+    # Een zoekterm mag geen eigen URL-parameters introduceren.
+    search_path = folder / 'resources/lib/indexers/tmdb_api.py'
+    search_text = search_path.read_text(encoding='utf-8')
+    for kind in ('movie', 'tv'):
+        old = "url = '/3/search/" + kind + "?language=en-US&query=%s&page=%s' % (query, page_no)"
+        if search_text.count(old) != 1:
+            raise ValueError('Onverwachte TMDb-zoekroute')
+        search_text = search_text.replace(old, old.replace('(query, page_no)', '(quote(query, safe=""), page_no)'))
+    search_path.write_bytes(('from urllib.parse import quote\n' + search_text).encode('utf-8'))
+    utils = folder / 'resources/lib/modules/kodi_utils.py'
+    text = utils.read_text(encoding='utf-8')
+    old = "xbmcgui.Dialog().notification('POV', line1, icon, time, sound)"
+    if text.count(old) != 1:
+        raise ValueError('Onverwachte notificatietitel')
+    utils.write_bytes(text.replace(old, "xbmcgui.Dialog().notification(get_addoninfo('name'), line1, icon, time, sound)").encode('utf-8'))
     path = folder / 'addon.xml'
     tree = ET.parse(path)
     addon = tree.getroot()
@@ -74,7 +89,7 @@ def make_pov():
         node = assets.find(key)
         shutil.copyfile(
             ROOT / 'video-mod/icon.png' if key == 'icon'
-            else ROOT / 'skin-mod/overlay' / name,
+            else ROOT / 'skin-mod/overlay/extras/krispijn/background.jpg',
             folder / name)
         node.text = name
     path.write_bytes(ET.tostring(addon, encoding='utf-8', xml_declaration=True))
@@ -99,6 +114,7 @@ def make_pov():
     ET.SubElement(category, 'setting', {'id': 'krispijn.family.path', 'type': 'text',
                                       'default': '', 'visible': 'false'})
     settings_path.write_bytes(ET.tostring(settings.getroot(), encoding='utf-8', xml_declaration=True))
+    shutil.copyfile(ROOT / 'video-mod/hub.py', folder / 'resources/lib/modules/krispijn_hub.py')
     shutil.copyfile(ROOT / 'video-mod/router.py', folder / 'resources/lib/router.py')
     shutil.copyfile(ROOT / 'video-mod/service.py', folder / 'resources/lib/service.py')
     # Label de bestaande TMDb-score correct, zonder extra ratingprovider.
@@ -126,7 +142,7 @@ def make_pov():
         license_path.write_bytes(license)
     shutil.copyfile(license_path, folder / 'COPYING')
     (folder / 'FORK.md').write_text(
-        '# Krispijn Video 1.0.1\n\nGebaseerd op POV 6.11.03 van kodifitzwell, GPL-3.0.\n'
+        '# Krispijn Video 1.0.2\n\nGebaseerd op POV 6.11.03 van kodifitzwell, GPL-3.0.\n'
         'Broncode: https://github.com/Marcospaan2001/kodi-spaan\n'
         'Bouw: tools/make_pov.py, aanpassingen: video-mod/.\n'
         'Eigen addon-id, Nederlands startmenu, beperkte lokale opstartservice,\n'
@@ -136,7 +152,7 @@ def make_pov():
         ast.parse(file.read_text(encoding='utf-8-sig'), filename=str(file))
     for file in folder.rglob('*.xml'):
         ET.parse(file)
-    print('  Krispijn Video 1.0.1 op basis van POV 6.11.03, bron-SHA256 akkoord')
+    print('  Krispijn Video 1.0.2 op basis van POV 6.11.03, bron-SHA256 akkoord')
     return folder
 
 

@@ -161,3 +161,12 @@ Meet eerste installatie apart. Gebruik hetzelfde netwerk en wis geen caches.
 - [ ] OpenSubtitles.com installeert met zijn afhankelijkheden.
 - [ ] Aanmelden en Nederlandse ondertitels downloaden werkt.
 - [ ] Beide skin-zips zijn ongewijzigd.
+
+## Portretten Kodi 21, versie 1.0.3
+
+- [ ] Zonder gekozen fotomap verschijnen de familieportretten, inclusief de hond.
+- [ ] Start Kodi, open Krispijn Video en controleer de laadindicator rechtsboven.
+- [ ] Film- en serielijsten behouden hun eigen posters.
+- [ ] Een bestaande eigen fotomap blijft actief.
+- [ ] Gezichtjes uitschakelen verbergt ook het portret in het add-onstartmenu.
+- [ ] Vergelijk drie koude starts en dezelfde navigatie met de vorige versie.
