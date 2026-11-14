@@ -24,6 +24,7 @@ from pathlib import Path
 
 from make_skin import load_configs, make_skin
 from extra_downloads import prepare_downloads
+from make_pov import make_pov, VERSION as VIDEO_VERSION
 
 ROOT = Path(__file__).resolve().parent.parent
 DOCS = ROOT / "docs"
@@ -138,7 +139,7 @@ code {{ background: #1b2130; padding: .1rem .35rem; border-radius: .25rem; }}
 <p><a href="{name}">{name}</a></p>
 <p>Extra installatiepakketten, ongewijzigd van de makers:</p>
 <ul>
-<li><a href="repository.thecrew-0.3.8.zip">repository.thecrew-0.3.8.zip</a></li>
+<li><a href="plugin.video.krispijn-{VIDEO_VERSION}.zip">plugin.video.krispijn-{VIDEO_VERSION}.zip</a></li>
 <li><a href="service.subtitles.opensubtitles-com-1.0.90.zip">service.subtitles.opensubtitles-com-1.0.90.zip</a></li>
 </ul>
 <p>Uitleg: <a href="https://github.com/Marcospaan2001/kodi-spaan/blob/main/docs/SETUP.md">SETUP.md</a></p>
@@ -150,6 +151,7 @@ code {{ background: #1b2130; padding: .1rem .35rem; border-radius: .25rem; }}
 
 def main():
     skin_dirs = [make_skin(cfg) for cfg in load_configs()]
+    skin_dirs.append(make_pov())
     addons = find_addons(skin_dirs)
     if not addons:
         sys.exit("FOUT: geen addons gevonden (mappen met een addon.xml).")
@@ -169,6 +171,10 @@ def main():
         zip_path, count = build_zip(folder, addon_id, version)
         size_kb = zip_path.stat().st_size / 1024
         print(f"  {addon_id} {version}: {count} bestanden, {size_kb:,.0f} kB")
+        if addon_id == "plugin.video.krispijn":
+            for old in DOCS.glob("plugin.video.krispijn-*.zip"):
+                old.unlink()
+            shutil.copyfile(zip_path, DOCS / zip_path.name)
         if addon_id == REPO_ADDON_ID:
             for old in DOCS.glob(f"{REPO_ADDON_ID}-*.zip"):
                 old.unlink()

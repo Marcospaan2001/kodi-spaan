@@ -41,7 +41,7 @@ def check_variant(cfg, catalogs):
     if not addon_xml.is_file():
         sys.exit(f"{addon_xml} ontbreekt. Draai eerst python tools/build.py.")
     print(f"\n{cfg['name']} ({kodi})")
-    imports = [(item.attrib["addon"], item.attrib["version"])
+    imports = [(item.attrib["addon"], item.get("version", "0.0.0"))
                for item in ET.parse(addon_xml).getroot().findall("requires/import")
                if not item.attrib["addon"].startswith(("xbmc.", "kodi."))
                and item.get("optional") != "true"]
@@ -75,10 +75,11 @@ def check_variant(cfg, catalogs):
 
 def main():
     catalogs = {}
-    problems = sum(check_variant(cfg, catalogs) for cfg in load_configs())
+    configs = load_configs() + [{"id": "plugin.video.krispijn", "name": "Krispijn Video", "kodi": "omega"}]
+    problems = sum(check_variant(cfg, catalogs) for cfg in configs)
     if problems:
         sys.exit(f"{problems} vereiste afhankelijkheid(en) niet gevonden.")
-    print("\nAlle vereiste afhankelijkheden van beide skins zijn gevonden.")
+    print("\nAlle vereiste afhankelijkheden van beide skins en Krispijn Video zijn gevonden.")
 
 
 if __name__ == "__main__":

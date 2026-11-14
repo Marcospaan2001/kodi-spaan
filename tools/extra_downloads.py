@@ -6,15 +6,14 @@ import xml.etree.ElementTree as ET
 import zipfile
 
 PACKAGES = (
-    ("repository.thecrew", "0.3.8",
-     "https://team-crew.github.io/repository.thecrew-0.3.8.zip",
-     "686e616ecd7d60906fd7975fe9ccaa09360c8cf0c65ba3431e6d81700b0f6ec0"),
     ("service.subtitles.opensubtitles-com", "1.0.90",
      "https://mirrors.kodi.tv/addons/omega/service.subtitles.opensubtitles-com/service.subtitles.opensubtitles-com-1.0.90.zip",
      "e327c92ac9d09bfcb2330eb217a15632b3b04d655ccf064aaf8a33e3f04c7660"),
 )
 
 def prepare_downloads(docs):
+    for old in (docs / "repository.thecrew-0.3.8.zip", docs / "downloads/repository.thecrew-0.3.8.zip"):
+        old.unlink(missing_ok=True)
     folder = docs / "downloads"
     folder.mkdir(parents=True, exist_ok=True)
     for addon_id, version, url, expected in PACKAGES:

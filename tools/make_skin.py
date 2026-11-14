@@ -17,6 +17,7 @@ Naam en versie staan in fuse2.json en fuse3.json. mod.json bevat het gedeelde th
 Alleen de standaardbibliotheek van Python is nodig.
 """
 import json
+from skin_fast import patch_fast
 import shutil
 import sys
 import xml.etree.ElementTree as ET
@@ -191,6 +192,7 @@ def patch_skin(cfg, skin_dir):
 
     if omega:
         patch_fuse2_performance(p)
+        patch_fast(p)
         patch_fuse2_menu(p)
     else:
         hubs_path = skin_dir / "shortcuts/skinvariables-shortcut-hubs.json"
