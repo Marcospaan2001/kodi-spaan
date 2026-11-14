@@ -1,0 +1,20 @@
+[
+    {
+        "label": "Video add-ons",
+        "icon": "special://skin/extras/icons/video.png",
+        "path": "ActivateWindow(videos,addons://sources/video/,return)",
+        "target": ""
+    },
+    {
+        "label": "$LOCALIZE[24001]",
+        "icon": "special://skin/extras/icons/addon.png",
+        "path": "ActivateWindow(addonbrowser)",
+        "target": ""
+    },
+    {
+        "label": "Fotomap gezichtjes",
+        "icon": "special://skin/extras/icons/image.png",
+        "path": "Skin.SetPath(Krispijn.FacesPath)",
+        "target": ""
+    }
+]

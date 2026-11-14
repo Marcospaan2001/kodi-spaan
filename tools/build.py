@@ -22,12 +22,14 @@ import xml.etree.ElementTree as ET
 import zipfile
 from pathlib import Path
 
+from make_skin import make_skin
+
 ROOT = Path(__file__).resolve().parent.parent
 DOCS = ROOT / "docs"
 ZIPS = DOCS / "zips"
 
 REPO_ADDON_ID = "repository.spaan"
-SKIP_DIRS = {"docs", "tools"}
+SKIP_DIRS = {"docs", "tools", "build", "upstream", "skin-mod", "fotos"}
 EXCLUDE_NAMES = {".git", ".github", ".gitignore", ".gitattributes", "__pycache__",
                  "Thumbs.db", "desktop.ini", ".DS_Store"}
 EXCLUDE_SUFFIXES = {".pyc", ".pyo", ".psd", ".xcf"}
@@ -40,7 +42,9 @@ FIXED_TIME = (2020, 1, 1, 0, 0, 0)
 
 def find_addons():
     addons = []
-    for folder in sorted(ROOT.iterdir()):
+    # Addons in de projectroot plus gegenereerde addons (de skin-mod) in build/
+    candidates = sorted(ROOT.iterdir()) + sorted((ROOT / "build").glob("*"))
+    for folder in candidates:
         if not folder.is_dir() or folder.name.startswith(".") or folder.name in SKIP_DIRS:
             continue
         addon_xml = folder / "addon.xml"
@@ -125,6 +129,7 @@ code {{ background: #1b2130; padding: .1rem .35rem; border-radius: .25rem; }}
 <h1>Spaan Repository</h1>
 <p>Voeg deze pagina in Kodi toe als bron en installeer daarna vanuit zip:</p>
 <p><a href="{name}">{name}</a></p>
+<p>Uitleg: <a href="https://github.com/Marcospaan2001/kodi-spaan/blob/main/docs/SETUP.md">SETUP.md</a></p>
 </body>
 </html>
 """
@@ -132,6 +137,7 @@ code {{ background: #1b2130; padding: .1rem .35rem; border-radius: .25rem; }}
 
 
 def main():
+    make_skin()  # bouwt build/<skin-id>/ uit upstream + skin-mod
     addons = find_addons()
     if not addons:
         sys.exit("FOUT: geen addons gevonden (mappen met een addon.xml).")

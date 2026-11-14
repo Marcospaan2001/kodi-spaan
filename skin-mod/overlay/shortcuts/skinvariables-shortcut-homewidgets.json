@@ -1,0 +1,8 @@
+[
+    {
+        "label": "Video add-ons",
+        "icon": "",
+        "path": "addons://sources/video/",
+        "target": "videos"
+    }
+]

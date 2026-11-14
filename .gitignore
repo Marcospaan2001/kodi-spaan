@@ -3,3 +3,9 @@ __pycache__/
 Thumbs.db
 desktop.ini
 .DS_Store
+
+# Gegenereerde skin-mod (wordt bij elke build opnieuw gemaakt)
+build/
+
+# Eigen gezinsfoto's: nooit naar de openbare repo
+fotos/

@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Eigen toevoegingen van de Familie Krispijn-mod. Dit bestand bestaat niet in
+     upstream en wordt door tools/make_skin.py aangemeld in Includes.xml. -->
+<includes>
+
+    <!-- Map met gezichtjes. Standaard de getekende gezichtjes in de skin. Met
+         Skin.SetPath(Krispijn.FacesPath) wijs je een eigen map aan, bijvoorbeeld
+         met gezinsfoto's op het apparaat zelf. -->
+    <variable name="Krispijn_FacesPath">
+        <value condition="!String.IsEmpty(Skin.String(Krispijn.FacesPath))">$INFO[Skin.String(Krispijn.FacesPath)]</value>
+        <value>special://skin/extras/krispijn/faces/</value>
+    </variable>
+
+    <!-- "Af en toe": waar als de klok op een seconde staat die eindigt op 0 of 5,
+         dus ongeveer 1 op de 5 keer. Uit te zetten met de skin-instelling
+         Krispijn.DisableFaces. -->
+    <expression name="Exp_Krispijn_FaceMoment">!Skin.HasSetting(Krispijn.DisableFaces) + [String.EndsWith(System.Time(ss),0) | String.EndsWith(System.Time(ss),5)]</expression>
+
+    <!-- Willekeurige laadtekst voor het opstartscherm (gevuld uit mod.json) -->
+    <variable name="Krispijn_LoadingLine">
+        <!--LOADING_LINES-->
+    </variable>
+
+    <!-- Gezichtje dat over het draaiende laad-rondje heen opduikt en wiebelt -->
+    <include name="Krispijn_BusyFace">
+        <control type="group">
+            <centerleft>50%</centerleft>
+            <centertop>50%</centertop>
+            <width>110</width>
+            <height>110</height>
+            <visible>$EXP[Exp_Krispijn_FaceMoment]</visible>
+            <animation type="Visible" reversible="false">
+                <effect type="zoom" start="20" end="100" center="auto" time="350" tween="back" easing="out" />
+                <effect type="fade" start="0" end="100" time="150" />
+            </animation>
+            <animation effect="fade" start="100" end="0" time="250">Hidden</animation>
+            <animation effect="rotate" start="-12" end="12" center="auto" time="500" tween="sine" easing="inout" pulse="true" condition="true">Conditional</animation>
+            <control type="multiimage">
+                <imagepath>$VAR[Krispijn_FacesPath]</imagepath>
+                <aspectratio>keep</aspectratio>
+                <timeperimage>5000</timeperimage>
+                <fadetime>0</fadetime>
+                <randomize>true</randomize>
+                <loop>yes</loop>
+            </control>
+        </control>
+    </include>
+
+    <!-- Opstartscherm: wisselend gezichtje boven het logo en een laadtekst eronder -->
+    <include name="Krispijn_Splash_Extras">
+        <control type="group">
+            <visible>!Skin.HasSetting(Krispijn.DisableFaces)</visible>
+            <centerleft>50%</centerleft>
+            <centertop>280</centertop>
+            <width>170</width>
+            <height>170</height>
+            <animation effect="zoom" start="94" end="106" center="auto" time="900" tween="sine" easing="inout" pulse="true" condition="true">Conditional</animation>
+            <animation effect="rotate" start="-6" end="6" center="auto" time="1400" tween="sine" easing="inout" pulse="true" condition="true">Conditional</animation>
+            <control type="multiimage">
+                <imagepath>$VAR[Krispijn_FacesPath]</imagepath>
+                <aspectratio>keep</aspectratio>
+                <timeperimage>1800</timeperimage>
+                <fadetime>300</fadetime>
+                <randomize>true</randomize>
+                <loop>yes</loop>
+            </control>
+        </control>
+        <control type="label">
+            <centertop>660</centertop>
+            <height>40</height>
+            <aligny>center</aligny>
+            <align>center</align>
+            <font>font_main</font>
+            <textcolor>$VAR[ColorHighlight]</textcolor>
+            <label>$VAR[Krispijn_LoadingLine]</label>
+        </control>
+    </include>
+
+</includes>
