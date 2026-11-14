@@ -156,3 +156,16 @@ plek.
   Mijn add-ons > Add-on-repository > Spaan Repository > Controleren op updates.
 - **Na een skin-update** bouwt de skin zijn menu's opnieuw op. Eigen rijen en
   instellingen blijven staan.
+
+## Kodi 21: optimalisatie 1.0.1
+
+De update schakelt dynamische blur eenmalig uit en kiest de Simple-achtergrondstijl.
+De achtergrondafbeelding, widgets en sleutels blijven behouden.
+Daarna gekozen achtergrondinstellingen worden niet opnieuw overschreven.
+
+Onder Skin-instellingen > Menus staan schakelaars voor de ratings-service en
+gezichtjes. Herstart Kodi na het wijzigen van de service. De keuze blijft bewaard.
+Ratings blijven standaard aan. Kodi 22 en de familieafbeeldingen zijn ongewijzigd.
+
+Kleurtextuurgeneratie blijft intact vanwege themawisselingen en profielen.
+De prestatiewinst moet nog op de Shield worden gemeten.

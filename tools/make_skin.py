@@ -190,6 +190,7 @@ def patch_skin(cfg, skin_dir):
               '                        <include condition="$PARAM[hasspinner]">Krispijn_BusyFace</include>')
 
     if omega:
+        patch_fuse2_performance(p)
         patch_fuse2_menu(p)
     else:
         hubs_path = skin_dir / "shortcuts/skinvariables-shortcut-hubs.json"
@@ -201,6 +202,69 @@ def patch_skin(cfg, skin_dir):
         hubs_path.write_text(json.dumps(hubs, indent=4, ensure_ascii=False) + "\n", encoding="utf-8", newline="\n")
 
     return p.count, upstream_version
+
+
+
+def patch_fuse2_performance(p):
+    """Lichte achtergrondstandaard en blijvende servicekeuze."""
+    startup = "shortcuts/skinvariables-startup.json"
+    p.replace(startup, '"Skin.SetBool(TMDbHelper.Service)",', "")
+    p.replace(startup, '"Skin.SetBool(TMDbHelper.EnableBlur)",',
+              '"Skin.SetBool(TMDbHelper.Service)",')
+
+    migration = {
+        "rules": ["!Skin.HasSetting(Krispijn.PerformanceV1)"],
+        "value": [
+            "Skin.Reset(TMDbHelper.EnableBlur)",
+            "Skin.SetString(Background.ArtworkStyle,Simple)",
+            "Skin.Reset(Background.DialogImage)",
+            "Skin.SetBool(Krispijn.PerformanceV1)"
+        ]
+    }
+    marker = '"Skin.SetBool(TMDbHelper.UseLocalWidgetContainer)",'
+    p.replace(startup, marker,
+              json.dumps(migration, ensure_ascii=False) + ",\n                " + marker)
+
+    blur = (
+        "RunScript(plugin.video.themoviedb.helper,"
+        "blur_image={var_image_simplebackground},prefix=SimpleBackground)"
+    )
+    condition = (
+        "Skin.HasSetting(TMDbHelper.EnableBlur) | "
+        "Skin.String(Background.DialogImage,Adaptive)"
+    )
+    p.replace(startup, json.dumps(blur) + ",",
+              json.dumps({"rules": [condition], "value": blur}) + ",")
+
+    action = (
+        "RunScript(plugin.video.themoviedb.helper,"
+        "blur_image=$VAR[Image_SimpleBackground],prefix=SimpleBackground)"
+    )
+    p.replace("1080i/Includes_Actions.xml",
+              "<onload>" + action + "</onload>",
+              '<onload condition="' + condition + '">' + action + "</onload>")
+
+    buttons = []
+    for item_id, label, setting, selected in (
+        ("006", "Ratings-service (herstart Kodi na wijzigen)",
+         "TMDbHelper.Service", "Skin.HasSetting(TMDbHelper.Service)"),
+        ("007", "Gezichtjes tijdens opstarten en laden",
+         "Krispijn.DisableFaces", "!Skin.HasSetting(Krispijn.DisableFaces)"),
+    ):
+        buttons.append(f"""        <include content="Settings_Button">
+            <param name="dialog">false</param>
+            <param name="window">skinsettings</param>
+            <param name="baseid">$PARAM[baseid]</param>
+            <param name="id">{item_id}</param>
+            <param name="control">radiobutton</param>
+            <label>{label}</label>
+            <onclick>Skin.ToggleSetting({setting})</onclick>
+            <selected>{selected}</selected>
+        </include>
+""")
+    marker = "    </include>\n\n    <!-- Appearance -->"
+    p.replace("1080i/Includes_SkinSettings.xml",
+              marker, "".join(buttons) + marker)
 
 
 def patch_fuse2_menu(p):

@@ -138,3 +138,18 @@ Kleine updates (22.0 naar 22.1) geven zelden problemen. Bij een nieuwe hoofdvers
   map `addons/skin.arctic.fuse.2.krispijn` of `addons/skin.arctic.fuse.3.krispijn`, afhankelijk van de gekozen skin.
 - Het logboek staat in `kodi.log` in de Kodi-gebruikersmap. Zoek op `ERROR` en op
   het add-on-id van de gekozen skin.
+
+## Controle optimalisatie Kodi 21, versie 1.0.1
+
+- [ ] Update vanaf 1.0.0: blur uit en Simple-achtergrondstijl.
+- [ ] Widgets, achtergrondafbeelding, fotomap en sleutels behouden.
+- [ ] Later gekozen achtergrondstijl blijft behouden na herstart.
+- [ ] Ratings-service uitzetten en herstarten: blijft uit.
+- [ ] Service weer aanzetten en herstarten: ratings werken met geldige sleutel.
+- [ ] Gezichtjes aan- en uitzetten werkt.
+- [ ] Blur en Adaptive-dialogen werken wanneer opnieuw gekozen.
+- [ ] Themawisseling en skinprofielen geven geen ontbrekende kleurtexturen.
+
+Meet voor en na drie keer: koude start, dezelfde add-on openen, bladeren in
+dezelfde lijst en terugkeren naar Home na afspelen. Vergelijk de middelste meting.
+Meet eerste installatie apart. Gebruik hetzelfde netwerk en wis geen caches.
