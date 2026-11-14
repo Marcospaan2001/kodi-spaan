@@ -20,7 +20,8 @@ uiterlijk, met één bron-URL te installeren op elk apparaat.
   `script.texturemaker` >= 0.2.9, `plugin.video.themoviedb.helper` >= 6.21.5,
   plus `resource.images.arctic.splash`, `resource.images.arctic.weather`,
   `resource.images.weathericons.white`, `resource.images.studios.coloured` en
-  `resource.font.robotocjksc`. Controleer deze lijst opnieuw bij elke upstream-merge.
+  `resource.font.robotocjksc`. De uitgebrachte 3.4.22 eist `script.skinvariables`
+  >= 2.2.15. Controleer deze lijst opnieuw bij elke upstream-merge.
 - Afhankelijkheden hosten we niet zelf: `repository.spaan` verwijst door naar de
   repository van jurialmunkey.
 - De bijgeleverde `repository.thecrew` was alleen een sjabloon voor de opbouw. Er
@@ -49,6 +50,10 @@ uiterlijk, met één bron-URL te installeren op elk apparaat.
 ## Opbouw van de mod
 
 - `upstream/skin.arctic.fuse.3/` is een onaangeroerde git subtree. Nooit bewerken.
+- Upstream staat vast op de uitgebrachte commit `254f7fadd6` (3.4.22). De kop van
+  branch `piers` eiste op 14-11-2026 `script.skinvariables` 2.2.18 terwijl alleen
+  2.2.16 was uitgebracht. Draai daarom na elke upstream-update
+  `python tools/check_deps.py`.
 - `tools/make_skin.py` bouwt de mod naar `build/` (gitignored): kopie van upstream,
   id vervangen, `skin-mod/overlay/` eroverheen, daarna gerichte tekstvervangingen
   die elk hun aantal treffers controleren.

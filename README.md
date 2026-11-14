@@ -25,6 +25,7 @@ Bron-URL: `https://marcospaan2001.github.io/kodi-spaan/`
 | `tools/make_skin.py` | Maakt de mod: upstream + ander id + overlay + gerichte wijzigingen, naar `build/` |
 | `tools/build.py` | Bouwt alles: skin-mod, zips, `addons.xml` en `addons.xml.md5` naar `docs/` |
 | `tools/make_art.py` | Genereert iconen, fanart, logo, achtergrond en getekende gezichtjes |
+| `tools/check_deps.py` | Controleert of Kodi alle afhankelijkheden van de skin kan vinden |
 | `tools/make_faces.py` | Maakt ronde gezichtjes van eigen foto's in `fotos/` (blijft lokaal) |
 | `docs/` | Uitvoer van de build plus `SETUP.md`, gepubliceerd via GitHub Pages |
 
@@ -46,20 +47,35 @@ De handleiding voor het inrichten van een apparaat staat in
 
 ## Arctic Fuse 3 bijwerken (upstream)
 
-De skin staat als git subtree in `upstream/`. Bijwerken naar de nieuwste versie:
+De skin staat als git subtree in `upstream/`, vastgezet op de laatst **uitgebrachte**
+versie. Neem niet blind de nieuwste code van de branch `piers`: de maker verhoogt daar
+soms al de vereiste versie van een afhankelijkheid voordat die is uitgebracht, en dan
+weigert Kodi de skin te installeren.
+
+Bijwerken:
 
 ```
-git subtree pull --prefix=upstream/skin.arctic.fuse.3 upstream piers --squash
+git fetch upstream piers
+git log --oneline -15 FETCH_HEAD -- addon.xml
+```
+
+Kies de commit van de laatste "version bump" die ook in de repository van
+jurialmunkey is uitgebracht en haal die binnen:
+
+```
+git subtree merge --prefix=upstream/skin.arctic.fuse.3 <commit> --squash
 python tools/build.py
+python tools/check_deps.py
 ```
 
-Omdat er nooit in `upstream/` bewerkt wordt, geeft de pull geen conflicten. De build
-controleert daarna elke wijziging van de mod. Heeft upstream een regel veranderd die
-de mod aanpast, dan stopt `make_skin.py` met de melding welk bestand en welke tekst
-niet meer gevonden wordt. Pas dan die ene stap aan. Controleer na elke update ook
-het `<requires>`-blok in `upstream/skin.arctic.fuse.3/addon.xml` op nieuwe
-afhankelijkheden, verhoog `version` in `skin-mod/mod.json` en test in Kodi voor je
-pusht.
+Omdat er nooit in `upstream/` bewerkt wordt, geeft de merge geen conflicten. Daarna:
+
+- **`build.py`** controleert elke wijziging van de mod. Heeft upstream een regel
+  veranderd die de mod aanpast, dan stopt `make_skin.py` met de melding welk bestand
+  en welke tekst niet meer gevonden wordt. Pas dan die ene stap aan.
+- **`check_deps.py`** controleert of alle vereiste add-ons in de vereiste versie te
+  vinden zijn. Meldt het een fout, kies dan een oudere upstream-commit.
+- Verhoog `version` in `skin-mod/mod.json` en test in Kodi voor je pusht.
 
 De remote is eenmalig toegevoegd met:
 
