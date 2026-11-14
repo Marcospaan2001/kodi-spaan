@@ -33,7 +33,8 @@ Bron-URL: `https://marcospaan2001.github.io/kodi-spaan/`
 `docs/zips/` of `build/`; dat wordt bij elke build overschreven.
 
 De handleiding voor het inrichten van een apparaat staat in
-[docs/SETUP.md](docs/SETUP.md).
+[docs/SETUP.md](docs/SETUP.md). De testchecklist, bekende beperkingen en wat je bij
+een Kodi-update moet controleren staan in [docs/TESTEN.md](docs/TESTEN.md).
 
 ## De skin aanpassen
 

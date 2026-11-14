@@ -79,8 +79,12 @@ uiterlijk, met één bron-URL te installeren op elk apparaat.
 ## Fases
 
 0. Inventarisatie (klaar)
-1. Repository en hosting
-2. Skin-mod: upstream binnenhalen, eigen id, kleurthema, logo, opstartscherm (gebouwd, nog niet in Kodi getest)
-3. `docs/SETUP.md` (geschreven): TMDbHelper, ratings via OMDb of MDBList, Trakt, homescherm-rijen,
-   back-up van skin-instellingen
-4. Testchecklist en bekende beperkingen
+1. Repository en hosting (klaar, live op GitHub Pages)
+2. Skin-mod Familie Krispijn 1.0.0 (klaar; installatie op de Shield bevestigd door
+   Marco op 14-11-2026)
+3. `docs/SETUP.md` (klaar)
+4. `docs/TESTEN.md`: testchecklist, bekende beperkingen, Kodi-updates (klaar)
+
+Openstaand: eigen gezinsfoto's (levert Marco zelf, lokaal), een knop voor
+`Krispijn.DisableFaces` in de skin-instellingen, en de checklist in TESTEN.md is nog
+niet volledig doorlopen.
