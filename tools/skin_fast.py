@@ -1,16 +1,15 @@
 """Gerichte Kodi 21-optimalisaties; Kodi 22 blijft ongewijzigd."""
 import json
-import importlib.util
 from pathlib import Path
 
 
 def patch_fast(p):
-    source = Path(__file__).resolve().parent.parent / 'video-mod/hub.py'
-    spec = importlib.util.spec_from_file_location('krispijn_hub_build', source)
-    module = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(module)
-    (p.skin_dir / '1080i/Custom_1188_KrispijnHub.xml').write_bytes(module.window_xml().encode('utf-8'))
-    p.replace('1080i/Home.xml', '<window>', '<window>\n    <onload condition="Skin.HasSetting(Krispijn.HubAsHome) + System.HasAddon(plugin.video.krispijn)">ReplaceWindow(1188)</onload>')
+    # Oude snelkoppelingen blijven werken, maar openen de nieuwe zelfstandige UI.
+    bridge = '''<?xml version="1.0" encoding="UTF-8"?>
+<window type="window" id="1188"><onload>RunScript(plugin.video.krispijn)</onload><controls><control type="label"><left>200</left><top>450</top><width>1500</width><height>70</height><font>font_main</font><label>Familie Krispijn</label></control></controls></window>
+'''
+    (p.skin_dir / '1080i/Custom_1188_KrispijnHub.xml').write_bytes(bridge.encode('utf-8'))
+    p.replace('1080i/Home.xml', '<window>', '<window>\n    <onload condition="Skin.HasSetting(Krispijn.HubAsHome) + System.HasAddon(plugin.video.krispijn) + !String.IsEqual(Window(Home).Property(Krispijn.AutoStarted),true)">RunScript(plugin.video.krispijn)</onload>\n    <onload>SetProperty(Krispijn.AutoStarted,true,home)</onload>')
     startup = 'shortcuts/skinvariables-startup.json'
     path = p.skin_dir / startup
     original = path.read_bytes().decode('utf-8')

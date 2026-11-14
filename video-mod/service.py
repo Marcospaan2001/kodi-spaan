@@ -3,6 +3,8 @@ from modules.entry import (SettingsMonitor, initializeDatabases, checkSettingsFi
                            viewsSetWindowProperties)
 
 if __name__ == '__main__':
+    from modules.krispijn_playback_setup import migrate
+    migrate()
     monitor = SettingsMonitor()
     initializeDatabases()
     checkSettingsFile()

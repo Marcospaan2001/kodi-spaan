@@ -1,0 +1,88 @@
+"""Eén verzoek per cataloguspagina, lokale cache en herkenbare fouten. GPL-3.0."""
+import hashlib
+import json
+import os
+import time
+from pathlib import Path
+from urllib.parse import urlencode
+from urllib.request import Request, urlopen
+from urllib.error import HTTPError, URLError
+
+class CatalogueError(Exception):
+    pass
+
+class Catalogue:
+    def __init__(self, token, cache_dir, transport=None, clock=time.time):
+        self.token, self.cache_dir = token, Path(cache_dir)
+        self.transport, self.clock = transport or self._request, clock
+        self.cache_dir.mkdir(parents=True, exist_ok=True)
+
+    def _request(self, path):
+        try:
+            request = Request('https://api.themoviedb.org/3/' + path, headers={'Authorization': 'Bearer ' + self.token, 'User-Agent': 'Krispijn/1.1'})
+            with urlopen(request, timeout=8) as response:
+                return json.load(response)
+        except HTTPError as error:
+            if error.code == 401: raise CatalogueError('De cataloguskoppeling is verlopen. Controleer of er een update is.') from None
+            if error.code == 429: raise CatalogueError('De catalogus is even druk. Probeer het straks opnieuw.') from None
+            raise CatalogueError('De catalogus is tijdelijk niet bereikbaar.') from None
+        except (URLError, OSError, ValueError):
+            raise CatalogueError('Geen verbinding met de catalogus. Controleer je internetverbinding.') from None
+
+    def fetch(self, section='trending', page=1, query='', media='movie', genres='', year=None, min_rating=None, tmdb_id=None, season=None):
+        page = max(1, min(500, int(page)))
+        params = {'language':'nl-NL', 'page':page, 'include_adult':'false'}
+        kind = media
+        if section == 'search':
+            endpoint = 'search/multi'; params['query'] = query.strip()
+        elif section in ('home','trending'):
+            endpoint = 'trending/all/week'
+        elif section == 'cinema':
+            endpoint='movie/now_playing'; params['region']='NL'; kind='movie'
+        elif section == 'seasons':
+            endpoint=f'tv/{int(tmdb_id)}'; kind='season'
+        elif section == 'episodes':
+            endpoint=f'tv/{int(tmdb_id)}/season/{int(season)}'; kind='episode'
+        else:
+            kind = 'tv' if section in ('tv','newshows') else media
+            endpoint = 'discover/' + ('tv' if kind in ('tv','tvshow') else 'movie')
+            params['sort_by']='popularity.desc'
+            if genres: params['with_genres']=genres
+            if year: params['first_air_date_year' if kind == 'tv' else 'primary_release_year']=str(year)
+            if min_rating: params.update({'vote_average.gte':str(min_rating),'vote_count.gte':'50'})
+        path=endpoint+'?'+urlencode(params)
+        file=self.cache_dir/(hashlib.sha256(path.encode()).hexdigest()+'.json')
+        cached=None
+        try:
+            cached=json.loads(file.read_text(encoding='utf-8'))
+            if self.clock()-cached['time'] < 900: return dict(cached['data'],stale=False)
+        except (OSError,ValueError,KeyError): pass
+        try:
+            data=self.transport(path)
+            if not isinstance(data,dict) or data.get('success') is False: raise CatalogueError('De catalogus gaf geen geldig antwoord.')
+            raw=data.get('seasons' if kind=='season' else 'episodes' if kind=='episode' else 'results',[])
+            results=[]
+            for row in raw:
+                typ=row.get('media_type',kind)
+                if typ not in ('movie','tv','tvshow','season','episode') or row.get('adult'): continue
+                item=dict(row,krispijn_type='tvshow' if typ=='tv' else typ)
+                if typ in ('season','episode'): item.update(krispijn_show_id=tmdb_id, krispijn_season=season)
+                results.append(item)
+            output={'results':results,'page':page,'total_pages':min(500,data.get('total_pages',1)),'stale':False}
+            temp=file.with_suffix('.tmp')
+            temp.write_text(json.dumps({'time':self.clock(),'data':output}),encoding='utf-8');os.replace(temp,file)
+            return output
+        except (CatalogueError, OSError):
+            if cached and self.clock()-cached.get('time',0)<7*86400: return dict(cached['data'],stale=True)
+            raise
+
+
+def from_kodi():
+    import xbmcaddon, xbmcvfs
+    import xml.etree.ElementTree as ET
+    addon=xbmcaddon.Addon('plugin.video.krispijn')
+    token=addon.getSetting('tmdb_read_token')
+    if not token:
+        root=ET.parse(os.path.join(addon.getAddonInfo('path'),'resources/settings.xml'))
+        token=root.find(".//setting[@id='tmdb_read_token']").get('default','')
+    return Catalogue(token,os.path.join(xbmcvfs.translatePath(addon.getAddonInfo('profile')),'catalogue'))

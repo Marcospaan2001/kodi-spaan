@@ -61,30 +61,17 @@ def portraits():
     xbmcgui.Dialog().ok('Familieportretten', f'{len(copied)} portretten staan nu lokaal op dit apparaat. De bronmap is niet meer nodig.')
 
 
-if mode in ('krispijn.cinema', 'krispijn.trending', 'krispijn.hub', 'krispijn.hubhome', 'krispijn.continue', 'krispijn.newmovies', 'krispijn.newshows', 'krispijn.search', 'krispijn.query', 'krispijn.results'):
-    try:
-        from modules.krispijn_hub import run
-        run(params)
-    except Exception as error:
-        xbmc.log('Krispijn hub fout: ' + type(error).__name__, xbmc.LOGERROR)
-        xbmcgui.Dialog().notification('Krispijn Video', 'De hub kon niet laden. Controleer de verbinding en probeer opnieuw.')
-        if int(sys.argv[1]) >= 0:
-            xbmcplugin.endOfDirectory(int(sys.argv[1]), succeeded=False)
-elif mode in ('krispijn.home', 'navigator.main'):
-    rows = []
-    if not addon.getSetting('rd.token'):
-        rows.append(('Begin hier: Real-Debrid koppelen', {'mode': 'krispijn.rd'}, False))
-    rows.extend([
-        ('Filmhub', {'mode': 'krispijn.hub'}, False),
-        ('Nu in de bioscoop', {'mode': 'krispijn.cinema'}, True),
-        ('Trending', {'mode': 'krispijn.trending'}, True),
-        ('Films', {'mode': 'krispijn.movies'}, True),
-        ('Series', {'mode': 'krispijn.tv'}, True),
-        ('Zoeken', {'mode': 'krispijn.search'}, True),
-        ('Verder kijken', {'mode': 'krispijn.resume'}, True),
-        ('Instellen', {'mode': 'krispijn.settings'}, True),
-    ])
-    directory(rows)
+def open_experience(section='home'):
+    # Directory is afgerond vóór de scriptinterface, zodat PlayMedia vrij is.
+    if int(sys.argv[1]) >= 0:
+        xbmcplugin.endOfDirectory(int(sys.argv[1]), succeeded=True)
+    args = urlencode(dict(params, section=section))
+    xbmc.executebuiltin('RunScript(plugin.video.krispijn,' + args + ')')
+
+
+if mode in ('krispijn.home', 'navigator.main', 'krispijn.hub', 'krispijn.search', 'krispijn.query', 'krispijn.results', 'krispijn.trending', 'krispijn.cinema', 'krispijn.continue', 'krispijn.resume', 'krispijn.newmovies', 'krispijn.newshows'):
+    section = {'krispijn.home':'home', 'navigator.main':'home', 'krispijn.hub':'home', 'krispijn.query':'search', 'krispijn.results':'search', 'krispijn.resume':'continue'}.get(mode, mode.split('.')[-1])
+    open_experience(section)
 elif mode in ('krispijn.movies', 'krispijn.tv', 'krispijn.filter'):
     movie = mode == 'krispijn.movies' or params.get('media') == 'movie'
     media = 'movie' if movie else 'tvshow'
@@ -142,8 +129,8 @@ elif mode == 'krispijn.settings':
         ('Uitgebreide instellingen', {'mode': 'open_settings'}, False),
     ])
 elif mode == 'krispijn.rd':
-    from modules.myservices import RealDebrid
-    RealDebrid().set()
+    from modules.krispijn_accounts import manage
+    manage()
 elif mode == 'krispijn.portraits':
     portraits()
 elif mode == 'krispijn.subtitles':
@@ -153,5 +140,11 @@ elif mode == 'krispijn.subtitles':
     else:
         xbmcaddon.Addon(subtitle_id).openSettings()
 else:
+    if mode in ('play_media', 'smart_play_media'):
+        from modules.krispijn_playback_setup import ready
+        if not ready():
+            if int(sys.argv[1]) >= 0:
+                xbmcplugin.setResolvedUrl(int(sys.argv[1]), False, xbmcgui.ListItem())
+            raise SystemExit
     from modules.entry import Router
     Router()()

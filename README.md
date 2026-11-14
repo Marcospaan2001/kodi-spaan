@@ -1,6 +1,8 @@
 # kodi-spaan
 
-Spaan Repository biedt twee varianten van de Familie Krispijn-skin via één bron-URL.
+Spaan Repository biedt Krispijn Video en twee varianten van de Familie Krispijn-skin via één bron-URL.
+
+Krispijn Video 1.1.0 opent direct de eigen film- en serieinterface. Trending, bioscoop, genres, zoeken en lokale kijkvoortgang staan bij elkaar. Koppel Real-Debrid via Instellen; TMDb-scores vereisen geen extra account. Zie [SETUP.md](docs/SETUP.md) voor de actuele installatie.
 
 ## Installeren in Kodi
 

@@ -145,3 +145,25 @@ TMDb-scores en lokale kijkvoortgang. De gebruiker koppelt Real-Debrid zelf.
 Nu in de bioscoop en Trending laden uitsluitend wanneer ze worden geopend.
 Bronnen en licenties blijven behouden, ook waar de normale interface eigen
 branding toont. De echte Kodi-interface moet op de Shield worden getest.
+
+## Actuele release 1.1.0
+
+De oude hub met drie gelijktijdige widgetproviders is vervangen door een zelfstandige
+WindowXML-interface. RunScript gebruikt het addon-id en een eigen script-extension,
+zodat de plugin-aanroep voor afspelen beschikbaar blijft. De interface opent direct
+vanuit Krispijn Video. Eén werkthread verwerkt de laatst gekozen categorie.
+Cataloguspagina's worden vijftien minuten lokaal gecachet; bij verbindingsproblemen
+mag een cache van maximaal zeven dagen worden getoond, met zichtbare melding.
+Geen per-titelmetadata of accountcontrole tijdens bladeren.
+
+Belangrijke reparatie: provider.external betekent de meegeleverde bronzoekers.
+Deze moeten aan staan. Een eenmalige migratie herstelt de fout van eerdere releases.
+Real-Debrid heeft afzonderlijke acties voor controleren, koppelen en ontkoppelen.
+Een bevestiging volgt pas nadat de account-API een geldig account teruggeeft.
+Zichtbare POV-branding is vervangen; licenties en credits zijn behouden.
+De portretten bewegen niet meer over de spinner. De Kodi 22-skin blijft ongewijzigd.
+
+Er is een geïsoleerde Linux Kodi 21.2 gebruikt om de nieuwe interface werkelijk te
+openen, posters en scores te bekijken en de melding bij ontbrekende koppeling te
+controleren. Op verzoek van Marco zijn verdere tests gestopt. Real-Debrid-afspelen,
+annuleren, hervatten en Shield-prestaties zijn voor deze release niet live bevestigd.

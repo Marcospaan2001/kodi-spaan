@@ -11,7 +11,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 UPSTREAM_ID = 'plugin.video.pov'
 ADDON_ID = 'plugin.video.krispijn'
-VERSION = '1.0.2'
+VERSION = '1.1.0'
 URL = 'https://raw.githubusercontent.com/kodifitzwell/repo/2c8390c6e65213853a862a00044597946b946132/plugin.video.pov/plugin.video.pov-6.11.03.zip'
 SHA256 = '9ac93ad045910774503cbfeeb45b63bbd9b23837c9e76749885076c9b11edfba'
 
@@ -80,6 +80,7 @@ def make_pov():
     if addon.get('version') != '6.11.03':
         raise ValueError('Onverwachte POV-versie')
     addon.set('version', VERSION)
+    ET.SubElement(addon, 'extension', {'point':'xbmc.python.script','library':'resources/lib/experience_entry.py'})
     addon.set('name', 'Krispijn Video')
     addon.set('provider-name', 'Spaan, gebaseerd op kodifitzwell POV')
     for node in addon.findall("extension[@point='xbmc.addon.metadata']/summary"):
@@ -98,7 +99,7 @@ def make_pov():
     defaults = {
         'meta_language': 'nl', 'meta_language_display': 'Nederlands',
         'subtitles.language': 'Dutch', 'image_resolutions': '1',
-        'provider.external': 'false', 'auto_start_pov': 'false',
+        'provider.external': 'true', 'auto_start_pov': 'false',
         'skip_intro.enable': 'false', 'autoplay_next_show_window': 'false', 'load_action': '0',
         'trakt.sync_refresh_widgets': 'false', 'thumb_fanart': 'false',
     }
@@ -113,10 +114,25 @@ def make_pov():
     category = ET.SubElement(settings.getroot(), 'category', {'label': 'Familieportretten'})
     ET.SubElement(category, 'setting', {'id': 'krispijn.family.path', 'type': 'text',
                                       'default': '', 'visible': 'false'})
+    for key in ('krispijn.sources.v1', 'krispijn.rd.state', 'krispijn.rd.checked'):
+        ET.SubElement(category, 'setting', {'id':key,'type':'text','default':'','visible':'false'})
     settings_path.write_bytes(ET.tostring(settings.getroot(), encoding='utf-8', xml_declaration=True))
     shutil.copyfile(ROOT / 'video-mod/hub.py', folder / 'resources/lib/modules/krispijn_hub.py')
+    for name in ('catalogue', 'experience', 'accounts', 'playback_setup'):
+        shutil.copyfile(ROOT / f'video-mod/{name}.py', folder / f'resources/lib/modules/krispijn_{name}.py')
+    shutil.copytree(ROOT / 'video-mod/resources', folder / 'resources', dirs_exist_ok=True)
+    shutil.copytree(ROOT / 'skin-mod/portraits', folder / 'extras/portraits', dirs_exist_ok=True)
+    shutil.copyfile(ROOT / 'video-mod/experience_entry.py', folder / 'resources/lib/experience_entry.py')
+
     shutil.copyfile(ROOT / 'video-mod/router.py', folder / 'resources/lib/router.py')
     shutil.copyfile(ROOT / 'video-mod/service.py', folder / 'resources/lib/service.py')
+    source_path = folder / 'resources/lib/modules/sources.py'
+    source_text = source_path.read_text(encoding='utf-8')
+    old = '\t\tnotification(32573)'
+    if source_text.count(old) != 1:
+        raise ValueError('Onverwacht geen-bronnenpad')
+    source_text = source_text.replace(old, '\t\tfrom modules.krispijn_playback_setup import no_sources\n\t\tno_sources(len(getattr(self, \'orig_results\', [])))')
+    source_path.write_bytes(source_text.encode('utf-8'))
     # Label de bestaande TMDb-score correct, zonder extra ratingprovider.
     for indexer in ('movies.py', 'tvshows.py'):
         path = folder / 'resources/lib/menus' / indexer
@@ -142,17 +158,19 @@ def make_pov():
         license_path.write_bytes(license)
     shutil.copyfile(license_path, folder / 'COPYING')
     (folder / 'FORK.md').write_text(
-        '# Krispijn Video 1.0.2\n\nGebaseerd op POV 6.11.03 van kodifitzwell, GPL-3.0.\n'
+        '# Krispijn Video 1.1.0\n\nGebaseerd op POV 6.11.03 van kodifitzwell, GPL-3.0.\n'
         'Broncode: https://github.com/Marcospaan2001/kodi-spaan\n'
         'Bouw: tools/make_pov.py, aanpassingen: video-mod/.\n'
         'Eigen addon-id, Nederlands startmenu, beperkte lokale opstartservice,\n'
         'Nederlandse metadata en middelgrote afbeeldingen.\n'
         f'Upstream: {URL}\nSHA256: {SHA256}\n', encoding='utf-8')
+    from branding import apply_branding
+    apply_branding(folder)
     for file in folder.rglob('*.py'):
         ast.parse(file.read_text(encoding='utf-8-sig'), filename=str(file))
     for file in folder.rglob('*.xml'):
         ET.parse(file)
-    print('  Krispijn Video 1.0.2 op basis van POV 6.11.03, bron-SHA256 akkoord')
+    print('  Krispijn Video 1.1.0 op basis van POV 6.11.03, bron-SHA256 akkoord')
     return folder
 
 

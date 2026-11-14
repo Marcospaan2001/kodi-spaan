@@ -1,204 +1,52 @@
-# Setup: Familie Krispijn op een nieuw apparaat
+# Familie Krispijn installeren
 
-Controleer je Kodi-versie bij **Instellingen > Systeeminfo**.
+## Eenmalig op de Shield
 
-| Kodi-versie | Kies deze skin | Basis |
-|---|---|---|
-| Kodi 21 (Omega), ook Kodi 21.2 op de Shield | **Familie Krispijn (Kodi 21)** | Arctic Fuse 2 |
-| Kodi 22 (Piers) | **Familie Krispijn** | Arctic Fuse 3 |
+1. Controleer Kodi 21.2 onder Instellingen > Systeeminfo.
+2. Voeg in Bestandsbeheer de bron `https://marcospaan2001.github.io/kodi-spaan/` toe met de naam `spaan`.
+3. Kies Add-ons > Installeren vanuit zip-bestand > spaan > `repository.spaan-1.0.7.zip`.
+4. Installeer vanuit Spaan Repository de video-add-on **Krispijn Video 1.1.0**.
+5. Installeer voor de rest van Kodi **Familie Krispijn (Kodi 21) 1.1.0** onder Uiterlijk > Skin.
+6. Open Krispijn Video. De eigen interface opent direct, ook wanneer je een andere Kodi-skin gebruikt.
+7. Open Instellen > Real-Debrid en koppel je account. De add-on controleert het account en toont de uitslag. Een opgeslagen koppeling en een gecontroleerd actief abonnement zijn verschillende statussen.
 
-Op de Shield is de repository-installatie bevestigd. De skin-installatie en
-weergave moeten nog op het apparaat worden getest.
+Er is geen IMDb-, Trakt-, MDBList- of TMDb-account nodig. Scores zijn van TMDb.
+Een titel in een catalogus is geen garantie dat er een afspeelbare bron beschikbaar is.
 
-De namen van menu's kunnen per versie van TMDbHelper iets afwijken. Waar dat speelt
-staat de Engelse naam erbij.
+## Bijwerken vanaf een vorige versie
 
-## 1. Repository en skin installeren
+Laat Spaan Repository controleren op updates. Werk Krispijn Video en de Kodi 21-skin bij en herstart Kodi.
+De update herstelt eenmalig de eerder per ongeluk uitgeschakelde meegeleverde bronzoeker.
+Accountgegevens en kijkvoortgang blijven bewaard. Wis geen Kodi-gegevens of caches als installatiestap.
 
-1. **Onbekende bronnen aanzetten:** Instellingen > Systeem > Add-ons > Onbekende
-   bronnen.
-2. **Bron toevoegen:** Instellingen > Bestandsbeheer > Bron toevoegen > kies `<Geen>`
-   en typ `https://marcospaan2001.github.io/kodi-spaan/`. Noem de bron `spaan`.
-3. **Repository installeren:** Add-ons > Installeren vanuit zip-bestand > `spaan` >
-   `repository.spaan-x.y.z.zip`.
-4. **Skin installeren:** Add-ons > Installeren vanuit repository > Spaan Repository >
-   Uiterlijk > Skin > kies de skin uit de tabel > Installeren. Kodi haalt
-   TMDbHelper, Skin Variables en de overige afhankelijkheden zelf op. De
-   download is circa 63 MiB voor Kodi 21 en 57 MiB voor Kodi 22.
-5. Kies **Ja** op de vraag of je de skin wilt behouden.
+## Bediening
 
-Bij de eerste start bouwt de skin zijn menu's op. Je ziet dan het opstartscherm met
-het logo, een gezichtje en een laadtekst. Dat duurt de eerste keer het langst.
+Het startscherm biedt onder andere Trending, Nu in de bioscoop, Films, Series, Actie, Sciencefiction en Zoeken.
+Alleen de gekozen lijst wordt geladen. Gebruik links/rechts voor de titels en het menu voor een andere categorie.
+Zoeken gebruikt het Kodi-toetsenbord en toont film- en serieresultaten na het bevestigen.
+Verder kijken gebruikt de lokale voortgang op dit apparaat. Een nieuwe installatie heeft daar nog geen titels.
 
-## 2. Wat je standaard krijgt
+## Ondertitels
 
-- Thema Bioscooprood: donkere achtergrond, rode selectie, wit op rood.
-- Homescherm met één rij: al je geïnstalleerde **video-add-ons**.
-- Menu met Video add-ons, Add-ons en Fotomap gezichtjes. Live-tv staat uit.
-- Opstartscherm met "FAMILIE KRISPIJN", een wisselend gezichtje en een willekeurige
-  laadtekst.
-- Tijdens het laden duikt af en toe (ongeveer 1 op de 5 keer) een wiebelend
-  gezichtje op over het laad-rondje.
-- TMDbHelper kijkt op de achtergrond mee naar de film of serie waar je op staat en
-  zoekt daar de gegevens en ratings bij. Dat werkt in lijsten van elke video-add-on,
-  zolang titel en jaar herkend worden.
-
-De keuzewizard van beide skins wordt bij de eerste start overgeslagen, omdat die
-het thema en het homescherm zou overschrijven. Hij blijft bereikbaar via de
-skin-instellingen.
-
-## 3. Ratings: IMDb, Rotten Tomatoes en Metacritic
-
-Ratings komen via TMDbHelper van MDBList. Je hebt daarvoor een eigen gratis sleutel
-nodig. Deel die sleutel niet en zet hem nooit in de repository.
-
-1. Maak een account op `mdblist.com` en kopieer je API-sleutel bij je
-   accountinstellingen (API Access).
-2. In Kodi: Add-ons > Mijn add-ons > Video-add-ons > TheMovieDb Helper >
-   Configureren.
-3. Ga naar **Services** > **MDbList** > **Open settings**. Kodi installeert zo nodig
-   eerst de MDbList-module. Vul daarna je sleutel in.
-4. Herstart Kodi.
-
-Wil je liever of daarnaast OMDb gebruiken: vraag een gratis sleutel aan op
-`omdbapi.com` en vul die in bij **Services** > **API keys** > **OMDb key**. De gratis
-OMDb-sleutel is beperkt tot 1000 opvragingen per dag.
-
-**Controleren:** open een video-add-on, ga op een bekende film staan en wacht een
-paar seconden. De scores verschijnen bij de filminformatie. Zie je niets:
-
-- Controleer of de skin-instelling voor de TMDbHelper-service aan staat
-  (Skin-instellingen, zoek op "TMDbHelper"). De mod zet die standaard aan.
-- Ratings in kleur aan of uit zet je in de skin-instellingen onder Ratings.
-- Niet elke add-on geeft een herkenbare titel met jaartal door. Bij rare titels
-  vindt TMDbHelper geen match en blijft het leeg.
-
-## 4. Trakt koppelen
-
-Trakt houdt bij wat je gekeken hebt en waar je gebleven was, over apparaten heen.
-
-1. Maak een gratis account op `trakt.tv`.
-2. In TheMovieDb Helper > Configureren > **Sync** > **Providers**: kies Trakt en
-   volg de aanwijzing. Je krijgt een code die je op `trakt.tv/activate` invult.
-3. Zet **Sync watched and resume** aan als je bekeken-vinkjes en hervatpunten in de
-   lijsten wilt zien.
-
-Trakt registreert alleen wat er daadwerkelijk aan Trakt gemeld wordt. TMDbHelper
-doet dat voor wat je via TMDbHelper start. Speel je rechtstreeks vanuit een
-video-add-on af, dan hangt het van die add-on af of hij zelf een Trakt-koppeling
-heeft. Een alternatief is de officiële Trakt-add-on uit de Kodi-repository, die alles
-meldt wat Kodi afspeelt en herkent.
-
-## 5. Homescherm-rijen aanpassen
-
-De standaard is bewust kaal: één rij video-add-ons. Rijen toevoegen:
-
-1. Ga op het homescherm naar het menu en open de skin-instellingen, of houd de
-   menuknop ingedrukt op een rij voor het contextmenu.
-2. Kies het bewerken van de **Home widgets**. Bij Fuse 2 hoort de rij bij de knop **Video add-ons** in het zijmenu.
-3. Voeg een rij toe en kies een bron. Voorbeelden via TheMovieDb Helper:
-   - Trending films en series deze week
-   - Populair en Best beoordeeld
-   - Trakt > Verder kijken (na het koppelen van Trakt)
-   - Eigen lijsten van Trakt of MDBList, bijvoorbeeld een IMDb-toplijst
-4. Kies per rij een weergave (posters, liggende kaarten, groot).
-
-Let op: titels uit TMDbHelper-rijen spelen alleen af als TMDbHelper weet waarmee.
-Dat stel je in bij TheMovieDb Helper > Configureren > **Players**. Zonder player zijn
-zulke rijen alleen om te bladeren.
-
-## 6. Eigen gezichtjes of gezinsfoto's
-
-De skin bevat zes getekende gezichtjes. Die vervang je door eigen foto's zonder dat
-er iets op internet komt:
-
-1. Op de pc: zet foto's in de map `fotos/` van het project en draai
-   `python tools/make_faces.py`. In `fotos/klaar/` staan daarna ronde uitsnedes.
-   De map `fotos/` wordt door git genegeerd.
-2. Kopieer `fotos/klaar/` naar een USB-stick of een netwerkmap en maak hem
-   bereikbaar voor de Shield.
-3. In Kodi: homescherm-menu > **Fotomap gezichtjes** > blader naar de map.
-
-Vanaf dat moment gebruikt de skin jouw map voor het opstartscherm en de
-laad-animatie. Terug naar de getekende gezichtjes: kies de optie opnieuw en maak het
-pad leeg.
-
-## 7. Instellingen exporteren en back-up
-
-Alles wat je in de skin instelt staat in de gebruikersmap van Kodi:
-
-| Wat | Map onder `userdata/addon_data/` |
-|---|---|
-| Skin-instellingen, kleuren, fotomap | `skin.arctic.fuse.2.krispijn/` voor Kodi 21 of `skin.arctic.fuse.3.krispijn/` voor Kodi 22 |
-| Homescherm-rijen en menu's | `script.skinvariables/` |
-| TMDbHelper, sleutels en Trakt-koppeling | `plugin.video.themoviedb.helper/` en de `script.module.tmdbhelper.sync.*`-mappen |
-
-De eenvoudigste back-up is de add-on **Backup** uit de officiële Kodi-repository
-(Programma-add-ons). Kies daarin minimaal "Add-on data" en schrijf weg naar een
-USB-stick of netwerkmap. Terugzetten op een nieuw apparaat: eerst stap 1 van deze
-handleiding, dan Backup > Herstellen.
-
-De back-up bevat je API-sleutels en Trakt-token. Bewaar hem dus niet op een openbare
-plek.
-
-## 8. Overstappen naar Kodi 22
-
-1. Maak een back-up volgens stap 7.
-2. Werk Kodi bij zodra de stabiele Kodi 22 voor je Shield in de Play Store staat.
-3. Open Spaan Repository en installeer **Familie Krispijn** volgens stap 1.
-4. Selecteer de nieuwe skin. De twee skins hebben verschillende add-on-id's.
-   Kies je fotomap opnieuw en stel eigen skin-instellingen en widgets opnieuw in.
-5. Controleer je video-add-ons, ratings en Trakt-koppeling op het apparaat.
-
-## 9. Updates
-
-- **Skin en repository:** Kodi controleert zelf periodiek. Forceren kan via Add-ons >
-  Mijn add-ons > Add-on-repository > Spaan Repository > Controleren op updates.
-- **Na een skin-update** bouwt de skin zijn menu's opnieuw op. Eigen rijen en
-  instellingen blijven staan.
-
-## Kodi 21: optimalisatie 1.0.1
-
-De update schakelt dynamische blur eenmalig uit en kiest de Simple-achtergrondstijl.
-De achtergrondafbeelding, widgets en sleutels blijven behouden.
-Daarna gekozen achtergrondinstellingen worden niet opnieuw overschreven.
-
-Onder Skin-instellingen > Menus staan schakelaars voor de ratings-service en
-gezichtjes. Herstart Kodi na het wijzigen van de service. De keuze blijft bewaard.
-Ratings blijven standaard aan. Kodi 22 en de familieafbeeldingen zijn ongewijzigd.
-
-Kleurtextuurgeneratie blijft intact vanwege themawisselingen en profielen.
-De prestatiewinst moet nog op de Shield worden gemeten.
-
-## Extra installatiepakketten, repository 1.0.2
-
-Op verzoek worden het originele The Crew-repositorypakket 0.3.8 en
-OpenSubtitles.com 1.0.90 uit de officiele Kodi 21-repository aangeboden.
-Dit vervangt de eerdere afspraak om geen The Crew-pakket aan te bieden.
-Externe code wordt niet aangepast. De bouw controleert SHA256, zip-integriteit,
-addon-id en versie. De pakketten staan onder docs/downloads.
-
-Installeer via Add-ons > Installeren vanuit zip-bestand > spaan.
-Kies The Crew Repository of OpenSubtitles.com, eventueel via downloads.
-Installeer The Crew daarna vanuit zijn eigen repository.
-OpenSubtitles.com installeert rechtstreeks en ontvangt updates via Kodi.
-
+OpenSubtitles.com is optioneel. Installeer het pakket vanuit de spaan-bron of de officiële Kodi-repository.
 Vul je eigen OpenSubtitles.com-account in bij de add-oninstellingen.
-Kies bij Instellingen > Speler > Taal Nederlands als ondertiteltaal en
-OpenSubtitles.com als standaard ondertitelservice voor films en series.
+Kies onder Instellingen > Speler > Taal Nederlands en OpenSubtitles.com als standaard ondertitelservice.
 
-Beide skins blijven ongewijzigd. Dit verhelpt geen Kodi-opstartcrash.
-Accountgegevens en familieportretten blijven buiten de openbare repository.
+## Familie en uiterlijk
 
-## Bronpagina vanaf repository 1.0.3
+De zeven aangeleverde gestileerde portretten zijn met toestemming meegeleverd.
+Ze staan bij het welkom; de laadindicator gebruikt een rustige vorm zonder wiebelend portret.
+Filmposters horen bij de betreffende film of serie. De interface gebruikt een vaste donkere achtergrond.
 
-De extra installatiepakketten staan ook direct in de hoofdmap van de bron.
-De links tonen de volledige zipbestandsnamen voor de Kodi-bestandsbrowser.
+## Back-up en Kodi 22
 
-## Meegeleverde portretten, Kodi 21-versie 1.0.3
+Maak een back-up van Kodi userdata voordat je naar een andere hoofdversie van Kodi overstapt.
+De back-up bevat accounttokens: bewaar hem privé.
+De Kodi 22-skin blijft als aparte variant beschikbaar. Die skin heeft nog niet dezelfde aanpassingen als de Kodi 21-skin.
+De zelfstandige Krispijn Video-interface vereist geen specifieke skin.
 
-De zeven aangeleverde familieportretten, inclusief de hond, worden met toestemming
-meegeleverd. Ze verschijnen bij het starten van de skin, in het startmenu van
-Krispijn Video en bij het laden. Een zelf gekozen fotomap blijft voorrang houden.
-Film- en serieposters worden niet vervangen. Er is geen extra account of service.
-Het gaat om stilstaande portretten met beweging vanuit de skin.
+## Herkomst
+
+De video-add-on is gebaseerd op POV 6.11.03 van kodifitzwell onder GPL-3.0.
+De skins zijn gebaseerd op Arctic Fuse van jurialmunkey onder CC BY-NC-SA 4.0.
+De bronvermelding en licenties staan in de broncode en credits, buiten de gewone navigatie.

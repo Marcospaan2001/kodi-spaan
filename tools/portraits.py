@@ -26,26 +26,24 @@ def apply_portraits(skin_dir):
     start = text.index('<expression name="Exp_Krispijn_FaceMoment">')
     end = text.index('</expression>', start)
     text = text[:start] + '<expression name="Exp_Krispijn_FaceMoment">!Skin.HasSetting(Krispijn.DisableFaces)' + text[end:]
-    # Dit staat alleen in het startmenu van onze video-add-on, nooit bij films.
-    entry = '''
-    <include name="Krispijn_AddonPortrait">
-        <control type="group" id="99873">
-            <visible>!Skin.HasSetting(Krispijn.DisableFaces) + [String.IsEqual(Container.FolderPath,plugin://plugin.video.krispijn/) | String.IsEqual(Container.FolderPath,plugin://plugin.video.krispijn/?mode=krispijn.home) | String.IsEqual(Container.FolderPath,plugin://plugin.video.krispijn/?mode=navigator.main)]</visible>
-            <left>1660</left><top>150</top><width>150</width><height>150</height>
-            <control type="multiimage">
-                <width>150</width><height>150</height>
-                <imagepath>$VAR[Krispijn_FacesPath]</imagepath>
-                <aspectratio>keep</aspectratio>
-                <timeperimage>5000</timeperimage><fadetime>200</fadetime>
-                <randomize>true</randomize><loop>yes</loop>
-            </control>
-        </control>
-    </include>
-'''
-    text = text.replace('</includes>', entry + '</includes>')
-    path.write_bytes(text.encode('utf-8'))
-    path = skin_dir / '1080i/MyVideoNav.xml'
-    text = path.read_text(encoding='utf-8')
-    if text.count('</controls>') != 1:
-        raise ValueError('Onverwachte video-navigatie')
-    path.write_bytes(text.replace('</controls>', '<include>Krispijn_AddonPortrait</include>\n    </controls>').encode('utf-8'))
+    # Rustige familiegalerij tijdens het starten; geen gezichten op de spinner.
+    import xml.etree.ElementTree as ET
+    tree = ET.fromstring(text)
+    busy = tree.find("include[@name='Krispijn_BusyFace']")
+    busy.clear()
+    busy.set('name', 'Krispijn_BusyFace')
+    splash = tree.find("include[@name='Krispijn_Splash_Extras']")
+    splash.clear()
+    splash.set('name', 'Krispijn_Splash_Extras')
+    group = ET.SubElement(splash, 'control', {'type': 'group'})
+    ET.SubElement(group, 'visible').text = '!Skin.HasSetting(Krispijn.DisableFaces)'
+    ET.SubElement(group, 'left').text = '574'
+    ET.SubElement(group, 'top').text = '265'
+    for index in range(7):
+        card = ET.SubElement(group, 'control', {'type': 'image'})
+        for tag, value in [('left',str(index*112)),('width','100'),('height','100'),('aspectratio','keep'),('texture', f'special://skin/extras/krispijn/faces/portret-{index+1}.jpg')]:
+            ET.SubElement(card, tag).text = value
+    label = ET.SubElement(splash, 'control', {'type':'label'})
+    for tag, value in [('left','400'),('top','650'),('width','1120'),('height','48'),('font','font_main'),('align','center'),('textcolor','ffb9bdc8'),('label','Een avond voor ons samen')]:
+        ET.SubElement(label,tag).text=value
+    path.write_bytes(ET.tostring(tree, encoding='utf-8', xml_declaration=True))
