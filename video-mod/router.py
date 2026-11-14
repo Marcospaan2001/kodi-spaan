@@ -73,15 +73,46 @@ if mode in ('krispijn.home', 'navigator.main'):
         ('Instellen', {'mode': 'krispijn.settings'}, True),
     ])
     directory(rows)
-elif mode in ('krispijn.movies', 'krispijn.tv'):
-    movie = mode == 'krispijn.movies'
+elif mode in ('krispijn.movies', 'krispijn.tv', 'krispijn.filter'):
+    movie = mode == 'krispijn.movies' or params.get('media') == 'movie'
     media = 'movie' if movie else 'tvshow'
-    prefix = 'tmdb_movies_' if movie else 'tmdb_tv_'
-    # Deze namen zijn vastgezet op de gecontroleerde POV-routes.
-    actions = ('tmdb_movies_popular', 'tmdb_movies_trending', 'tmdb_movies_latest_releases') if movie else (
-        'tmdb_tv_popular', 'tmdb_tv_trending', 'tmdb_tv_premieres')
-    directory([(label, {'mode': 'build_' + media + '_list', 'action': action}, True)
-               for label, action in zip(('Populair', 'Nu populair', 'Nieuw'), actions)])
+    genres = [
+        ('Actie', '28'), ('Avontuur', '12'), ('Sciencefiction', '878'),
+        ('Komedie', '35'), ('Thriller', '53'), ('Misdaad', '80'),
+        ('Drama', '18'), ('Horror', '27'), ('Fantasy', '14'),
+        ('Animatie', '16'), ('Familie', '10751'), ('Documentaire', '99'),
+        ('Romantiek', '10749'), ('Oorlog', '10752'), ('Western', '37'),
+    ] if movie else [
+        ('Actie en avontuur', '10759'), ('Sciencefiction en fantasy', '10765'),
+        ('Komedie', '35'), ('Misdaad', '80'), ('Drama', '18'),
+        ('Mysterie', '9648'), ('Animatie', '16'), ('Familie', '10751'),
+        ('Documentaire', '99'), ('Historie en politiek', '10768'),
+        ('Western', '37'),
+    ]
+    def genre_route(genre_id):
+        return {
+            'mode': 'build_' + media + '_list',
+            'action': 'tmdb_movies_genres' if movie else 'tmdb_tv_genres',
+            'genre_id': genre_id
+        }
+    if mode == 'krispijn.filter':
+        choices = xbmcgui.Dialog().multiselect(
+            'Kies genres: alle gekozen genres moeten passen',
+            [name for name, _ in genres])
+        if choices:
+            route = genre_route(','.join(genres[i][1] for i in choices))
+            xbmc.executebuiltin(
+                'Container.Update(' + BASE + '?' + urlencode(route) + ')')
+    else:
+        rows = [(name, genre_route(genre_id), True)
+                for name, genre_id in genres]
+        rows.append((
+            'Genres combineren',
+            {'mode': 'krispijn.filter', 'media': media}, False))
+        rows.append((
+            'Meer filters: jaar en score',
+            {'mode': 'discover.router', 'mediatype': media}, True))
+        directory(rows)
 elif mode == 'krispijn.search':
     directory([
         ('Films zoeken', {'mode': 'search_history', 'action': 'movie'}, True),

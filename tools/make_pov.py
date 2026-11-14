@@ -11,7 +11,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 UPSTREAM_ID = 'plugin.video.pov'
 ADDON_ID = 'plugin.video.krispijn'
-VERSION = '1.0.0'
+VERSION = '1.0.1'
 URL = 'https://raw.githubusercontent.com/kodifitzwell/repo/2c8390c6e65213853a862a00044597946b946132/plugin.video.pov/plugin.video.pov-6.11.03.zip'
 SHA256 = '9ac93ad045910774503cbfeeb45b63bbd9b23837c9e76749885076c9b11edfba'
 
@@ -47,7 +47,16 @@ def make_pov():
             target = folder.joinpath(*parts[1:])
             content = archive.read(item)
             if target.suffix in {'.py', '.xml', '.json', '.po', '.txt'}:
-                content = content.decode('utf-8-sig').replace(UPSTREAM_ID, ADDON_ID).encode('utf-8')
+                content = (
+                    content.decode('utf-8-sig')
+                    .replace(UPSTREAM_ID, ADDON_ID)
+                    .replace(UPSTREAM_ID[::-1], ADDON_ID[::-1])
+                    .replace('getVideoInfoTag(offscreen=True)', 'getVideoInfoTag()')
+                    .replace('pov_fanart.png', 'fanart.jpg')
+                    .replace('pov_poster.png', 'icon.png')
+                    .replace('pov.png', 'icon.png')
+                    .encode('utf-8')
+                )
             target.parent.mkdir(parents=True, exist_ok=True)
             target.write_bytes(content)
     path = folder / 'addon.xml'
@@ -61,11 +70,14 @@ def make_pov():
     for node in addon.findall("extension[@point='xbmc.addon.metadata']/summary"):
         node.text = 'Films en series voor Familie Krispijn'
     assets = addon.find("extension[@point='xbmc.addon.metadata']/assets")
-    for key, name in (('icon', 'icon.png'), ('fanart', 'fanart.png')):
+    for key, name in (('icon', 'icon.png'), ('fanart', 'fanart.jpg')):
         node = assets.find(key)
-        shutil.copyfile(folder / node.text, folder / name)
+        shutil.copyfile(
+            ROOT / 'video-mod/icon.png' if key == 'icon'
+            else ROOT / 'skin-mod/overlay' / name,
+            folder / name)
         node.text = name
-    tree.write(path, encoding='utf-8', xml_declaration=True)
+    path.write_bytes(ET.tostring(addon, encoding='utf-8', xml_declaration=True))
     settings_path = folder / 'resources/settings.xml'
     settings = ET.parse(settings_path)
     defaults = {
@@ -86,7 +98,7 @@ def make_pov():
     category = ET.SubElement(settings.getroot(), 'category', {'label': 'Familieportretten'})
     ET.SubElement(category, 'setting', {'id': 'krispijn.family.path', 'type': 'text',
                                       'default': '', 'visible': 'false'})
-    settings.write(settings_path, encoding='utf-8', xml_declaration=True)
+    settings_path.write_bytes(ET.tostring(settings.getroot(), encoding='utf-8', xml_declaration=True))
     shutil.copyfile(ROOT / 'video-mod/router.py', folder / 'resources/lib/router.py')
     shutil.copyfile(ROOT / 'video-mod/service.py', folder / 'resources/lib/service.py')
     # Label de bestaande TMDb-score correct, zonder extra ratingprovider.
@@ -114,7 +126,7 @@ def make_pov():
         license_path.write_bytes(license)
     shutil.copyfile(license_path, folder / 'COPYING')
     (folder / 'FORK.md').write_text(
-        '# Krispijn Video 1.0.0\n\nGebaseerd op POV 6.11.03 van kodifitzwell, GPL-3.0.\n'
+        '# Krispijn Video 1.0.1\n\nGebaseerd op POV 6.11.03 van kodifitzwell, GPL-3.0.\n'
         'Broncode: https://github.com/Marcospaan2001/kodi-spaan\n'
         'Bouw: tools/make_pov.py, aanpassingen: video-mod/.\n'
         'Eigen addon-id, Nederlands startmenu, beperkte lokale opstartservice,\n'
@@ -124,7 +136,7 @@ def make_pov():
         ast.parse(file.read_text(encoding='utf-8-sig'), filename=str(file))
     for file in folder.rglob('*.xml'):
         ET.parse(file)
-    print('  Krispijn Video 1.0.0 op basis van POV 6.11.03, bron-SHA256 akkoord')
+    print('  Krispijn Video 1.0.1 op basis van POV 6.11.03, bron-SHA256 akkoord')
     return folder
 
 

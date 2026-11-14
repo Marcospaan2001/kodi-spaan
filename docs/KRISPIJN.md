@@ -89,3 +89,12 @@ De build en statische controles vervangen geen praktijktest. Op de Shield:
 
 Er is geen gemeten prestatiewinst op de Shield vastgesteld. De eerder gemelde crash
 en opstartblokkade zijn zonder kodi.log niet definitief verklaard of opgelost.
+
+## Correctie Krispijn Video 1.0.1
+
+Herstelt ook omgekeerd opgeslagen POV-ids. Filmlinks, paginering en het
+autorisatievenster verwijzen daardoor naar de eigen add-on.
+Verwijdert het voor Kodi 21 ongeldige offscreen-argument bij getVideoInfoTag.
+Voegt Nederlandse genres, gecombineerde genres en verdere filters toe.
+Gebruikt eigen logo en achtergrond; bron- en licentievermeldingen blijven behouden.
+De skins wijzigen niet. Real-Debrid-autorisatie en afspelen nog op de Shield testen.
