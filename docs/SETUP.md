@@ -189,3 +189,8 @@ OpenSubtitles.com als standaard ondertitelservice voor films en series.
 
 Beide skins blijven ongewijzigd. Dit verhelpt geen Kodi-opstartcrash.
 Accountgegevens en familieportretten blijven buiten de openbare repository.
+
+## Bronpagina vanaf repository 1.0.3
+
+De extra installatiepakketten staan ook direct in de hoofdmap van de bron.
+De links tonen de volledige zipbestandsnamen voor de Kodi-bestandsbrowser.

@@ -138,8 +138,8 @@ code {{ background: #1b2130; padding: .1rem .35rem; border-radius: .25rem; }}
 <p><a href="{name}">{name}</a></p>
 <p>Extra installatiepakketten, ongewijzigd van de makers:</p>
 <ul>
-<li><a href="downloads/repository.thecrew-0.3.8.zip">The Crew Repository 0.3.8</a></li>
-<li><a href="downloads/service.subtitles.opensubtitles-com-1.0.90.zip">OpenSubtitles.com 1.0.90 (Kodi 21)</a></li>
+<li><a href="repository.thecrew-0.3.8.zip">repository.thecrew-0.3.8.zip</a></li>
+<li><a href="service.subtitles.opensubtitles-com-1.0.90.zip">service.subtitles.opensubtitles-com-1.0.90.zip</a></li>
 </ul>
 <p>Uitleg: <a href="https://github.com/Marcospaan2001/kodi-spaan/blob/main/docs/SETUP.md">SETUP.md</a></p>
 </body>

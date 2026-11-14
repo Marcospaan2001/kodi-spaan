@@ -36,4 +36,5 @@ def prepare_downloads(docs):
             if addon.get("id") != addon_id or addon.get("version") != version:
                 raise ValueError(f"Onverwacht installatiepakket: {addon_id}")
         target.write_bytes(data)
+        (docs / target.name).write_bytes(data)
         print(f"  extra download: {target.name}, SHA256 akkoord")
