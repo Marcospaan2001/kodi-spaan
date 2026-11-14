@@ -22,7 +22,7 @@ import xml.etree.ElementTree as ET
 import zipfile
 from pathlib import Path
 
-from make_skin import make_skin
+from make_skin import load_configs, make_skin
 
 ROOT = Path(__file__).resolve().parent.parent
 DOCS = ROOT / "docs"
@@ -40,10 +40,10 @@ LOOSE_FILES = ("addon.xml", "icon.png", "fanart.jpg", "fanart.png")
 FIXED_TIME = (2020, 1, 1, 0, 0, 0)
 
 
-def find_addons():
+def find_addons(skin_dirs):
     addons = []
     # Addons in de projectroot plus gegenereerde addons (de skin-mod) in build/
-    candidates = sorted(ROOT.iterdir()) + sorted((ROOT / "build").glob("*"))
+    candidates = sorted(ROOT.iterdir()) + sorted(skin_dirs)
     for folder in candidates:
         if not folder.is_dir() or folder.name.startswith(".") or folder.name in SKIP_DIRS:
             continue
@@ -61,7 +61,12 @@ def find_addons():
 
 
 def included_files(folder):
-    for path in sorted(folder.rglob("*")):
+    # Windows en Linux sorteren Path verschillend. Houd de oorspronkelijke
+    # Windows-volgorde aan op elk platform, ook bij verschillen in hoofdletters.
+    def zip_order(path):
+        return tuple((part.casefold(), part) for part in path.relative_to(folder).parts)
+
+    for path in sorted(folder.rglob("*"), key=zip_order):
         if not path.is_file():
             continue
         rel = path.relative_to(folder)
@@ -83,6 +88,7 @@ def build_zip(folder, addon_id, version):
     with zipfile.ZipFile(zip_path, "w", zipfile.ZIP_DEFLATED, compresslevel=9) as zf:
         for path, rel in included_files(folder):
             info = zipfile.ZipInfo(f"{addon_id}/{rel.as_posix()}", FIXED_TIME)
+            info.create_system = 0  # Gebruik ook op Linux dezelfde ZIP-header als op Windows.
             info.compress_type = zipfile.ZIP_DEFLATED
             info.external_attr = 0o644 << 16
             zf.writestr(info, path.read_bytes())
@@ -137,8 +143,8 @@ code {{ background: #1b2130; padding: .1rem .35rem; border-radius: .25rem; }}
 
 
 def main():
-    make_skin()  # bouwt build/<skin-id>/ uit upstream + skin-mod
-    addons = find_addons()
+    skin_dirs = [make_skin(cfg) for cfg in load_configs()]
+    addons = find_addons(skin_dirs)
     if not addons:
         sys.exit("FOUT: geen addons gevonden (mappen met een addon.xml).")
     ZIPS.mkdir(parents=True, exist_ok=True)

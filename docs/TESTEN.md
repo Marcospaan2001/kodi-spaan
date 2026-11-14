@@ -6,14 +6,18 @@ je precies zag.
 
 ## 1. Installatie vanaf nul
 
+Getest op de Shield: de repository installeert. De Kodi 21-variant moet nog op
+de Shield worden geïnstalleerd en getest. De Kodi 22-variant wacht op een test
+met Kodi 22.
+
 Doe dit op een schoon apparaat, of wis eerst de app-gegevens van Kodi
 (Android-instellingen > Apps > Kodi > Opslag > Gegevens wissen).
 
-- [ ] Kodi-versie is 22 of hoger (Instellingen > Systeeminfo).
+- [ ] Kodi-versie is gecontroleerd onder Instellingen > Systeeminfo. Test Fuse 2 op Kodi 21.2 op de Shield en Fuse 3 op Kodi 22.
 - [ ] Bron `https://marcospaan2001.github.io/kodi-spaan/` is toe te voegen en toont
       `repository.spaan-x.y.z.zip`.
 - [ ] Repository installeert zonder foutmelding.
-- [ ] Skin Familie Krispijn staat onder Spaan Repository > Uiterlijk > Skin.
+- [ ] Op Kodi 21 staat **Familie Krispijn (Kodi 21)** onder Spaan Repository > Uiterlijk > Skin. Op Kodi 22 staat daar **Familie Krispijn**.
 - [ ] Installatie haalt alle afhankelijkheden zelf op, zonder "afhankelijkheid niet
       voldaan".
 - [ ] Eerste start: opstartscherm met logo, gezichtje en laadtekst, daarna het
@@ -25,7 +29,7 @@ Doe dit op een schoon apparaat, of wis eerst de app-gegevens van Kodi
 
 ## 2. Update via de repository
 
-- [ ] Verhoog `version` in `skin-mod/mod.json`, bouw, draai `check_deps.py`, push.
+- [ ] Verhoog `version` in `skin-mod/fuse2.json` of `skin-mod/fuse3.json`, bouw, draai `check_deps.py`, push.
 - [ ] Na een paar minuten: Spaan Repository > Controleren op updates toont de nieuwe
       versie.
 - [ ] Na de update start de skin zonder foutmelding en bouwt hij zijn menu's opnieuw
@@ -76,7 +80,7 @@ volgorde:
 
 ## Bekende beperkingen
 
-- **Alleen Kodi 22 of hoger.** Arctic Fuse 3 werkt niet op Kodi 21.
+- **Versie per apparaat.** Arctic Fuse 2 is de variant voor Kodi 21. Arctic Fuse 3 vereist Kodi 22.
 - **Geen Nederlandse vertaling van de skin.** Arctic Fuse 3 heeft geen Nederlands
   taalbestand, dus de skin-instellingen zijn Engels. De rest van Kodi volgt je
   taalinstelling.
@@ -94,9 +98,9 @@ volgorde:
   jaar of een IMDb-id. Geeft een add-on dat niet door, dan blijven de scores leeg.
 - **TMDbHelper-rijen spelen niet vanzelf af.** Rijen zoals Trending zijn zonder
   ingestelde player alleen om te bladeren.
-- **De keuze-wizard van Arctic Fuse 3 is overgeslagen.** Kies je daar later toch een
+- **De keuzewizard van beide skins is overgeslagen.** Kies je daar later toch een
   preset of kleurenschema, dan overschrijft die het homescherm en het rode thema.
-- **Grote download.** De skin is ongeveer 58 MB en GitHub waarschuwt bij bestanden
+- **Grote download.** De zips zijn circa 63 MiB (Fuse 2) en 57 MiB (Fuse 3). GitHub waarschuwt bij bestanden
   boven 50 MB. De harde grens is 100 MB. Groeit de skin daar richting, dan moet de
   zip naar GitHub Releases verhuizen.
 - **De repository groeit.** Elke gepubliceerde skin-versie blijft in de
@@ -107,6 +111,9 @@ volgorde:
   meer op nieuwe apparaten tot `repository.spaan/addon.xml` is aangepast.
 
 ## Controleren bij een Kodi-update
+
+Loop bij de overstap van Kodi 21 naar Kodi 22 eerst stap 8 in [SETUP.md](SETUP.md)
+door. Test daarna het homescherm, de eigen fotomap en het afspelen van een video.
 
 Kleine updates (22.0 naar 22.1) geven zelden problemen. Bij een nieuwe hoofdversie
 (Kodi 23):
@@ -128,6 +135,6 @@ Kleine updates (22.0 naar 22.1) geven zelden problemen. Bij een nieuwe hoofdvers
 
 - Kodi valt bij een kapotte skin meestal zelf terug op de standaardskin Estuary.
 - Gebeurt dat niet: wis de app-gegevens van Kodi, of verwijder op het apparaat de
-  map `addons/skin.arctic.fuse.3.krispijn`.
+  map `addons/skin.arctic.fuse.2.krispijn` of `addons/skin.arctic.fuse.3.krispijn`, afhankelijk van de gekozen skin.
 - Het logboek staat in `kodi.log` in de Kodi-gebruikersmap. Zoek op `ERROR` en op
-  `skin.arctic.fuse.3.krispijn`.
+  het add-on-id van de gekozen skin.

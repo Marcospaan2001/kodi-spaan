@@ -1,8 +1,14 @@
 # Setup: Familie Krispijn op een nieuw apparaat
 
-Deze handleiding gaat uit van een Nvidia Shield of andere Android TV met **Kodi 22
-(Piers)**. De skin is gebaseerd op Arctic Fuse 3 en installeert niet op Kodi 21.
-Controleer je versie bij Instellingen > Systeeminfo.
+Controleer je Kodi-versie bij **Instellingen > Systeeminfo**.
+
+| Kodi-versie | Kies deze skin | Basis |
+|---|---|---|
+| Kodi 21 (Omega), ook Kodi 21.2 op de Shield | **Familie Krispijn (Kodi 21)** | Arctic Fuse 2 |
+| Kodi 22 (Piers) | **Familie Krispijn** | Arctic Fuse 3 |
+
+Op de Shield is de repository-installatie bevestigd. De skin-installatie en
+weergave moeten nog op het apparaat worden getest.
 
 De namen van menu's kunnen per versie van TMDbHelper iets afwijken. Waar dat speelt
 staat de Engelse naam erbij.
@@ -16,9 +22,9 @@ staat de Engelse naam erbij.
 3. **Repository installeren:** Add-ons > Installeren vanuit zip-bestand > `spaan` >
    `repository.spaan-x.y.z.zip`.
 4. **Skin installeren:** Add-ons > Installeren vanuit repository > Spaan Repository >
-   Uiterlijk > Skin > **Familie Krispijn** > Installeren. Kodi haalt TMDbHelper,
-   Skin Variables en de overige afhankelijkheden zelf op. De skin is ongeveer 58 MB,
-   dus dit duurt even.
+   Uiterlijk > Skin > kies de skin uit de tabel > Installeren. Kodi haalt
+   TMDbHelper, Skin Variables en de overige afhankelijkheden zelf op. De
+   download is circa 63 MiB voor Kodi 21 en 57 MiB voor Kodi 22.
 5. Kies **Ja** op de vraag of je de skin wilt behouden.
 
 Bij de eerste start bouwt de skin zijn menu's op. Je ziet dan het opstartscherm met
@@ -37,7 +43,7 @@ het logo, een gezichtje en een laadtekst. Dat duurt de eerste keer het langst.
   zoekt daar de gegevens en ratings bij. Dat werkt in lijsten van elke video-add-on,
   zolang titel en jaar herkend worden.
 
-De keuze-wizard van Arctic Fuse 3 wordt bij de eerste start overgeslagen, omdat die
+De keuzewizard van beide skins wordt bij de eerste start overgeslagen, omdat die
 het thema en het homescherm zou overschrijven. Hij blijft bereikbaar via de
 skin-instellingen.
 
@@ -89,7 +95,7 @@ De standaard is bewust kaal: één rij video-add-ons. Rijen toevoegen:
 
 1. Ga op het homescherm naar het menu en open de skin-instellingen, of houd de
    menuknop ingedrukt op een rij voor het contextmenu.
-2. Kies het bewerken van de **Home widgets**.
+2. Kies het bewerken van de **Home widgets**. Bij Fuse 2 hoort de rij bij de knop **Video add-ons** in het zijmenu.
 3. Voeg een rij toe en kies een bron. Voorbeelden via TheMovieDb Helper:
    - Trending films en series deze week
    - Populair en Best beoordeeld
@@ -123,7 +129,7 @@ Alles wat je in de skin instelt staat in de gebruikersmap van Kodi:
 
 | Wat | Map onder `userdata/addon_data/` |
 |---|---|
-| Skin-instellingen, kleuren, fotomap | `skin.arctic.fuse.3.krispijn/` |
+| Skin-instellingen, kleuren, fotomap | `skin.arctic.fuse.2.krispijn/` voor Kodi 21 of `skin.arctic.fuse.3.krispijn/` voor Kodi 22 |
 | Homescherm-rijen en menu's | `script.skinvariables/` |
 | TMDbHelper, sleutels en Trakt-koppeling | `plugin.video.themoviedb.helper/` en de `script.module.tmdbhelper.sync.*`-mappen |
 
@@ -135,7 +141,16 @@ handleiding, dan Backup > Herstellen.
 De back-up bevat je API-sleutels en Trakt-token. Bewaar hem dus niet op een openbare
 plek.
 
-## 8. Updates
+## 8. Overstappen naar Kodi 22
+
+1. Maak een back-up volgens stap 7.
+2. Werk Kodi bij zodra de stabiele Kodi 22 voor je Shield in de Play Store staat.
+3. Open Spaan Repository en installeer **Familie Krispijn** volgens stap 1.
+4. Selecteer de nieuwe skin. De twee skins hebben verschillende add-on-id's.
+   Kies je fotomap opnieuw en stel eigen skin-instellingen en widgets opnieuw in.
+5. Controleer je video-add-ons, ratings en Trakt-koppeling op het apparaat.
+
+## 9. Updates
 
 - **Skin en repository:** Kodi controleert zelf periodiek. Forceren kan via Add-ons >
   Mijn add-ons > Add-on-repository > Spaan Repository > Controleren op updates.

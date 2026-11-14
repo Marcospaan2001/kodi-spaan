@@ -9,21 +9,15 @@ nieuwere versie eist dan er uitgebracht is. Draai deze controle daarom na elke
 upstream-update en voor elke publicatie.
 """
 import gzip
-import json
 import sys
 import urllib.request
 import xml.etree.ElementTree as ET
-from pathlib import Path
 
-ROOT = Path(__file__).resolve().parent.parent
+from make_skin import BUILD, load_configs
+
 JM = "https://raw.githubusercontent.com/jurialmunkey/repository.jurialmunkey/master/{}/zips/addons.xml"
-SOURCES = [
-    ("jurialmunkey piers", JM.format("piers")),
-    ("jurialmunkey omega", JM.format("omega")),
-    ("jurialmunkey repo", JM.format("repo")),
-    ("Kodi officieel (piers)", "https://mirrors.kodi.tv/addons/piers/addons.xml.gz"),
-]
-BUILT_IN = ("xbmc.", "kodi.")
+KODI_MIRROR = "https://mirrors.kodi.tv/addons/{}/addons.xml.gz"
+JM_DIRS = {"omega": ("omega", "repo"), "piers": ("piers", "omega", "repo")}
 
 
 def version_key(version):
@@ -41,21 +35,29 @@ def fetch(url):
     return {a.get("id"): a.get("version") for a in ET.fromstring(data).iter("addon")}
 
 
-def main():
-    cfg = json.loads((ROOT / "skin-mod" / "mod.json").read_text(encoding="utf-8"))
-    addon_xml = ROOT / "build" / cfg["id"] / "addon.xml"
+def check_variant(cfg, catalogs):
+    kodi = cfg["kodi"]
+    addon_xml = BUILD / cfg["id"] / "addon.xml"
     if not addon_xml.is_file():
-        sys.exit("Draai eerst python tools/build.py.")
-    imports = [(i.get("addon"), i.get("version"))
-               for i in ET.parse(addon_xml).getroot().iter("import")
-               if not i.get("addon").startswith(BUILT_IN)]
+        sys.exit(f"{addon_xml} ontbreekt. Draai eerst python tools/build.py.")
+    print(f"\n{cfg['name']} ({kodi})")
+    imports = [(item.attrib["addon"], item.attrib["version"])
+               for item in ET.parse(addon_xml).getroot().findall("requires/import")
+               if not item.attrib["addon"].startswith(("xbmc.", "kodi."))
+               and item.get("optional") != "true"]
 
+    sources = [(f"jurialmunkey {name}", JM.format(name)) for name in JM_DIRS[kodi]]
+    sources.append((f"Kodi officieel ({kodi})", KODI_MIRROR.format(kodi)))
     available = []
-    for name, url in SOURCES:
-        try:
-            available.append((name, fetch(url)))
-        except Exception as err:  # netwerkfout of ontbrekende repo: melden, niet stoppen
-            print(f"  LET OP: {name} niet bereikbaar ({err})")
+    for name, url in sources:
+        if url not in catalogs:
+            try:
+                catalogs[url] = fetch(url)
+            except (OSError, ET.ParseError) as err:
+                catalogs[url] = None
+                print(f"  LET OP: {name} niet bereikbaar of ongeldig ({err})")
+        if catalogs[url] is not None:
+            available.append((name, catalogs[url]))
 
     problems = 0
     for addon_id, wanted in imports:
@@ -68,9 +70,15 @@ def main():
             problems += 1
             seen = ", ".join(f"{v} in {n}" for n, v in hits) or "nergens gevonden"
             print(f"  FOUT  {addon_id} >= {wanted}: niet beschikbaar ({seen})")
+    return problems
+
+
+def main():
+    catalogs = {}
+    problems = sum(check_variant(cfg, catalogs) for cfg in load_configs())
     if problems:
-        sys.exit(f"{problems} afhankelijkheid(en) niet beschikbaar: Kodi zal de skin niet installeren.")
-    print("Alle afhankelijkheden zijn beschikbaar.")
+        sys.exit(f"{problems} vereiste afhankelijkheid(en) niet gevonden.")
+    print("\nAlle vereiste afhankelijkheden van beide skins zijn gevonden.")
 
 
 if __name__ == "__main__":

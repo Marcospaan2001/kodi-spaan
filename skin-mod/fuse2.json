@@ -1,0 +1,9 @@
+{
+    "upstream_dir": "upstream/skin.arctic.fuse.2",
+    "upstream_id": "skin.arctic.fuse.2",
+    "id": "skin.arctic.fuse.2.krispijn",
+    "name": "Familie Krispijn (Kodi 21)",
+    "version": "1.0.0",
+    "upstream_name": "Arctic Fuse 2",
+    "kodi": "omega"
+}

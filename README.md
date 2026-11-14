@@ -1,7 +1,6 @@
 # kodi-spaan
 
-Persoonlijke Kodi-setup: een eigen repository (`repository.spaan`) en een skin-mod op
-basis van Arctic Fuse 3 (Familie Krispijn), te installeren op elk apparaat via één bron-URL.
+Spaan Repository biedt twee varianten van de Familie Krispijn-skin via één bron-URL.
 
 ## Installeren in Kodi
 
@@ -12,7 +11,18 @@ Bron-URL: `https://marcospaan2001.github.io/kodi-spaan/`
    hem `spaan`.
 3. Add-ons > **Installeren vanuit zip-bestand** > `spaan` >
    `repository.spaan-x.y.z.zip`.
-4. Add-ons > **Installeren vanuit repository** > Spaan Repository.
+4. Add-ons > **Installeren vanuit repository** > Spaan Repository > Uiterlijk > Skin.
+   Kies de variant bij je Kodi-versie.
+
+| Kodi-versie | Skin in Kodi | Basis |
+|---|---|---|
+| Kodi 21 (Omega), waaronder Shield met 21.2 | **Familie Krispijn (Kodi 21)** | Arctic Fuse 2 2.12.12 |
+| Kodi 22 (Piers) | **Familie Krispijn** | Arctic Fuse 3 3.4.22 |
+
+De installatie van de repository is bevestigd op de Shield. De skins moeten nog
+op de Shield worden getest. Zodra Kodi 22 stabiel in de Play Store staat, kun je
+overstappen op Familie Krispijn via dezelfde repository. Zie [SETUP.md](docs/SETUP.md)
+voor de overstap.
 
 ## Mappen
 
@@ -20,7 +30,9 @@ Bron-URL: `https://marcospaan2001.github.io/kodi-spaan/`
 |---|---|
 | `repository.spaan/` | De repository-addon: vertelt Kodi waar de addons staan |
 | `upstream/skin.arctic.fuse.3/` | Onaangeroerde kopie van Arctic Fuse 3 (git subtree). Hier nooit in bewerken |
-| `skin-mod/mod.json` | Naam, versie, kleuren en laadteksten van de mod |
+| `upstream/skin.arctic.fuse.2/` | Onaangeroerde Arctic Fuse 2 (git subtree) |
+| `skin-mod/fuse2.json` en `skin-mod/fuse3.json` | Add-on-id, naam, versie en Kodi-variant per skin |
+| `skin-mod/mod.json` | Gedeelde kleuren, logo-tekst en laadteksten |
 | `skin-mod/overlay/` | Eigen bestanden die over de skin heen gelegd worden: logo, gezichtjes, achtergrond, eigen includes, standaard-homescherm |
 | `tools/make_skin.py` | Maakt de mod: upstream + ander id + overlay + gerichte wijzigingen, naar `build/` |
 | `tools/build.py` | Bouwt alles: skin-mod, zips, `addons.xml` en `addons.xml.md5` naar `docs/` |
@@ -38,7 +50,7 @@ een Kodi-update moet controleren staan in [docs/TESTEN.md](docs/TESTEN.md).
 
 ## De skin aanpassen
 
-- **Naam, kleuren, laadteksten:** `skin-mod/mod.json`.
+- **Naam en versie:** `skin-mod/fuse2.json` of `skin-mod/fuse3.json`. Thema en laadteksten staan in `skin-mod/mod.json`.
 - **Plaatjes:** kleuren aanpassen in `tools/make_art.py` en opnieuw draaien, of een
   bestand in `skin-mod/overlay/` vervangen.
 - **Een bestaand skin-bestand wijzigen:** voeg een stap toe in `patch_skin()` in
@@ -46,7 +58,12 @@ een Kodi-update moet controleren staan in [docs/TESTEN.md](docs/TESTEN.md).
   bestand naar de overlay kopiëren, want dan mis je latere upstream-wijzigingen.
 - **Iets nieuws toevoegen:** zet het in `skin-mod/overlay/1080i/Includes_Krispijn.xml`.
 
-## Arctic Fuse 3 bijwerken (upstream)
+## Upstream bijwerken
+
+Arctic Fuse 2 staat vast op commit `e138a25fe11f24254c6456711d37ac9d1053f541`
+van branch `omega`. Het upstream-project is gearchiveerd.
+
+### Arctic Fuse 3
 
 De skin staat als git subtree in `upstream/`, vastgezet op de laatst **uitgebrachte**
 versie. Neem niet blind de nieuwste code van de branch `piers`: de maker verhoogt daar
@@ -76,7 +93,7 @@ Omdat er nooit in `upstream/` bewerkt wordt, geeft de merge geen conflicten. Daa
   en welke tekst niet meer gevonden wordt. Pas dan die ene stap aan.
 - **`check_deps.py`** controleert of alle vereiste add-ons in de vereiste versie te
   vinden zijn. Meldt het een fout, kies dan een oudere upstream-commit.
-- Verhoog `version` in `skin-mod/mod.json` en test in Kodi voor je pusht.
+- Verhoog `version` in `skin-mod/fuse3.json` en test de variant in Kodi.
 
 De remote is eenmalig toegevoegd met:
 
@@ -87,12 +104,14 @@ git remote add upstream https://github.com/jurialmunkey/skin.arctic.fuse.3.git
 ## Een wijziging publiceren
 
 1. Pas de addon aan.
-2. Verhoog de versie: voor de skin in `skin-mod/mod.json`, voor de repository in
-   `repository.spaan/addon.xml`. Zonder hogere versie ziet Kodi geen update.
+2. Verhoog de versie in `skin-mod/fuse2.json` of `skin-mod/fuse3.json` voor elke
+   gewijzigde skin. Voor de repository staat de versie in `repository.spaan/addon.xml`.
+   Kodi ziet een update zodra het versienummer hoger is.
 3. Bouw en publiceer:
 
 ```
 python tools/build.py
+python tools/check_deps.py
 git add -A
 git commit -m "Beschrijving van de wijziging"
 git push
@@ -114,8 +133,8 @@ updates; forceren kan via Add-ons > Spaan Repository > Controleren op updates.
 
 ## Licentie en herkomst
 
-De skin-mod is gebaseerd op
+De skin-mods zijn gebaseerd op [Arctic Fuse 2](https://github.com/jurialmunkey/skin.arctic.fuse.2) en
 [Arctic Fuse 3](https://github.com/jurialmunkey/skin.arctic.fuse.3) van jurialmunkey,
-gelicentieerd onder CC BY-NC-SA 4.0. De mod valt daarom onder dezelfde licentie:
-naamsvermelding, niet-commercieel, gelijk delen. De scripts in `tools/` en
+gelicentieerd onder CC BY-NC-SA 4.0. Dezelfde licentie geldt voor beide mods, met
+naamsvermelding, niet-commercieel gebruik en gelijk delen. De scripts in `tools/` en
 `repository.spaan/` zijn eigen werk.
