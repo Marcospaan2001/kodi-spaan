@@ -155,3 +155,16 @@ De onderliggende interface en categorie blijven behouden.
 
 Deze versie is gebouwd en statisch gecontroleerd. Afstandsbediening, YouTube-
 afspelen en snelheid moeten nog op de Shield worden beoordeeld.
+
+
+## Rustigere indeling in 1.2.1
+
+Filmavond heeft weer twee rijen: Verder kijken en Seizoensfilms. Nieuw digitaal
+is verwijderd, inclusief de bijbehorende catalogus- en releaseaanvragen. De
+beschrijving heeft weer een ruim tekstvak; Hele beschrijving opent de volledige
+tekst in een leesvenster. De overige categorieën tonen grotere posters en minder
+films tegelijk. Zoeken blijft rechtsboven. De kleine trailerspeler heeft alleen
+Pauze / afspelen en Trailer sluiten; de fullscreenknop is verwijderd.
+
+De tweerijenindeling en het beschrijvingsvak zijn daadwerkelijk bekeken in het
+Kodi 21.2-lab. Streaming en de Shield-prestaties zijn niet opnieuw getest.

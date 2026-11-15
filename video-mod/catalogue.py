@@ -1,6 +1,5 @@
 """Eén verzoek per cataloguspagina, lokale cache en herkenbare fouten. GPL-3.0."""
-from datetime import date, timedelta
-from concurrent.futures import ThreadPoolExecutor
+from datetime import date
 import hashlib
 import json
 import os
@@ -33,7 +32,6 @@ class Catalogue:
             raise CatalogueError('Geen verbinding met de catalogus. Controleer je internetverbinding.') from None
 
     def fetch(self, section='trending', page=1, query='', media='movie', genres='', year=None, min_rating=None, tmdb_id=None, season=None):
-        if section == 'digital':return self.digital(page)
         page = max(1, min(500, int(page)))
         params = {'language':'nl-NL', 'page':page, 'include_adult':'false'}
         kind = media
@@ -96,32 +94,6 @@ class Catalogue:
         temp.write_text(json.dumps({'time':self.clock(),'data':data}),encoding='utf-8')
         os.replace(temp,file)
         return data
-
-    def digital(self, page=1):
-        page=max(1,min(500,int(page)));today=date.today();since=today-timedelta(days=120)
-        params={'language':'nl-NL','region':'US','with_release_type':'4',
-                'release_date.gte':since.isoformat(),'release_date.lte':today.isoformat(),
-                'primary_release_date.gte':(today-timedelta(days=365)).isoformat(),
-                'include_adult':'false','sort_by':'release_date.desc','page':page}
-        # US digitale releases dekken ook internationale films die later in NL verschijnen.
-        data=self.cached_raw('discover/movie?'+urlencode(params),21600)
-        def verified(row):
-            if self.cancelled():return None
-            release=self.cached_raw(f"movie/{int(row['id'])}/release_dates")
-            cinemas=[];digital=[]
-            for country in release.get('results',[]):
-                for entry in country.get('release_dates',[]):
-                    try: day=date.fromisoformat(entry['release_date'][:10])
-                    except (KeyError,ValueError,TypeError):continue
-                    if entry.get('type') in (2,3) and day<=today:cinemas.append(day)
-                    if country.get('iso_3166_1')=='US' and entry.get('type')==4 and since<=day<=today:digital.append(day)
-            if not cinemas or not digital or min(cinemas)>min(digital):return None
-            return dict(row,krispijn_type='movie',krispijn_digital=min(digital).isoformat())
-        # Alleen de geopende pagina controleren, maximaal vier gelijktijdige aanvragen.
-        with ThreadPoolExecutor(max_workers=4) as pool:
-            rows=[r for r in pool.map(verified,data.get('results',[])) if r is not None]
-        rows.sort(key=lambda r:r['krispijn_digital'],reverse=True)
-        return {'results':rows,'page':page,'total_pages':min(500,data.get('total_pages',1)),'stale':False}
 
     def trailer(self, row):
         kind='movie' if row['krispijn_type']=='movie' else 'tv'

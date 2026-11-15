@@ -6,7 +6,7 @@ import threading
 from pathlib import Path
 from urllib.parse import urlencode
 
-NAV=[('home','Filmavond'),('digital','Nieuw digitaal'),('trending','Trending'),('cinema','Bioscoop'),('tv','Series'),('genres','Genres en filters'),('continue','Verder kijken'),('stop','Afspelen stoppen'),('settings','Instellen')]
+NAV=[('home','Filmavond'),('trending','Trending'),('cinema','Bioscoop'),('tv','Series'),('genres','Genres en filters'),('continue','Verder kijken'),('stop','Afspelen stoppen'),('settings','Instellen')]
 BASE='plugin://plugin.video.krispijn/?'
 
 
@@ -50,10 +50,10 @@ def launch(params=None):
             self.setFocusId(50)
             threading.Thread(target=self.worker,daemon=True).start()
             initial=(params or {}).get('section','home')
-            self.load(initial if initial in ('home','digital','trending','cinema','tv','movie','search','continue','action','scifi') else 'home',query=(params or {}).get('query',''))
+            self.load(initial if initial in ('home','trending','cinema','tv','movie','search','continue','action','scifi') else 'home',query=(params or {}).get('query',''))
 
         def load(self,section,page=1,query='',extra=None):
-            self.focus_results=self.getFocusId() in (60,61,62,63,70)
+            self.focus_results=self.getFocusId() in (60,61,62,70)
             if self.focus_results:self.setFocusId(50)
             self.section,self.page,self.query=section,page,query
             self.extra=extra or {}
@@ -65,8 +65,7 @@ def launch(params=None):
             self.setProperty('season_title',seasonal_selection()[0])
             self.setProperty('resume_status','Nog niets om te hervatten')
             self.setProperty('season_status','Wordt geladen…')
-            self.setProperty('digital_status','Wordt geladen…')
-            for cid in (60,61,62,63):self.getControl(cid).reset()
+            for cid in (60,61,62):self.getControl(cid).reset()
             self.rows=[];self.groups={};self.active_list=61 if section=='home' else 60
             self.setProperty('title','Een avond voor ons samen' if section=='home' else dict(NAV).get(section,'Kies wat je wilt kijken'))
             self.setProperty('overview','Films en series, op jouw tempo.');self.setProperty('detail','')
@@ -90,7 +89,7 @@ def launch(params=None):
                         if self.closed or gen!=self.generation:continue
                         self.present({'results':ongoing},section,1,61)
                         self.setProperty('resume_status','' if ongoing else 'Je onafgekeken films en series verschijnen hier.')
-                        for category,cid,status in [('home',62,'season_status'),('digital',63,'digital_status')]:
+                        for category,cid,status in [('home',62,'season_status')]:
                             if self.closed or gen!=self.generation:break
                             try:
                                 data=self.catalogue.fetch(category)
@@ -175,11 +174,11 @@ def launch(params=None):
             return rows[pos] if 0<=pos<len(rows) else None
 
         def onFocus(self,control):
-            if control in (60,61,62,63):self.active_list=control
+            if control in (60,61,62):self.active_list=control
             self.focus_details()
 
         def focus_details(self):
-            if self.getFocusId() in (60,61,62,63):self.active_list=self.getFocusId()
+            if self.getFocusId() in (60,61,62):self.active_list=self.getFocusId()
             welcoming=self.section=='home' and self.getFocusId()==50
             self.setProperty('welcome','true' if welcoming else '')
             row=self.selected()
@@ -211,8 +210,11 @@ def launch(params=None):
                 query=xbmcgui.Dialog().input('Zoek films en series',defaultt=self.query).strip()
                 if len(query)>=2:self.history=[];self.load('search',query=query);self.setFocusId(60)
                 return
-            if control==81:self.load('digital');self.setFocusId(60);return
             if control==74:self.show_trailer();return
+            if control==75:
+                row=self.selected()
+                if row:xbmcgui.Dialog().textviewer(row.get('title') or row.get('name','Beschrijving'),row.get('overview') or 'Geen beschrijving beschikbaar.')
+                return
             if control==50:
                 section=NAV[self.getControl(50).getSelectedPosition()][0]
                 if section=='stop':
@@ -229,8 +231,8 @@ def launch(params=None):
                     self.history=[];self.load('search',query=query);return
                 if section=='genres':self.filters();return
                 self.history=[];self.load(section)
-            elif control in (60,61,62,63,70):
-                if control in (60,61,62,63):self.active_list=control
+            elif control in (60,61,62,70):
+                if control in (60,61,62):self.active_list=control
                 row=self.selected()
                 if not row:return
                 play=route(row)
@@ -316,12 +318,11 @@ def launch(params=None):
             if self.started:return
             self.started=True
             self.setProperty('title',self.video.get('name','Trailer'))
-            self.setFocusId(90)
+            self.setFocusId(91)
             url='plugin://plugin.video.youtube/play/?'+urlencode({'video_id':self.video['key']})
             xbmc.Player().play(url,windowed=True)
         def onClick(self,control):
-            if control==90:xbmc.executebuiltin('ActivateWindow(fullscreenvideo)')
-            elif control==91:
+            if control==91:
                 if xbmc.Player().isPlayingVideo():xbmc.executebuiltin('PlayerControl(Play)')
             elif control==92:self.close()
         def onAction(self,action):
