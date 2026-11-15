@@ -168,3 +168,31 @@ Pauze / afspelen en Trailer sluiten; de fullscreenknop is verwijderd.
 
 De tweerijenindeling en het beschrijvingsvak zijn daadwerkelijk bekeken in het
 Kodi 21.2-lab. Streaming en de Shield-prestaties zijn niet opnieuw getest.
+
+
+## Filmavond en Sport in 1.2.2
+
+Filmavond toont uitsluitend seizoensfilms. Verder kijken staat alleen nog in
+het zijmenu. Hierdoor hoeft Filmavond ook geen kijkhistorie op te halen.
+
+Sport biedt Formule 1, Voetbal en Darts. Kies binnen een sport The Loop openen.
+Als The Loop ontbreekt, biedt Krispijn installatie aan. Vernieuw eerst Spaan
+Repository 1.0.14 zodat Kodi de nieuwe externe catalogus kent. Rond Kodi's
+installatiedialoog af en open Sport opnieuw. Als alternatief staat de originele
+repository.loop-3.0.4.zip onder de bestaande spaan-bestandsbron.
+
+De categorieën gebruiken geverifieerde routes uit The Loop 8.4: Auto Zone voor
+Formule 1, het voetbalmenu voor voetbal en de livezoekroute voor darts. De
+inhoud en beschikbaarheid worden door The Loop bepaald. Bij openen verlaat je
+de Krispijn-hub en gebruik je de oorspronkelijke The Loop-interface. Updates
+van The Loop komen uit zijn eigen catalogus. Er is geen nieuwe achtergrondtaak
+in Krispijn, maar The Loop heeft zelf wel een service en meerdere afhankelijkheden.
+De liveweergave en installatieketen zijn niet op de Shield getest.
+
+Per sport kun je ook eigen http- of https-streamadressen toevoegen, afspelen
+en verwijderen. Die adressen worden alleen in je lokale Kodi-profiel bewaard,
+niet in GitHub. Tijdelijke toegangstokens in een streamadres kunnen verlopen.
+
+Bron: https://loopaddon.uk/theloop/ . De repositoryzip is ongewijzigd en met
+een vastgezette SHA256 gecontroleerd. Spaan verwijst naar dezelfde twee
+externe catalogi als de Loop-repository, zodat afhankelijkheden vindbaar zijn.

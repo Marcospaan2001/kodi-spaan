@@ -6,7 +6,7 @@ import threading
 from pathlib import Path
 from urllib.parse import urlencode
 
-NAV=[('home','Filmavond'),('trending','Trending'),('cinema','Bioscoop'),('tv','Series'),('genres','Genres en filters'),('continue','Verder kijken'),('stop','Afspelen stoppen'),('settings','Instellen')]
+NAV=[('home','Filmavond'),('trending','Trending'),('cinema','Bioscoop'),('tv','Series'),('sports','Sport'),('genres','Genres en filters'),('continue','Verder kijken'),('stop','Afspelen stoppen'),('settings','Instellen')]
 BASE='plugin://plugin.video.krispijn/?'
 
 
@@ -53,7 +53,7 @@ def launch(params=None):
             self.load(initial if initial in ('home','trending','cinema','tv','movie','search','continue','action','scifi') else 'home',query=(params or {}).get('query',''))
 
         def load(self,section,page=1,query='',extra=None):
-            self.focus_results=self.getFocusId() in (60,61,62,70)
+            self.focus_results=self.getFocusId() in (60,62,70)
             if self.focus_results:self.setFocusId(50)
             self.section,self.page,self.query=section,page,query
             self.extra=extra or {}
@@ -63,10 +63,9 @@ def launch(params=None):
             self.setProperty('welcome','true' if section=='home' else '')
             self.setProperty('home','true' if section=='home' else '')
             self.setProperty('season_title',seasonal_selection()[0])
-            self.setProperty('resume_status','Nog niets om te hervatten')
             self.setProperty('season_status','Wordt geladen…')
-            for cid in (60,61,62):self.getControl(cid).reset()
-            self.rows=[];self.groups={};self.active_list=61 if section=='home' else 60
+            for cid in (60,62):self.getControl(cid).reset()
+            self.rows=[];self.groups={};self.active_list=62 if section=='home' else 60
             self.setProperty('title','Een avond voor ons samen' if section=='home' else dict(NAV).get(section,'Kies wat je wilt kijken'))
             self.setProperty('overview','Films en series, op jouw tempo.');self.setProperty('detail','')
             self.getControl(201).setImage('')
@@ -84,11 +83,6 @@ def launch(params=None):
                 self.catalogue.cancelled=lambda:self.closed or gen!=self.generation
                 try:
                     if section=='home':
-                        try: ongoing=self.progress()['results']
-                        except (sqlite3.Error,ValueError,IndexError): ongoing=[]
-                        if self.closed or gen!=self.generation:continue
-                        self.present({'results':ongoing},section,1,61)
-                        self.setProperty('resume_status','' if ongoing else 'Je onafgekeken films en series verschijnen hier.')
                         for category,cid,status in [('home',62,'season_status')]:
                             if self.closed or gen!=self.generation:break
                             try:
@@ -174,11 +168,11 @@ def launch(params=None):
             return rows[pos] if 0<=pos<len(rows) else None
 
         def onFocus(self,control):
-            if control in (60,61,62):self.active_list=control
+            if control in (60,62):self.active_list=control
             self.focus_details()
 
         def focus_details(self):
-            if self.getFocusId() in (60,61,62):self.active_list=self.getFocusId()
+            if self.getFocusId() in (60,62):self.active_list=self.getFocusId()
             welcoming=self.section=='home' and self.getFocusId()==50
             self.setProperty('welcome','true' if welcoming else '')
             row=self.selected()
@@ -224,6 +218,9 @@ def launch(params=None):
                     else:
                         xbmcgui.Dialog().notification('Familie Krispijn','Er wordt geen video afgespeeld.',time=2500)
                     return
+                if section=='sports':
+                    from modules.krispijn_sports import open_sports
+                    open_sports(self.close);return
                 if section=='settings':self.settings();return
                 if section=='search':
                     query=xbmcgui.Dialog().input('Zoek films en series',defaultt=self.query).strip()
@@ -231,8 +228,8 @@ def launch(params=None):
                     self.history=[];self.load('search',query=query);return
                 if section=='genres':self.filters();return
                 self.history=[];self.load(section)
-            elif control in (60,61,62,70):
-                if control in (60,61,62):self.active_list=control
+            elif control in (60,62,70):
+                if control in (60,62):self.active_list=control
                 row=self.selected()
                 if not row:return
                 play=route(row)

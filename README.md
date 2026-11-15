@@ -2,7 +2,7 @@
 
 Spaan Repository biedt Krispijn Video en twee varianten van de Familie Krispijn-skin via één bron-URL.
 
-Krispijn Video 1.2.1 opent direct de eigen film- en serieinterface. Filmavond heeft twee aparte rijen voor kijkvoortgang en seizoensfilms. Zoeken staat rechtsboven; trailers openen op verzoek in een kleine speler met pauze- en sluitknoppen. Koppel Real-Debrid via Instellen; TMDb-scores vereisen geen extra account. Zie [SETUP.md](docs/SETUP.md) voor de actuele installatie.
+Krispijn Video 1.2.2 opent direct de eigen film- en serieinterface. Filmavond heeft alleen seizoensfilms; Verder kijken blijft een aparte tab. Zoeken staat rechtsboven; trailers openen op verzoek in een kleine speler met pauze- en sluitknoppen. Koppel Real-Debrid via Instellen; TMDb-scores vereisen geen extra account. Zie [SETUP.md](docs/SETUP.md) voor de actuele installatie.
 
 ## Installeren in Kodi
 
@@ -140,3 +140,5 @@ De skin-mods zijn gebaseerd op [Arctic Fuse 2](https://github.com/jurialmunkey/s
 gelicentieerd onder CC BY-NC-SA 4.0. Dezelfde licentie geldt voor beide mods, met
 naamsvermelding, niet-commercieel gebruik en gelijk delen. De scripts in `tools/` en
 `repository.spaan/` zijn eigen werk.
+
+Sport biedt Formule 1, voetbal en darts via The Loop en eigen livestreamadressen.
