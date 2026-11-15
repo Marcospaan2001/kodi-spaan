@@ -120,3 +120,38 @@ een knop Verder kijken, Film afspelen of Bekijk seizoenen. Vorige en Volgende
 zijn alleen actief wanneer die pagina bestaat. De vaste achtergrond en bestaande
 afbeeldingscache blijven behouden; er komen geen extra catalogusverzoeken bij.
 De stopknop uit 1.1.3 is eveneens opgenomen in deze update.
+
+
+## Videohub 1.2.0
+
+Filmavond toont drie afzonderlijke horizontale rijen: Verder kijken, de
+seizoenskeuze en Nieuw digitaal. De lokale kijkvoortgang verschijnt eerst;
+online rijen worden daarna onafhankelijk gevuld. Bij een verbindingsprobleem
+blijven de andere rijen bruikbaar. De knop Alle nieuwe films opent een raster
+met meerdere rijen posters en paginering. Zoeken staat vast rechtsboven.
+De losse Actie- en Sciencefictiontabs zijn vervangen door het bestaande menu
+Genres en filters. Afspelen stoppen blijft beschikbaar in het zijmenu.
+
+Nieuw digitaal gebruikt TMDb: digitale releases in de VS van de afgelopen
+120 dagen, met een eerste release in het afgelopen jaar en een geregistreerde
+bioscooprelease op of voor de digitale releasedatum. De VS dient als bron voor
+internationale digitale releases; dit is geen garantie van Nederlandse
+beschikbaarheid of afspeelbronnen. Alleen de geopende cataloguspagina wordt
+gecontroleerd, met maximaal vier gelijktijdige releasecontroles. De pagina
+wordt zes uur gecachet en releasedetails één dag. De eerste ongevulde cache
+kan trager zijn. Een pagina kan minder titels bevatten na de bioscoopcontrole;
+Volgende doorzoekt de volgende bronpagina. Sortering binnen de pagina gebeurt
+op de bevestigde digitale datum.
+
+Kies een poster en daarna Trailer bekijken. Hiervoor is de officiële YouTube-
+add-on nodig. Krispijn biedt installatie aan als deze ontbreekt. Eventuele
+YouTube-configuratie, API-sleutels of toegangseisen hangen af van die add-on.
+Trailers worden uitsluitend op verzoek opgehaald en niet automatisch gestart.
+Een kleine speler opent boven de hub, met Volledig scherm, Pauze / afspelen en
+Trailer sluiten. Sluiten stopt de trailer. Terug vanuit volledig scherm brengt
+je terug naar de kleine speler. Bij een andere spelende video vraagt Krispijn
+eerst of deze mag worden gestopt. Ontbreekt een trailer, dan volgt een melding.
+De onderliggende interface en categorie blijven behouden.
+
+Deze versie is gebouwd en statisch gecontroleerd. Afstandsbediening, YouTube-
+afspelen en snelheid moeten nog op de Shield worden beoordeeld.

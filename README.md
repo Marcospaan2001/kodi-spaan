@@ -2,7 +2,7 @@
 
 Spaan Repository biedt Krispijn Video en twee varianten van de Familie Krispijn-skin via één bron-URL.
 
-Krispijn Video 1.1.0 opent direct de eigen film- en serieinterface. Trending, bioscoop, genres, zoeken en lokale kijkvoortgang staan bij elkaar. Koppel Real-Debrid via Instellen; TMDb-scores vereisen geen extra account. Zie [SETUP.md](docs/SETUP.md) voor de actuele installatie.
+Krispijn Video 1.2.0 opent direct de eigen film- en serieinterface. Filmavond heeft aparte rijen voor kijkvoortgang, seizoensfilms en nieuwe digitale releases. Zoeken staat rechtsboven; trailers openen op verzoek in een kleine speler met optie voor volledig scherm. Koppel Real-Debrid via Instellen; TMDb-scores vereisen geen extra account. Zie [SETUP.md](docs/SETUP.md) voor de actuele installatie.
 
 ## Installeren in Kodi
 

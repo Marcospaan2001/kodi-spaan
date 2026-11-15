@@ -1,5 +1,6 @@
 """Eén verzoek per cataloguspagina, lokale cache en herkenbare fouten. GPL-3.0."""
-from datetime import date
+from datetime import date, timedelta
+from concurrent.futures import ThreadPoolExecutor
 import hashlib
 import json
 import os
@@ -15,6 +16,7 @@ class CatalogueError(Exception):
 class Catalogue:
     def __init__(self, token, cache_dir, transport=None, clock=time.time):
         self.token, self.cache_dir = token, Path(cache_dir)
+        self.cancelled=lambda:False
         self.transport, self.clock = transport or self._request, clock
         self.cache_dir.mkdir(parents=True, exist_ok=True)
 
@@ -31,6 +33,7 @@ class Catalogue:
             raise CatalogueError('Geen verbinding met de catalogus. Controleer je internetverbinding.') from None
 
     def fetch(self, section='trending', page=1, query='', media='movie', genres='', year=None, min_rating=None, tmdb_id=None, season=None):
+        if section == 'digital':return self.digital(page)
         page = max(1, min(500, int(page)))
         params = {'language':'nl-NL', 'page':page, 'include_adult':'false'}
         kind = media
@@ -79,6 +82,56 @@ class Catalogue:
         except (CatalogueError, OSError):
             if cached and self.clock()-cached.get('time',0)<7*86400: return dict(cached['data'],stale=True)
             raise
+
+    def cached_raw(self, path, ttl=86400):
+        file=self.cache_dir/('raw-'+hashlib.sha256(path.encode()).hexdigest()+'.json')
+        try:
+            saved=json.loads(file.read_text(encoding='utf-8'))
+            if self.clock()-saved['time']<ttl:return saved['data']
+        except (ValueError,KeyError,OSError):pass
+        data=self.transport(path)
+        if not isinstance(data,dict) or data.get('success') is False:
+            raise CatalogueError('De catalogus gaf geen geldig antwoord.')
+        temp=file.with_suffix('.tmp')
+        temp.write_text(json.dumps({'time':self.clock(),'data':data}),encoding='utf-8')
+        os.replace(temp,file)
+        return data
+
+    def digital(self, page=1):
+        page=max(1,min(500,int(page)));today=date.today();since=today-timedelta(days=120)
+        params={'language':'nl-NL','region':'US','with_release_type':'4',
+                'release_date.gte':since.isoformat(),'release_date.lte':today.isoformat(),
+                'primary_release_date.gte':(today-timedelta(days=365)).isoformat(),
+                'include_adult':'false','sort_by':'release_date.desc','page':page}
+        # US digitale releases dekken ook internationale films die later in NL verschijnen.
+        data=self.cached_raw('discover/movie?'+urlencode(params),21600)
+        def verified(row):
+            if self.cancelled():return None
+            release=self.cached_raw(f"movie/{int(row['id'])}/release_dates")
+            cinemas=[];digital=[]
+            for country in release.get('results',[]):
+                for entry in country.get('release_dates',[]):
+                    try: day=date.fromisoformat(entry['release_date'][:10])
+                    except (KeyError,ValueError,TypeError):continue
+                    if entry.get('type') in (2,3) and day<=today:cinemas.append(day)
+                    if country.get('iso_3166_1')=='US' and entry.get('type')==4 and since<=day<=today:digital.append(day)
+            if not cinemas or not digital or min(cinemas)>min(digital):return None
+            return dict(row,krispijn_type='movie',krispijn_digital=min(digital).isoformat())
+        # Alleen de geopende pagina controleren, maximaal vier gelijktijdige aanvragen.
+        with ThreadPoolExecutor(max_workers=4) as pool:
+            rows=[r for r in pool.map(verified,data.get('results',[])) if r is not None]
+        rows.sort(key=lambda r:r['krispijn_digital'],reverse=True)
+        return {'results':rows,'page':page,'total_pages':min(500,data.get('total_pages',1)),'stale':False}
+
+    def trailer(self, row):
+        kind='movie' if row['krispijn_type']=='movie' else 'tv'
+        identifier=row.get('krispijn_show_id') or row['id']
+        # Zonder taalfilter: één aanvraag met alle taalvarianten.
+        data=self.cached_raw(f'{kind}/{int(identifier)}/videos')
+        videos=[v for v in data.get('results',[]) if v.get('site')=='YouTube'
+                and v.get('type')=='Trailer' and v.get('key')]
+        videos.sort(key=lambda v:(bool(v.get('official')),v.get('iso_639_1') in ('nl','en'),v.get('published_at','')),reverse=True)
+        return videos[0] if videos else None
 
 
 def from_kodi():

@@ -6,62 +6,71 @@
   </coordinates>
   <controls>
     <control type="image">
+      <left>0</left>
+      <top>0</top>
       <width>1920</width>
       <height>1080</height>
-      <texture colordiffuse="ff101217">white.png</texture>
+      <texture colordiffuse="ff0b0e15">white.png</texture>
     </control>
     <control type="image">
+      <left>0</left>
+      <top>0</top>
       <width>310</width>
       <height>1080</height>
-      <texture colordiffuse="ff171a21">white.png</texture>
+      <texture colordiffuse="ff141821">white.png</texture>
     </control>
     <control type="label">
-      <left>40</left>
+      <left>35</left>
       <top>45</top>
-      <width>260</width>
+      <width>265</width>
       <height>50</height>
       <font>font_main</font>
       <textcolor>ffffffff</textcolor>
       <label>KRISPIJN</label>
     </control>
     <control type="label">
-      <left>42</left>
-      <top>98</top>
-      <width>250</width>
-      <height>32</height>
+      <left>38</left>
+      <top>100</top>
+      <width>260</width>
+      <height>30</height>
       <font>font_main</font>
-      <textcolor>ffc35b69</textcolor>
-      <label>FILMAVOND</label>
+      <textcolor>ffffffff</textcolor>
+      <label>ONZE FILMAVOND</label>
     </control>
     <control type="list" id="50">
       <left>22</left>
       <top>170</top>
       <width>270</width>
-      <height>825</height>
-      <onright>60</onright>
+      <height>810</height>
       <onleft>50</onleft>
-      <onup>50</onup>
+      <onright condition="String.IsEqual(Window.Property(home),true)">61</onright>
+      <onup>80</onup>
       <ondown>50</ondown>
-      <itemlayout width="270" height="65">
+      <onright condition="!String.IsEqual(Window.Property(home),true)">60</onright>
+      <itemlayout width="270" height="72">
         <control type="label">
-          <left>22</left>
-          <width>240</width>
-          <height>65</height>
+          <left>18</left>
+          <top>0</top>
+          <width>245</width>
+          <height>64</height>
           <font>font_main</font>
-          <textcolor>ffb2b6c0</textcolor>
+          <textcolor>ffffffff</textcolor>
           <label>$INFO[ListItem.Label]</label>
         </control>
       </itemlayout>
-      <focusedlayout width="270" height="65">
+      <focusedlayout width="270" height="72">
         <control type="image">
-          <width>270</width>
-          <height>58</height>
-          <texture colordiffuse="ffad3349">white.png</texture>
+          <left>0</left>
+          <top>0</top>
+          <width>265</width>
+          <height>64</height>
+          <texture colordiffuse="ffb52b3c">white.png</texture>
         </control>
         <control type="label">
-          <left>22</left>
-          <width>240</width>
-          <height>65</height>
+          <left>18</left>
+          <top>0</top>
+          <width>245</width>
+          <height>64</height>
           <font>font_main</font>
           <textcolor>ffffffff</textcolor>
           <label>$INFO[ListItem.Label]</label>
@@ -70,312 +79,735 @@
     </control>
     <control type="label">
       <left>370</left>
-      <top>46</top>
+      <top>42</top>
       <width>650</width>
-      <height>48</height>
+      <height>50</height>
       <font>font_main</font>
       <textcolor>ffffffff</textcolor>
       <label>$INFO[Window.Property(section)]</label>
     </control>
     <control type="label">
-      <left>1100</left>
-      <top>55</top>
-      <width>750</width>
+      <left>1080</left>
+      <top>50</top>
+      <width>500</width>
       <height>35</height>
-      <align>right</align>
       <font>font_main</font>
-      <textcolor>ffafb5c2</textcolor>
+      <textcolor>ffffffff</textcolor>
       <label>$INFO[Window.Property(account)]</label>
+    </control>
+    <control type="button" id="80">
+      <left>1640</left>
+      <top>42</top>
+      <width>200</width>
+      <height>44</height>
+      <font>font_main</font>
+      <label>Zoeken</label>
+      <textcolor>ffffffff</textcolor>
+      <focusedcolor>ff101217</focusedcolor>
+      <onleft>50</onleft>
+      <onright>50</onright>
+      <onup>50</onup>
+      <ondown condition="!String.IsEqual(Window.Property(home),true)">60</ondown>
+      <texturefocus colordiffuse="ffffffff">white.png</texturefocus>
+      <texturenofocus colordiffuse="ff30343e">white.png</texturenofocus>
+      <ondown condition="String.IsEqual(Window.Property(home),true)">61</ondown>
     </control>
     <control type="label">
       <left>370</left>
-      <top>158</top>
+      <top>118</top>
       <width>1120</width>
-      <height>80</height>
+      <height>55</height>
       <font>font_main</font>
       <textcolor>ffffffff</textcolor>
       <label>$INFO[Window.Property(title)]</label>
     </control>
     <control type="label">
-      <left>372</left>
-      <top>250</top>
-      <width>1050</width>
-      <height>36</height>
+      <left>370</left>
+      <top>174</top>
+      <width>1080</width>
+      <height>30</height>
       <font>font_main</font>
-      <textcolor>ffe88b98</textcolor>
+      <textcolor>ffffffff</textcolor>
       <label>$INFO[Window.Property(detail)]</label>
       <visible>!String.IsEqual(Window.Property(welcome),true)</visible>
     </control>
     <control type="textbox">
-      <left>372</left>
-      <top>305</top>
-      <width>1060</width>
-      <height>118</height>
+      <left>370</left>
+      <top>207</top>
+      <width>1080</width>
+      <height>36</height>
       <font>font_main</font>
       <textcolor>ffb9bfcc</textcolor>
       <label>$INFO[Window.Property(overview)]</label>
       <visible>!String.IsEqual(Window.Property(welcome),true)</visible>
     </control>
     <control type="image" id="201">
-      <left>1540</left>
-      <top>140</top>
-      <width>240</width>
-      <height>350</height>
+      <left>1510</left>
+      <top>115</top>
+      <width>130</width>
+      <height>180</height>
       <aspectratio>keep</aspectratio>
+    </control>
+    <control type="image" id="300">
+      <left>370</left>
+      <top>185</top>
+      <width>76</width>
+      <height>76</height>
+      <aspectratio>keep</aspectratio>
+      <visible>String.IsEqual(Window.Property(home),true) + String.IsEqual(Window.Property(welcome),true)</visible>
+    </control>
+    <control type="image" id="301">
+      <left>485</left>
+      <top>185</top>
+      <width>76</width>
+      <height>76</height>
+      <aspectratio>keep</aspectratio>
+      <visible>String.IsEqual(Window.Property(home),true) + String.IsEqual(Window.Property(welcome),true)</visible>
+    </control>
+    <control type="image" id="302">
+      <left>600</left>
+      <top>185</top>
+      <width>76</width>
+      <height>76</height>
+      <aspectratio>keep</aspectratio>
+      <visible>String.IsEqual(Window.Property(home),true) + String.IsEqual(Window.Property(welcome),true)</visible>
+    </control>
+    <control type="image" id="303">
+      <left>715</left>
+      <top>185</top>
+      <width>76</width>
+      <height>76</height>
+      <aspectratio>keep</aspectratio>
+      <visible>String.IsEqual(Window.Property(home),true) + String.IsEqual(Window.Property(welcome),true)</visible>
+    </control>
+    <control type="image" id="304">
+      <left>830</left>
+      <top>185</top>
+      <width>76</width>
+      <height>76</height>
+      <aspectratio>keep</aspectratio>
+      <visible>String.IsEqual(Window.Property(home),true) + String.IsEqual(Window.Property(welcome),true)</visible>
+    </control>
+    <control type="image" id="305">
+      <left>945</left>
+      <top>185</top>
+      <width>76</width>
+      <height>76</height>
+      <aspectratio>keep</aspectratio>
+      <visible>String.IsEqual(Window.Property(home),true) + String.IsEqual(Window.Property(welcome),true)</visible>
+    </control>
+    <control type="image" id="306">
+      <left>1060</left>
+      <top>185</top>
+      <width>76</width>
+      <height>76</height>
+      <aspectratio>keep</aspectratio>
+      <visible>String.IsEqual(Window.Property(home),true) + String.IsEqual(Window.Property(welcome),true)</visible>
+    </control>
+    <control type="button" id="70">
+      <left>370</left>
+      <top>250</top>
+      <width>300</width>
+      <height>44</height>
+      <font>font_main</font>
+      <label>$INFO[Window.Property(action)]</label>
+      <textcolor>ffffffff</textcolor>
+      <focusedcolor>ff101217</focusedcolor>
+      <onleft>50</onleft>
+      <onright>74</onright>
+      <onup>80</onup>
+      <ondown condition="!String.IsEqual(Window.Property(home),true)">60</ondown>
+      <texturefocus colordiffuse="ffffffff">white.png</texturefocus>
+      <texturenofocus colordiffuse="ff30343e">white.png</texturenofocus>
+      <visible>!String.IsEqual(Window.Property(welcome),true) + !String.IsEmpty(Window.Property(action))</visible>
+      <ondown condition="String.IsEqual(Window.Property(home),true)">61</ondown>
+    </control>
+    <control type="button" id="74">
+      <left>690</left>
+      <top>250</top>
+      <width>220</width>
+      <height>44</height>
+      <font>font_main</font>
+      <label>Trailer bekijken</label>
+      <textcolor>ffffffff</textcolor>
+      <focusedcolor>ff101217</focusedcolor>
+      <onleft>70</onleft>
+      <onright>80</onright>
+      <onup>80</onup>
+      <ondown condition="!String.IsEqual(Window.Property(home),true)">60</ondown>
+      <texturefocus colordiffuse="ffffffff">white.png</texturefocus>
+      <texturenofocus colordiffuse="ff30343e">white.png</texturenofocus>
+      <visible>!String.IsEqual(Window.Property(welcome),true) + !String.IsEmpty(Window.Property(action))</visible>
+      <ondown condition="String.IsEqual(Window.Property(home),true)">61</ondown>
     </control>
     <control type="label">
       <left>370</left>
-      <top>503</top>
-      <width>1320</width>
-      <height>38</height>
+      <top>302</top>
+      <width>1300</width>
+      <height>28</height>
       <font>font_main</font>
-      <textcolor>ffa6acb7</textcolor>
+      <textcolor>ffffffff</textcolor>
       <label>$INFO[Window.Property(status)]</label>
+      <visible>!String.IsEqual(Window.Property(home),true)</visible>
     </control>
-    <control type="image">
+    <control type="label">
       <left>370</left>
-      <top>547</top>
-      <width>1450</width>
-      <height>2</height>
-      <texture colordiffuse="ff30343e">white.png</texture>
+      <top>303</top>
+      <width>650</width>
+      <height>30</height>
+      <font>font_main</font>
+      <textcolor>ffffffff</textcolor>
+      <label>Verder kijken</label>
+      <visible>String.IsEqual(Window.Property(home),true)</visible>
     </control>
-    <control type="image">
+    <control type="label">
+      <left>990</left>
+      <top>303</top>
+      <width>790</width>
+      <height>30</height>
+      <font>font_main</font>
+      <textcolor>ffffffff</textcolor>
+      <label>$INFO[Window.Property(resume_status)]</label>
+      <visible>String.IsEqual(Window.Property(home),true)</visible>
+    </control>
+    <control type="label">
       <left>370</left>
-      <top>547</top>
-      <width>120</width>
-      <height>2</height>
-      <texture colordiffuse="ffdb506b">white.png</texture>
-      <visible>String.IsEqual(Window.Property(loading),true)</visible>
-      <animation effect="fade" start="30" end="100" time="700" pulse="true" condition="true">Conditional</animation>
+      <top>518</top>
+      <width>650</width>
+      <height>30</height>
+      <font>font_main</font>
+      <textcolor>ffffffff</textcolor>
+      <label>$INFO[Window.Property(season_title)]</label>
+      <visible>String.IsEqual(Window.Property(home),true)</visible>
+    </control>
+    <control type="label">
+      <left>990</left>
+      <top>518</top>
+      <width>790</width>
+      <height>30</height>
+      <font>font_main</font>
+      <textcolor>ffffffff</textcolor>
+      <label>$INFO[Window.Property(season_status)]</label>
+      <visible>String.IsEqual(Window.Property(home),true)</visible>
+    </control>
+    <control type="label">
+      <left>370</left>
+      <top>733</top>
+      <width>650</width>
+      <height>30</height>
+      <font>font_main</font>
+      <textcolor>ffffffff</textcolor>
+      <label>Nieuw digitaal</label>
+      <visible>String.IsEqual(Window.Property(home),true)</visible>
+    </control>
+    <control type="label">
+      <left>990</left>
+      <top>733</top>
+      <width>790</width>
+      <height>30</height>
+      <font>font_main</font>
+      <textcolor>ffffffff</textcolor>
+      <label>$INFO[Window.Property(digital_status)]</label>
+      <visible>String.IsEqual(Window.Property(home),true)</visible>
+    </control>
+    <control type="button" id="81">
+      <left>1570</left>
+      <top>974</top>
+      <width>250</width>
+      <height>44</height>
+      <font>font_main</font>
+      <label>Alle nieuwe films</label>
+      <textcolor>ffffffff</textcolor>
+      <focusedcolor>ff101217</focusedcolor>
+      <onleft>50</onleft>
+      <onright>80</onright>
+      <onup>63</onup>
+      <ondown>80</ondown>
+      <texturefocus colordiffuse="ffffffff">white.png</texturefocus>
+      <texturenofocus colordiffuse="ff30343e">white.png</texturenofocus>
+      <visible>String.IsEqual(Window.Property(home),true)</visible>
     </control>
     <control type="panel" id="60">
       <left>370</left>
-      <top>575</top>
+      <top>335</top>
       <width>1450</width>
-      <height>365</height>
-      <orientation>horizontal</orientation>
+      <height>610</height>
+      <orientation>vertical</orientation>
       <onleft>50</onleft>
       <onup>70</onup>
       <ondown>73</ondown>
-      <itemlayout width="240" height="355">
+      <visible>!String.IsEqual(Window.Property(home),true)</visible>
+      <itemlayout width="205" height="300">
         <control type="image">
-          <left>5</left>
-          <top>5</top>
-          <width>210</width>
-          <height>290</height>
-          <aspectratio>scale</aspectratio>
+          <left>4</left>
+          <top>4</top>
+          <width>180</width>
+          <height>240</height>
           <texture background="true">$INFO[ListItem.Art(poster)]</texture>
-        </control>
-        <control type="label">
-          <left>5</left>
-          <top>302</top>
-          <width>210</width>
-          <height>28</height>
-          <font>font_main</font>
-          <textcolor>ffb9bfcc</textcolor>
-          <label>$INFO[ListItem.Label]</label>
-        </control>
-        <control type="label">
-          <left>5</left>
-          <top>330</top>
-          <width>210</width>
-          <height>25</height>
-          <font>font_main</font>
-          <textcolor>ff8f98a9</textcolor>
-          <label>$INFO[ListItem.Property(caption)]</label>
-        </control>
-        <control type="progress">
-          <left>5</left>
-          <top>285</top>
-          <width>210</width>
-          <height>10</height>
-          <info>ListItem.Property(progress)</info>
-          <texturebg colordiffuse="ff32343a">white.png</texturebg>
-          <lefttexture />
-          <midtexture colordiffuse="ffe53935">white.png</midtexture>
-          <righttexture />
-          <overlaytexture />
-          <visible>String.IsEqual(ListItem.Property(has_progress),true)</visible>
-        </control>
-      </itemlayout>
-      <focusedlayout width="240" height="355">
-        <control type="image">
-          <width>220</width>
-          <height>300</height>
-          <texture colordiffuse="fff6f1ed">white.png</texture>
-        </control>
-        <control type="image">
-          <left>5</left>
-          <top>5</top>
-          <width>210</width>
-          <height>290</height>
           <aspectratio>scale</aspectratio>
-          <texture background="true">$INFO[ListItem.Art(poster)]</texture>
         </control>
         <control type="label">
-          <left>5</left>
-          <top>302</top>
-          <width>210</width>
-          <height>28</height>
+          <left>4</left>
+          <top>250</top>
+          <width>180</width>
+          <height>24</height>
           <font>font_main</font>
           <textcolor>ffffffff</textcolor>
           <label>$INFO[ListItem.Label]</label>
         </control>
         <control type="label">
-          <left>5</left>
-          <top>330</top>
-          <width>210</width>
-          <height>25</height>
+          <left>4</left>
+          <top>274</top>
+          <width>180</width>
+          <height>24</height>
           <font>font_main</font>
-          <textcolor>ffe88b98</textcolor>
+          <textcolor>ffffffff</textcolor>
           <label>$INFO[ListItem.Property(caption)]</label>
         </control>
         <control type="progress">
-          <left>5</left>
-          <top>285</top>
-          <width>210</width>
-          <height>10</height>
+          <left>4</left>
+          <top>237</top>
+          <width>180</width>
+          <height>7</height>
           <info>ListItem.Property(progress)</info>
-          <texturebg colordiffuse="ff32343a">white.png</texturebg>
-          <lefttexture />
+          <visible>String.IsEqual(ListItem.Property(has_progress),true)</visible>
+          <texturebg colordiffuse="ff353942">white.png</texturebg>
           <midtexture colordiffuse="ffe53935">white.png</midtexture>
+          <lefttexture />
           <righttexture />
           <overlaytexture />
+        </control>
+      </itemlayout>
+      <focusedlayout width="205" height="300">
+        <control type="image">
+          <left>0</left>
+          <top>0</top>
+          <width>188</width>
+          <height>248</height>
+          <texture colordiffuse="ffffffff">white.png</texture>
+        </control>
+        <control type="image">
+          <left>4</left>
+          <top>4</top>
+          <width>180</width>
+          <height>240</height>
+          <texture background="true">$INFO[ListItem.Art(poster)]</texture>
+          <aspectratio>scale</aspectratio>
+        </control>
+        <control type="label">
+          <left>4</left>
+          <top>250</top>
+          <width>180</width>
+          <height>24</height>
+          <font>font_main</font>
+          <textcolor>ffffffff</textcolor>
+          <label>$INFO[ListItem.Label]</label>
+        </control>
+        <control type="label">
+          <left>4</left>
+          <top>274</top>
+          <width>180</width>
+          <height>24</height>
+          <font>font_main</font>
+          <textcolor>ffffffff</textcolor>
+          <label>$INFO[ListItem.Property(caption)]</label>
+        </control>
+        <control type="progress">
+          <left>4</left>
+          <top>237</top>
+          <width>180</width>
+          <height>7</height>
+          <info>ListItem.Property(progress)</info>
           <visible>String.IsEqual(ListItem.Property(has_progress),true)</visible>
+          <texturebg colordiffuse="ff353942">white.png</texturebg>
+          <midtexture colordiffuse="ffe53935">white.png</midtexture>
+          <lefttexture />
+          <righttexture />
+          <overlaytexture />
         </control>
       </focusedlayout>
     </control>
-    <control type="image" id="300">
+    <control type="panel" id="61">
       <left>370</left>
-      <top>270</top>
-      <width>180</width>
-      <height>180</height>
-      <aspectratio>keep</aspectratio>
-      <visible>String.IsEqual(Window.Property(welcome),true)</visible>
+      <top>335</top>
+      <width>1450</width>
+      <height>192</height>
+      <orientation>horizontal</orientation>
+      <onleft>50</onleft>
+      <onup>70</onup>
+      <ondown>62</ondown>
+      <visible>String.IsEqual(Window.Property(home),true)</visible>
+      <itemlayout width="150" height="190">
+        <control type="image">
+          <left>4</left>
+          <top>4</top>
+          <width>112</width>
+          <height>132</height>
+          <texture background="true">$INFO[ListItem.Art(poster)]</texture>
+          <aspectratio>scale</aspectratio>
+        </control>
+        <control type="label">
+          <left>4</left>
+          <top>142</top>
+          <width>112</width>
+          <height>24</height>
+          <font>font_main</font>
+          <textcolor>ffffffff</textcolor>
+          <label>$INFO[ListItem.Label]</label>
+        </control>
+        <control type="label">
+          <left>4</left>
+          <top>166</top>
+          <width>112</width>
+          <height>24</height>
+          <font>font_main</font>
+          <textcolor>ffffffff</textcolor>
+          <label>$INFO[ListItem.Property(caption)]</label>
+        </control>
+        <control type="progress">
+          <left>4</left>
+          <top>129</top>
+          <width>112</width>
+          <height>7</height>
+          <info>ListItem.Property(progress)</info>
+          <visible>String.IsEqual(ListItem.Property(has_progress),true)</visible>
+          <texturebg colordiffuse="ff353942">white.png</texturebg>
+          <midtexture colordiffuse="ffe53935">white.png</midtexture>
+          <lefttexture />
+          <righttexture />
+          <overlaytexture />
+        </control>
+      </itemlayout>
+      <focusedlayout width="150" height="190">
+        <control type="image">
+          <left>0</left>
+          <top>0</top>
+          <width>120</width>
+          <height>140</height>
+          <texture colordiffuse="ffffffff">white.png</texture>
+        </control>
+        <control type="image">
+          <left>4</left>
+          <top>4</top>
+          <width>112</width>
+          <height>132</height>
+          <texture background="true">$INFO[ListItem.Art(poster)]</texture>
+          <aspectratio>scale</aspectratio>
+        </control>
+        <control type="label">
+          <left>4</left>
+          <top>142</top>
+          <width>112</width>
+          <height>24</height>
+          <font>font_main</font>
+          <textcolor>ffffffff</textcolor>
+          <label>$INFO[ListItem.Label]</label>
+        </control>
+        <control type="label">
+          <left>4</left>
+          <top>166</top>
+          <width>112</width>
+          <height>24</height>
+          <font>font_main</font>
+          <textcolor>ffffffff</textcolor>
+          <label>$INFO[ListItem.Property(caption)]</label>
+        </control>
+        <control type="progress">
+          <left>4</left>
+          <top>129</top>
+          <width>112</width>
+          <height>7</height>
+          <info>ListItem.Property(progress)</info>
+          <visible>String.IsEqual(ListItem.Property(has_progress),true)</visible>
+          <texturebg colordiffuse="ff353942">white.png</texturebg>
+          <midtexture colordiffuse="ffe53935">white.png</midtexture>
+          <lefttexture />
+          <righttexture />
+          <overlaytexture />
+        </control>
+      </focusedlayout>
     </control>
-    <control type="image" id="301">
-      <left>572</left>
-      <top>270</top>
-      <width>180</width>
-      <height>180</height>
-      <aspectratio>keep</aspectratio>
-      <visible>String.IsEqual(Window.Property(welcome),true)</visible>
+    <control type="panel" id="62">
+      <left>370</left>
+      <top>550</top>
+      <width>1450</width>
+      <height>192</height>
+      <orientation>horizontal</orientation>
+      <onleft>50</onleft>
+      <onup>61</onup>
+      <ondown>63</ondown>
+      <visible>String.IsEqual(Window.Property(home),true)</visible>
+      <itemlayout width="150" height="190">
+        <control type="image">
+          <left>4</left>
+          <top>4</top>
+          <width>112</width>
+          <height>132</height>
+          <texture background="true">$INFO[ListItem.Art(poster)]</texture>
+          <aspectratio>scale</aspectratio>
+        </control>
+        <control type="label">
+          <left>4</left>
+          <top>142</top>
+          <width>112</width>
+          <height>24</height>
+          <font>font_main</font>
+          <textcolor>ffffffff</textcolor>
+          <label>$INFO[ListItem.Label]</label>
+        </control>
+        <control type="label">
+          <left>4</left>
+          <top>166</top>
+          <width>112</width>
+          <height>24</height>
+          <font>font_main</font>
+          <textcolor>ffffffff</textcolor>
+          <label>$INFO[ListItem.Property(caption)]</label>
+        </control>
+        <control type="progress">
+          <left>4</left>
+          <top>129</top>
+          <width>112</width>
+          <height>7</height>
+          <info>ListItem.Property(progress)</info>
+          <visible>String.IsEqual(ListItem.Property(has_progress),true)</visible>
+          <texturebg colordiffuse="ff353942">white.png</texturebg>
+          <midtexture colordiffuse="ffe53935">white.png</midtexture>
+          <lefttexture />
+          <righttexture />
+          <overlaytexture />
+        </control>
+      </itemlayout>
+      <focusedlayout width="150" height="190">
+        <control type="image">
+          <left>0</left>
+          <top>0</top>
+          <width>120</width>
+          <height>140</height>
+          <texture colordiffuse="ffffffff">white.png</texture>
+        </control>
+        <control type="image">
+          <left>4</left>
+          <top>4</top>
+          <width>112</width>
+          <height>132</height>
+          <texture background="true">$INFO[ListItem.Art(poster)]</texture>
+          <aspectratio>scale</aspectratio>
+        </control>
+        <control type="label">
+          <left>4</left>
+          <top>142</top>
+          <width>112</width>
+          <height>24</height>
+          <font>font_main</font>
+          <textcolor>ffffffff</textcolor>
+          <label>$INFO[ListItem.Label]</label>
+        </control>
+        <control type="label">
+          <left>4</left>
+          <top>166</top>
+          <width>112</width>
+          <height>24</height>
+          <font>font_main</font>
+          <textcolor>ffffffff</textcolor>
+          <label>$INFO[ListItem.Property(caption)]</label>
+        </control>
+        <control type="progress">
+          <left>4</left>
+          <top>129</top>
+          <width>112</width>
+          <height>7</height>
+          <info>ListItem.Property(progress)</info>
+          <visible>String.IsEqual(ListItem.Property(has_progress),true)</visible>
+          <texturebg colordiffuse="ff353942">white.png</texturebg>
+          <midtexture colordiffuse="ffe53935">white.png</midtexture>
+          <lefttexture />
+          <righttexture />
+          <overlaytexture />
+        </control>
+      </focusedlayout>
     </control>
-    <control type="image" id="302">
-      <left>774</left>
-      <top>270</top>
-      <width>180</width>
-      <height>180</height>
-      <aspectratio>keep</aspectratio>
-      <visible>String.IsEqual(Window.Property(welcome),true)</visible>
-    </control>
-    <control type="image" id="303">
-      <left>976</left>
-      <top>270</top>
-      <width>180</width>
-      <height>180</height>
-      <aspectratio>keep</aspectratio>
-      <visible>String.IsEqual(Window.Property(welcome),true)</visible>
-    </control>
-    <control type="image" id="304">
-      <left>1178</left>
-      <top>270</top>
-      <width>180</width>
-      <height>180</height>
-      <aspectratio>keep</aspectratio>
-      <visible>String.IsEqual(Window.Property(welcome),true)</visible>
-    </control>
-    <control type="image" id="305">
-      <left>1380</left>
-      <top>270</top>
-      <width>180</width>
-      <height>180</height>
-      <aspectratio>keep</aspectratio>
-      <visible>String.IsEqual(Window.Property(welcome),true)</visible>
-    </control>
-    <control type="image" id="306">
-      <left>1582</left>
-      <top>270</top>
-      <width>180</width>
-      <height>180</height>
-      <aspectratio>keep</aspectratio>
-      <visible>String.IsEqual(Window.Property(welcome),true)</visible>
+    <control type="panel" id="63">
+      <left>370</left>
+      <top>765</top>
+      <width>1450</width>
+      <height>192</height>
+      <orientation>horizontal</orientation>
+      <onleft>50</onleft>
+      <onup>62</onup>
+      <ondown>81</ondown>
+      <visible>String.IsEqual(Window.Property(home),true)</visible>
+      <itemlayout width="150" height="190">
+        <control type="image">
+          <left>4</left>
+          <top>4</top>
+          <width>112</width>
+          <height>132</height>
+          <texture background="true">$INFO[ListItem.Art(poster)]</texture>
+          <aspectratio>scale</aspectratio>
+        </control>
+        <control type="label">
+          <left>4</left>
+          <top>142</top>
+          <width>112</width>
+          <height>24</height>
+          <font>font_main</font>
+          <textcolor>ffffffff</textcolor>
+          <label>$INFO[ListItem.Label]</label>
+        </control>
+        <control type="label">
+          <left>4</left>
+          <top>166</top>
+          <width>112</width>
+          <height>24</height>
+          <font>font_main</font>
+          <textcolor>ffffffff</textcolor>
+          <label>$INFO[ListItem.Property(caption)]</label>
+        </control>
+        <control type="progress">
+          <left>4</left>
+          <top>129</top>
+          <width>112</width>
+          <height>7</height>
+          <info>ListItem.Property(progress)</info>
+          <visible>String.IsEqual(ListItem.Property(has_progress),true)</visible>
+          <texturebg colordiffuse="ff353942">white.png</texturebg>
+          <midtexture colordiffuse="ffe53935">white.png</midtexture>
+          <lefttexture />
+          <righttexture />
+          <overlaytexture />
+        </control>
+      </itemlayout>
+      <focusedlayout width="150" height="190">
+        <control type="image">
+          <left>0</left>
+          <top>0</top>
+          <width>120</width>
+          <height>140</height>
+          <texture colordiffuse="ffffffff">white.png</texture>
+        </control>
+        <control type="image">
+          <left>4</left>
+          <top>4</top>
+          <width>112</width>
+          <height>132</height>
+          <texture background="true">$INFO[ListItem.Art(poster)]</texture>
+          <aspectratio>scale</aspectratio>
+        </control>
+        <control type="label">
+          <left>4</left>
+          <top>142</top>
+          <width>112</width>
+          <height>24</height>
+          <font>font_main</font>
+          <textcolor>ffffffff</textcolor>
+          <label>$INFO[ListItem.Label]</label>
+        </control>
+        <control type="label">
+          <left>4</left>
+          <top>166</top>
+          <width>112</width>
+          <height>24</height>
+          <font>font_main</font>
+          <textcolor>ffffffff</textcolor>
+          <label>$INFO[ListItem.Property(caption)]</label>
+        </control>
+        <control type="progress">
+          <left>4</left>
+          <top>129</top>
+          <width>112</width>
+          <height>7</height>
+          <info>ListItem.Property(progress)</info>
+          <visible>String.IsEqual(ListItem.Property(has_progress),true)</visible>
+          <texturebg colordiffuse="ff353942">white.png</texturebg>
+          <midtexture colordiffuse="ffe53935">white.png</midtexture>
+          <lefttexture />
+          <righttexture />
+          <overlaytexture />
+        </control>
+      </focusedlayout>
     </control>
     <control type="button" id="71">
       <left>370</left>
-      <top>970</top>
+      <top>974</top>
       <width>190</width>
-      <height>55</height>
-      <label>Vorige</label>
+      <height>44</height>
       <font>font_main</font>
-      <textcolor>ffb9bfcc</textcolor>
-      <focusedcolor>ffffffff</focusedcolor>
-      <texturefocus colordiffuse="ffad3349">white.png</texturefocus>
-      <texturenofocus colordiffuse="ff232832">white.png</texturenofocus>
-      <onup>60</onup>
+      <label>Vorige</label>
+      <textcolor>ffffffff</textcolor>
+      <focusedcolor>ff101217</focusedcolor>
       <onleft>50</onleft>
       <onright>72</onright>
+      <onup>60</onup>
+      <ondown>80</ondown>
+      <texturefocus colordiffuse="ffffffff">white.png</texturefocus>
+      <texturenofocus colordiffuse="ff30343e">white.png</texturenofocus>
+      <visible>!String.IsEqual(Window.Property(home),true)</visible>
       <enable>String.IsEqual(Window.Property(has_previous),true)</enable>
       <disabledcolor>ff555b66</disabledcolor>
     </control>
     <control type="button" id="72">
       <left>580</left>
-      <top>970</top>
+      <top>974</top>
       <width>190</width>
-      <height>55</height>
-      <label>Volgende</label>
+      <height>44</height>
       <font>font_main</font>
-      <textcolor>ffb9bfcc</textcolor>
-      <focusedcolor>ffffffff</focusedcolor>
-      <texturefocus colordiffuse="ffad3349">white.png</texturefocus>
-      <texturenofocus colordiffuse="ff232832">white.png</texturenofocus>
-      <onup>60</onup>
+      <label>Volgende</label>
+      <textcolor>ffffffff</textcolor>
+      <focusedcolor>ff101217</focusedcolor>
       <onleft>71</onleft>
       <onright>73</onright>
+      <onup>60</onup>
+      <ondown>80</ondown>
+      <texturefocus colordiffuse="ffffffff">white.png</texturefocus>
+      <texturenofocus colordiffuse="ff30343e">white.png</texturenofocus>
+      <visible>!String.IsEqual(Window.Property(home),true)</visible>
       <enable>String.IsEqual(Window.Property(has_next),true)</enable>
       <disabledcolor>ff555b66</disabledcolor>
     </control>
     <control type="button" id="73">
       <left>790</left>
-      <top>970</top>
+      <top>974</top>
       <width>190</width>
-      <height>55</height>
+      <height>44</height>
+      <font>font_main</font>
       <label>Opnieuw</label>
-      <font>font_main</font>
-      <textcolor>ffb9bfcc</textcolor>
-      <focusedcolor>ffffffff</focusedcolor>
-      <texturefocus colordiffuse="ffad3349">white.png</texturefocus>
-      <texturenofocus colordiffuse="ff232832">white.png</texturenofocus>
-      <onup>60</onup>
-      <onleft>72</onleft>
-      <onright>50</onright>
-    </control>
-    <control type="label">
-      <left>1300</left>
-      <top>975</top>
-      <width>520</width>
-      <height>40</height>
-      <align>right</align>
-      <font>font_main</font>
-      <textcolor>ff9aa2b1</textcolor>
-      <label>$INFO[Window.Property(page)]</label>
-    </control>
-    <control type="button" id="70">
-      <left>370</left>
-      <top>442</top>
-      <width>320</width>
-      <height>48</height>
-      <label>$INFO[Window.Property(action)]</label>
-      <font>font_main</font>
       <textcolor>ffffffff</textcolor>
       <focusedcolor>ff101217</focusedcolor>
+      <onleft>72</onleft>
+      <onright>80</onright>
+      <onup>60</onup>
+      <ondown>80</ondown>
       <texturefocus colordiffuse="ffffffff">white.png</texturefocus>
-      <texturenofocus colordiffuse="ffb52b3c">white.png</texturenofocus>
-      <visible>!String.IsEqual(Window.Property(welcome),true) + !String.IsEmpty(Window.Property(action))</visible>
+      <texturenofocus colordiffuse="ff30343e">white.png</texturenofocus>
+      <visible>!String.IsEqual(Window.Property(home),true)</visible>
+    </control>
+    <control type="label">
+      <left>1200</left>
+      <top>980</top>
+      <width>400</width>
+      <height>36</height>
+      <font>font_main</font>
+      <textcolor>ffffffff</textcolor>
+      <label>$INFO[Window.Property(page)]</label>
+      <visible>!String.IsEqual(Window.Property(home),true)</visible>
+    </control>
+    <control type="button" id="82">
+      <left>1340</left>
+      <top>974</top>
+      <width>210</width>
+      <height>44</height>
+      <font>font_main</font>
+      <label>Opnieuw</label>
+      <textcolor>ffffffff</textcolor>
+      <focusedcolor>ff101217</focusedcolor>
       <onleft>50</onleft>
-      <onright>60</onright>
-      <onup>50</onup>
-      <ondown>60</ondown>
+      <onright>81</onright>
+      <onup>63</onup>
+      <ondown>80</ondown>
+      <texturefocus colordiffuse="ffffffff">white.png</texturefocus>
+      <texturenofocus colordiffuse="ff30343e">white.png</texturenofocus>
+      <visible>String.IsEqual(Window.Property(home),true)</visible>
     </control>
   </controls>
 </window>

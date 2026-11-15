@@ -6,7 +6,7 @@ import threading
 from pathlib import Path
 from urllib.parse import urlencode
 
-NAV=[('home','Filmavond'),('stop','Afspelen stoppen'),('trending','Trending'),('cinema','Nu in de bioscoop'),('movie','Films'),('tv','Series'),('action','Actie'),('scifi','Sciencefiction'),('genres','Genres en filters'),('search','Zoeken'),('continue','Verder kijken'),('settings','Instellen')]
+NAV=[('home','Filmavond'),('digital','Nieuw digitaal'),('trending','Trending'),('cinema','Bioscoop'),('tv','Series'),('genres','Genres en filters'),('continue','Verder kijken'),('stop','Afspelen stoppen'),('settings','Instellen')]
 BASE='plugin://plugin.video.krispijn/?'
 
 
@@ -38,7 +38,7 @@ def launch(params=None):
             self.catalogue=from_kodi(); self.closed=False; self.generation=0
             self.condition=threading.Condition(); self.pending=None
             self.rows=[]; self.section='home'; self.query=''; self.page=1; self.pages=1
-            self.extra={}; self.history=[]; self.artist=saved_art; self.started=False
+            self.groups={};self.active_list=60;self.focus_results=False; self.extra={}; self.history=[]; self.artist=saved_art; self.started=False
 
         def onInit(self):
             if self.started:return
@@ -50,16 +50,24 @@ def launch(params=None):
             self.setFocusId(50)
             threading.Thread(target=self.worker,daemon=True).start()
             initial=(params or {}).get('section','home')
-            self.load(initial if initial in dict(NAV) and initial not in ('stop','settings','genres') else 'home',query=(params or {}).get('query',''))
+            self.load(initial if initial in ('home','digital','trending','cinema','tv','movie','search','continue','action','scifi') else 'home',query=(params or {}).get('query',''))
 
         def load(self,section,page=1,query='',extra=None):
+            self.focus_results=self.getFocusId() in (60,61,62,63,70)
+            if self.focus_results:self.setFocusId(50)
             self.section,self.page,self.query=section,page,query
             self.extra=extra or {}
             self.generation+=1
-            self.setProperty('section',dict(NAV).get(section,'Afleveringen' if section=='episodes' else 'Seizoenen'))
+            self.setProperty('section',dict(NAV).get(section,{'search':'Zoeken','movie':'Films','episodes':'Afleveringen','seasons':'Seizoenen'}.get(section,'Films')))
             self.setProperty('status','Even ophalen…');self.setProperty('loading','true')
             self.setProperty('welcome','true' if section=='home' else '')
-            self.getControl(60).reset();self.rows=[]
+            self.setProperty('home','true' if section=='home' else '')
+            self.setProperty('season_title',seasonal_selection()[0])
+            self.setProperty('resume_status','Nog niets om te hervatten')
+            self.setProperty('season_status','Wordt geladen…')
+            self.setProperty('digital_status','Wordt geladen…')
+            for cid in (60,61,62,63):self.getControl(cid).reset()
+            self.rows=[];self.groups={};self.active_list=61 if section=='home' else 60
             self.setProperty('title','Een avond voor ons samen' if section=='home' else dict(NAV).get(section,'Kies wat je wilt kijken'))
             self.setProperty('overview','Films en series, op jouw tempo.');self.setProperty('detail','')
             self.getControl(201).setImage('')
@@ -74,20 +82,25 @@ def launch(params=None):
                     if self.closed:return
                     job=self.pending;self.pending=None
                 gen,section,page,query,extra=job
+                self.catalogue.cancelled=lambda:self.closed or gen!=self.generation
                 try:
                     if section=='home':
                         try: ongoing=self.progress()['results']
                         except (sqlite3.Error,ValueError,IndexError): ongoing=[]
                         if self.closed or gen!=self.generation:continue
-                        self.present({'results':ongoing,'home_label':'Verder kijken · Seizoenskeuze wordt geladen'},section,page)
-                        try: data=self.catalogue.fetch('home',page=page)
-                        except (CatalogueError,OSError):
-                            data={'results':[], 'stale':True}
-                        keys={(r['krispijn_type'],str(r['id'])) for r in ongoing}
-                        picks=[dict(r,krispijn_group=seasonal_selection()[0]) for r in data['results']
-                               if (r['krispijn_type'],str(r['id'])) not in keys][:12]
-                        data=dict(data,results=ongoing+picks,total_pages=1,
-                                  home_label=('Verder kijken · ' if ongoing else '')+seasonal_selection()[0])
+                        self.present({'results':ongoing},section,1,61)
+                        self.setProperty('resume_status','' if ongoing else 'Je onafgekeken films en series verschijnen hier.')
+                        for category,cid,status in [('home',62,'season_status'),('digital',63,'digital_status')]:
+                            if self.closed or gen!=self.generation:break
+                            try:
+                                data=self.catalogue.fetch(category)
+                                if self.closed or gen!=self.generation:break
+                                self.present(dict(data,results=data['results'][:12]),section,1,cid)
+                                self.setProperty(status,'' if data['results'] else 'Geen titels gevonden. Bekijk het volledige overzicht.')
+                            except (CatalogueError,OSError):
+                                if gen==self.generation:self.setProperty(status,'Tijdelijk niet beschikbaar. Kies Opnieuw.')
+                        if gen==self.generation:self.setProperty('loading','')
+                        continue
                     elif section=='continue':data=self.progress()
                     else:
                         if section=='action':extra.update(media='movie',genres='28')
@@ -101,10 +114,11 @@ def launch(params=None):
                     self.setProperty('status',str(error) if isinstance(error,CatalogueError) else 'Dit overzicht kon niet laden. Kies Opnieuw.')
                     xbmc.log('Krispijn catalogus: '+type(error).__name__,xbmc.LOGERROR)
 
-        def present(self,data,section,page):
-            self.rows=data['results'];self.pages=data.get('total_pages',1)
+        def present(self,data,section,page,cid=60):
+            self.groups[cid]=data['results']
+            if cid==60:self.rows=data['results'];self.pages=data.get('total_pages',1)
             items=[]
-            for row in self.rows:
+            for row in data['results']:
                 kind=row['krispijn_type'];title=row.get('title') or row.get('name') or 'Onbekende titel'
                 if kind=='episode':title=f"{row.get('episode_number','')}. {title}"
                 item=xbmcgui.ListItem(label=title)
@@ -120,10 +134,15 @@ def launch(params=None):
                 item.setProperty('kind',{'movie':'FILM','tvshow':'SERIE','season':'SEIZOEN','episode':'AFLEVERING'}[kind])
                 items.append(item)
                 if kind in ('movie','tvshow') and not row.get('krispijn_route'):self.artist[f"{kind}:{row['id']}"]=row
-            position=max(0,self.getControl(60).getSelectedPosition())
-            self.getControl(60).reset()
-            self.getControl(60).addItems(items)
-            if items:self.getControl(60).selectItem(min(position,len(items)-1))
+            if cid!=60 and not items:items.append(xbmcgui.ListItem(label='Nog geen titels'))
+            position=max(0,self.getControl(cid).getSelectedPosition())
+            self.getControl(cid).reset()
+            self.getControl(cid).addItems(items)
+            if items:self.getControl(cid).selectItem(min(position,len(items)-1))
+            if self.focus_results and items:
+                self.focus_results=False;self.active_list=cid;self.setFocusId(cid)
+            if cid!=60:
+                self.focus_details();return
             self.setProperty('page',f'Pagina {page} van {self.pages}')
             self.setProperty('has_previous','true' if page>1 else '')
             self.setProperty('has_next','true' if page<self.pages else '')
@@ -150,26 +169,34 @@ def launch(params=None):
                 if len(rows)>=20:break
             return {'results':rows}
 
+        def selected(self):
+            rows=self.groups.get(self.active_list,[])
+            pos=self.getControl(self.active_list).getSelectedPosition()
+            return rows[pos] if 0<=pos<len(rows) else None
+
+        def onFocus(self,control):
+            if control in (60,61,62,63):self.active_list=control
+            self.focus_details()
+
         def focus_details(self):
-            welcoming = self.section == 'home' and self.getFocusId() not in (60,70)
-            self.setProperty('welcome', 'true' if welcoming else '')
-            if welcoming:
-                self.setProperty('title', 'Een avond voor ons samen')
-                self.setProperty('overview', 'Welkom bij Familie Krispijn. Kies een film of serie en maak het gezellig.')
-                self.setProperty('detail', 'ONZE EIGEN BIOSCOOP')
+            if self.getFocusId() in (60,61,62,63):self.active_list=self.getFocusId()
+            welcoming=self.section=='home' and self.getFocusId()==50
+            self.setProperty('welcome','true' if welcoming else '')
+            row=self.selected()
+            if welcoming or not row:
+                self.setProperty('title','Een avond voor ons samen' if self.section=='home' else 'Kies wat je wilt kijken')
+                self.setProperty('overview','')
+                self.setProperty('detail','')
+                self.setProperty('action','')
                 self.getControl(201).setImage('')
                 return
-            if not self.rows:return
-            pos=self.getControl(60).getSelectedPosition()
-            if not 0<=pos<len(self.rows):return
-            row=self.rows[pos]
             self.setProperty('action','Verder kijken' if row.get('krispijn_progress') else 'Film afspelen' if row['krispijn_type']=='movie' else 'Aflevering afspelen' if row['krispijn_type']=='episode' else 'Bekijk afleveringen' if row['krispijn_type']=='season' else 'Bekijk seizoenen')
             self.setProperty('title',row.get('title') or row.get('name',''))
             self.setProperty('overview',row.get('overview') or 'Kies deze titel om verder te gaan.')
             year=(row.get('release_date') or row.get('first_air_date') or row.get('air_date') or '')[:4]
             score=f"TMDb {float(row.get('vote_average') or 0):.1f}" if row.get('vote_average') else ''
             self.setProperty('detail','  •  '.join(x for x in [row.get('krispijn_group',''),f"{int(row['krispijn_progress'])}% bekeken" if row.get('krispijn_progress') else '',year,score] if x))
-            self.getControl(201).setImage(self.getControl(60).getSelectedItem().getArt('poster'))
+            self.getControl(201).setImage(self.getControl(self.active_list).getSelectedItem().getArt('poster'))
 
         def onAction(self,action):
             if action.getId() in (9,10,92,216,247):
@@ -180,6 +207,12 @@ def launch(params=None):
             elif action.getId() in (1,2,3,4,7,107):self.focus_details()
 
         def onClick(self,control):
+            if control==80:
+                query=xbmcgui.Dialog().input('Zoek films en series',defaultt=self.query).strip()
+                if len(query)>=2:self.history=[];self.load('search',query=query);self.setFocusId(60)
+                return
+            if control==81:self.load('digital');self.setFocusId(60);return
+            if control==74:self.show_trailer();return
             if control==50:
                 section=NAV[self.getControl(50).getSelectedPosition()][0]
                 if section=='stop':
@@ -196,10 +229,11 @@ def launch(params=None):
                     self.history=[];self.load('search',query=query);return
                 if section=='genres':self.filters();return
                 self.history=[];self.load(section)
-            elif control in (60,70) and self.rows:
-                pos=self.getControl(60).getSelectedPosition()
-                if not 0<=pos<len(self.rows):return
-                row=self.rows[pos];play=route(row)
+            elif control in (60,61,62,63,70):
+                if control in (60,61,62,63):self.active_list=control
+                row=self.selected()
+                if not row:return
+                play=route(row)
                 if play:
                     xbmc.executebuiltin('PlayMedia('+BASE+urlencode(play)+')')
                 else:
@@ -208,7 +242,38 @@ def launch(params=None):
                     else:self.load('episodes',extra={'tmdb_id':row['krispijn_show_id'],'season':row['season_number']})
             elif control==71 and self.page>1:self.load(self.section,self.page-1,self.query,self.extra)
             elif control==72 and self.page<self.pages:self.load(self.section,self.page+1,self.query,self.extra)
-            elif control==73:self.load(self.section,self.page,self.query,self.extra)
+            elif control in (73,82):self.load(self.section,self.page,self.query,self.extra)
+
+        def show_trailer(self):
+            row=self.selected()
+            if not row:return
+            if not xbmc.getCondVisibility('System.HasAddon(plugin.video.youtube)'):
+                if xbmcgui.Dialog().yesno('Trailers','Voor trailers is de YouTube-add-on nodig. Nu installeren?'):
+                    xbmc.executebuiltin('InstallAddon(plugin.video.youtube)')
+                return
+            if xbmc.Player().isPlayingVideo():
+                if not xbmcgui.Dialog().yesno('Trailer bekijken','De huidige video wordt gestopt. Trailer starten?'):return
+                xbmc.Player().stop()
+            progress=xbmcgui.DialogProgress()
+            progress.create('Trailer','Trailer ophalen…')
+            result={}
+            def lookup():
+                try:result['video']=self.catalogue.trailer(row)
+                except (CatalogueError,OSError):result['error']=True
+            task=threading.Thread(target=lookup,daemon=True);task.start()
+            monitor=xbmc.Monitor()
+            while task.is_alive():
+                if progress.iscanceled() or monitor.waitForAbort(.1):progress.close();return
+            progress.close()
+            if result.get('error'):
+                xbmcgui.Dialog().ok('Trailer','De trailerinformatie is tijdelijk niet beschikbaar.');return
+            video=result.get('video')
+            if not video:
+                xbmcgui.Dialog().ok('Trailer','Voor deze titel is geen trailer beschikbaar.');return
+            filename='Krispijn-Trailer-Fuse.xml' if xbmc.getSkinDir().startswith('skin.arctic.fuse.') else 'Krispijn-Trailer.xml'
+            preview=Trailer(filename,addon.getAddonInfo('path'),'Default','1080i',video=video)
+            preview.doModal()
+            del preview
 
         def filters(self):
             dialog=xbmcgui.Dialog();choice=dialog.select('Wat wil je zien?',['Films','Series'])
@@ -241,6 +306,28 @@ def launch(params=None):
                 profile.mkdir(parents=True,exist_ok=True)
                 artfile.write_text(json.dumps(dict(list(self.artist.items())[-500:])),encoding='utf-8')
             except OSError:pass
+            super().close()
+
+    class Trailer(xbmcgui.WindowXMLDialog):
+        def __init__(self,*args,**kwargs):
+            self.video=kwargs.pop('video');self.started=False
+            super().__init__(*args,**kwargs)
+        def onInit(self):
+            if self.started:return
+            self.started=True
+            self.setProperty('title',self.video.get('name','Trailer'))
+            self.setFocusId(90)
+            url='plugin://plugin.video.youtube/play/?'+urlencode({'video_id':self.video['key']})
+            xbmc.Player().play(url,windowed=True)
+        def onClick(self,control):
+            if control==90:xbmc.executebuiltin('ActivateWindow(fullscreenvideo)')
+            elif control==91:
+                if xbmc.Player().isPlayingVideo():xbmc.executebuiltin('PlayerControl(Play)')
+            elif control==92:self.close()
+        def onAction(self,action):
+            if action.getId() in (9,10,92,216,247):self.close()
+        def close(self):
+            xbmc.Player().stop()
             super().close()
 
     try:

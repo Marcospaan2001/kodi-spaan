@@ -1,0 +1,96 @@
+<?xml version='1.0' encoding='utf-8'?>
+<window>
+  <defaultcontrol always="true">90</defaultcontrol>
+  <coordinates>
+    <system>1</system>
+  </coordinates>
+  <controls>
+    <control type="image">
+      <left>0</left>
+      <top>0</top>
+      <width>1920</width>
+      <height>1080</height>
+      <texture colordiffuse="dd000000">white.png</texture>
+    </control>
+    <control type="image">
+      <left>300</left>
+      <top>145</top>
+      <width>1320</width>
+      <height>790</height>
+      <texture colordiffuse="ff141821">white.png</texture>
+    </control>
+    <control type="label">
+      <left>350</left>
+      <top>175</top>
+      <width>1200</width>
+      <height>45</height>
+      <font>font_main</font>
+      <textcolor>ffffffff</textcolor>
+      <label>$INFO[Window.Property(title)]</label>
+    </control>
+    <control type="videowindow" id="400">
+      <left>350</left>
+      <top>240</top>
+      <width>1220</width>
+      <height>590</height>
+    </control>
+    <control type="label">
+      <left>350</left>
+      <top>240</top>
+      <width>1200</width>
+      <height>40</height>
+      <font>font_main</font>
+      <textcolor>ffffffff</textcolor>
+      <label>Trailer laden… Geen beeld? Controleer de YouTube-add-on.</label>
+      <visible>!Player.HasVideo</visible>
+    </control>
+    <control type="button" id="90">
+      <left>350</left>
+      <top>855</top>
+      <width>320</width>
+      <height>44</height>
+      <font>font_main</font>
+      <label>Volledig scherm</label>
+      <textcolor>ffffffff</textcolor>
+      <focusedcolor>ff101217</focusedcolor>
+      <onleft>92</onleft>
+      <onright>91</onright>
+      <onup>90</onup>
+      <ondown>90</ondown>
+      <texturefocus colordiffuse="ffffffff">white.png</texturefocus>
+      <texturenofocus colordiffuse="ff30343e">white.png</texturenofocus>
+    </control>
+    <control type="button" id="91">
+      <left>700</left>
+      <top>855</top>
+      <width>320</width>
+      <height>44</height>
+      <font>font_main</font>
+      <label>Pauze / afspelen</label>
+      <textcolor>ffffffff</textcolor>
+      <focusedcolor>ff101217</focusedcolor>
+      <onleft>90</onleft>
+      <onright>92</onright>
+      <onup>91</onup>
+      <ondown>91</ondown>
+      <texturefocus colordiffuse="ffffffff">white.png</texturefocus>
+      <texturenofocus colordiffuse="ff30343e">white.png</texturenofocus>
+    </control>
+    <control type="button" id="92">
+      <left>1050</left>
+      <top>855</top>
+      <width>320</width>
+      <height>44</height>
+      <font>font_main</font>
+      <label>Trailer sluiten</label>
+      <textcolor>ffffffff</textcolor>
+      <focusedcolor>ff101217</focusedcolor>
+      <onleft>91</onleft>
+      <onright>90</onright>
+      <onup>92</onup>
+      <ondown>92</ondown>
+      <texturefocus colordiffuse="ffffffff">white.png</texturefocus>
+      <texturenofocus colordiffuse="ff30343e">white.png</texturenofocus>
+    </control>
+  </controls>
+</window>
