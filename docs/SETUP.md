@@ -196,3 +196,29 @@ niet in GitHub. Tijdelijke toegangstokens in een streamadres kunnen verlopen.
 Bron: https://loopaddon.uk/theloop/ . De repositoryzip is ongewijzigd en met
 een vastgezette SHA256 gecontroleerd. Spaan verwijst naar dezelfde twee
 externe catalogi als de Loop-repository, zodat afhankelijkheden vindbaar zijn.
+
+
+## YouTube-herstelprofiel in 1.2.3
+
+Bij de eerste trailer stelt Krispijn YouTube eenmalig in op maximaal 720p,
+H.264-video en AAC-audio. Alleen-audio en kwaliteitsvragen staan uit; AV1, VP9,
+HDR en hoge framerates worden niet geselecteerd in het streamfilter. De bestaande
+keuze voor InputStream Adaptive blijft behouden. Het profiel is gecontroleerd
+tegen het instellingsschema van officiële YouTube 7.4.4 voor Kodi 21. Bij een
+afwijkend schema wordt niets gewijzigd en verschijnt een updateadvies.
+
+Dit geldt voor de hele YouTube-add-on, ook buiten Krispijn. Film-, sport- en
+Kodi-hardwareversnellingsinstellingen worden niet veranderd. Eerdere waarden
+worden lokaal bewaard. Via Instellen > YouTube en trailers kun je het profiel
+opnieuw toepassen, de vorige waarden terugzetten of YouTube-instellingen openen.
+Na terugzetten wordt het profiel niet vanzelf opnieuw toegepast. Accounts,
+API-sleutels en tokens worden niet aangepast of in de back-up opgenomen.
+
+Ontbreekt YouTube, dan biedt de trailerfunctie installatie vanuit Kodi aan.
+Bestaande installaties volgen Kodi's update-instelling. Vanuit het trailermenu
+kunnen repositories opnieuw worden gecontroleerd, maar dit forceert geen update.
+
+Dit is een herstelmaatregel voor mogelijke codec- en kwaliteitsproblemen, geen
+bewezen oplossing voor elke vastloper. Zwart beeld, netwerkproblemen, YouTube-
+veranderingen of Android-rendering kunnen een andere oorzaak hebben. De fout
+na tien seconden is zonder Shield-log niet gereproduceerd.

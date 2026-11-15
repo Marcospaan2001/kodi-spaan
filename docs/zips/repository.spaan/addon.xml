@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<addon id="repository.spaan" name="Spaan Repository" version="1.0.14" provider-name="Spaan">
+<addon id="repository.spaan" name="Spaan Repository" version="1.0.15" provider-name="Spaan">
   <extension point="xbmc.addon.repository" name="Spaan Repository">
     <dir>
       <info compressed="false">https://marcospaan2001.github.io/kodi-spaan/zips/addons.xml</info>

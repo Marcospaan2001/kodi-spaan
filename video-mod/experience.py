@@ -250,6 +250,11 @@ def launch(params=None):
                 if xbmcgui.Dialog().yesno('Trailers','Voor trailers is de YouTube-add-on nodig. Nu installeren?'):
                     xbmc.executebuiltin('InstallAddon(plugin.video.youtube)')
                 return
+            try:
+                from modules.krispijn_trailer_setup import apply
+                apply()
+            except (OSError,ValueError,RuntimeError,AttributeError):
+                xbmcgui.Dialog().notification('Trailers','YouTube-profiel kon niet worden ingesteld; zie Instellen.',time=5000)
             if xbmc.Player().isPlayingVideo():
                 if not xbmcgui.Dialog().yesno('Trailer bekijken','De huidige video wordt gestopt. Trailer starten?'):return
                 xbmc.Player().stop()
@@ -289,7 +294,7 @@ def launch(params=None):
 
         def settings(self):
             dialog=xbmcgui.Dialog()
-            selection=dialog.select('Instellen',[offline_status(addon),'OpenSubtitles (optioneel)','Uitgebreide instellingen','Over Familie Krispijn'])
+            selection=dialog.select('Instellen',[offline_status(addon),'OpenSubtitles (optioneel)','Uitgebreide instellingen','Over Familie Krispijn','YouTube en trailers'])
             if selection==0:manage();self.setProperty('account',offline_status(addon))
             elif selection==1:
                 sid='service.subtitles.opensubtitles-com'
@@ -297,6 +302,11 @@ def launch(params=None):
                 else:xbmc.executebuiltin('InstallAddon('+sid+')')
             elif selection==2:addon.openSettings()
             elif selection==3:dialog.ok('Familie Krispijn','Een avond voor ons samen.[CR]Versie '+addon.getAddonInfo('version')+'[CR]TMDb levert de catalogus en scores.[CR]Gebaseerd op POV van kodifitzwell, GPL-3.0. Skin: Arctic Fuse van jurialmunkey, CC BY-NC-SA 4.0.')
+
+            elif selection==4:
+                from modules.krispijn_trailer_setup import manage
+                try:manage()
+                except (OSError,ValueError,RuntimeError,AttributeError):dialog.ok('YouTube','Deze instellingen konden niet worden aangepast. Open de YouTube-add-oninstellingen.')
 
         def close(self):
             self.closed=True
@@ -316,7 +326,7 @@ def launch(params=None):
             self.started=True
             self.setProperty('title',self.video.get('name','Trailer'))
             self.setFocusId(91)
-            url='plugin://plugin.video.youtube/play/?'+urlencode({'video_id':self.video['key']})
+            url='plugin://plugin.video.youtube/play/?'+urlencode({'video_id':self.video['key'],'audio_only':'false','ask_for_quality':'false'})
             xbmc.Player().play(url,windowed=True)
         def onClick(self,control):
             if control==91:
