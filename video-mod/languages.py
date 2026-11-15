@@ -50,7 +50,7 @@ def apply_streams():
         xbmc.log('Krispijn: taalsporen konden niet worden geselecteerd',xbmc.LOGWARNING)
 
 
-def search_missing():
+def search_missing(playback=None, metadata=None):
     """Eenmalig na de afspeelstart; gebruiker kiest zelf de passende vertaling."""
     import xbmc, xbmcaddon, xbmcgui
     try:
@@ -68,6 +68,34 @@ def search_missing():
             return
         for key,value in [('subtitles.languages',['Dutch']),('subtitles.movie',sid),('subtitles.tv',sid),('subtitles.downloadfirst',False)]:
             if rpc('Settings.SetSettingValue',{'setting':key,'value':value}) is not True:return
+        if playback is not None and metadata:
+            prepare_subtitle_metadata(playback, metadata)
         xbmc.executebuiltin('ActivateWindow(subtitlesearch)')
     except (ValueError,TypeError,KeyError,RuntimeError):
         xbmc.log('Krispijn: automatisch ondertitels zoeken niet beschikbaar',xbmc.LOGWARNING)
+
+
+def prepare_subtitle_metadata(playback, metadata):
+    """Herstel catalogustitels nadat de stream zijn eigen releasenaam heeft geladen."""
+    title=str(metadata.get('title') or metadata.get('original_title') or '').strip()
+    original=str(metadata.get('original_title') or title).strip()
+    if not title:return
+    item=playback.make_listitem()
+    item.setPath(playback.getPlayingFile())
+    item.setLabel(title)
+    tag=item.getVideoInfoTag()
+    if metadata.get('mediatype') == 'episode':
+        tag.setMediaType('episode')
+        tag.setTvShowTitle(original)
+        tag.setTitle(str(metadata.get('ep_name') or title))
+        tag.setOriginalTitle(str(metadata.get('ep_name') or title))
+        for key, setter in [('season',tag.setSeason),('episode',tag.setEpisode)]:
+            try:setter(int(metadata[key]))
+            except (KeyError,ValueError,TypeError):pass
+    else:
+        tag.setMediaType('movie')
+        tag.setTitle(title)
+        tag.setOriginalTitle(original)
+    try:tag.setYear(int(metadata.get('year')))
+    except (ValueError,TypeError):pass
+    playback.updateInfoTag(item)

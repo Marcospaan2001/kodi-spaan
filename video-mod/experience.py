@@ -63,6 +63,7 @@ def launch(params=None):
             self.setProperty('title','Een avond voor ons samen' if section=='home' else dict(NAV).get(section,'Kies wat je wilt kijken'))
             self.setProperty('overview','Films en series, op jouw tempo.');self.setProperty('detail','')
             self.getControl(201).setImage('')
+            self.setProperty('action','')
             with self.condition:
                 self.pending=(self.generation,section,page,query,dict(self.extra));self.condition.notify()
 
@@ -112,6 +113,10 @@ def launch(params=None):
                 item.setArt({'poster':poster or 'DefaultVideo.png','thumb':poster or 'DefaultVideo.png'})
                 item.setProperty('score',f"TMDb {float(row.get('vote_average') or 0):.1f}" if row.get('vote_average') else '')
                 item.setProperty('group',row.get('krispijn_group',''))
+                percent=max(0,min(100,float(row.get('krispijn_progress') or 0)))
+                item.setProperty('progress',str(int(percent)))
+                item.setProperty('has_progress','true' if percent>0 else '')
+                item.setProperty('caption',f'{int(percent)}% bekeken' if percent>0 else item.getProperty('score'))
                 item.setProperty('kind',{'movie':'FILM','tvshow':'SERIE','season':'SEIZOEN','episode':'AFLEVERING'}[kind])
                 items.append(item)
                 if kind in ('movie','tvshow') and not row.get('krispijn_route'):self.artist[f"{kind}:{row['id']}"]=row
@@ -120,6 +125,8 @@ def launch(params=None):
             self.getControl(60).addItems(items)
             if items:self.getControl(60).selectItem(min(position,len(items)-1))
             self.setProperty('page',f'Pagina {page} van {self.pages}')
+            self.setProperty('has_previous','true' if page>1 else '')
+            self.setProperty('has_next','true' if page<self.pages else '')
             self.setProperty('status',('Bewaarde resultaten: geen verbinding' if data.get('stale') else f'{len(items)} titels') if items else ('Hier staan straks je onafgekeken films en afleveringen.' if section=='continue' else 'Geen resultaten. Probeer een andere zoekterm of categorie.'))
             self.setProperty('loading','')
             if data.get('home_label'):self.setProperty('status',data['home_label']+(' · Seizoenskeuze niet bereikbaar' if data.get('stale') else ''))
@@ -137,14 +144,14 @@ def launch(params=None):
                 kind='movie' if row[0]=='movie' else 'tvshow';key=f'{kind}:{row[1]}'
                 if key in seen:continue
                 seen.add(key);data=dict(self.artist.get(key,{}))
-                data.update(krispijn_group='Verder kijken',id=row[1],krispijn_type=kind,title=row[8],name=row[8],overview=f'{int(float(row[4]))}% bekeken. Hervat waar je bent gebleven.',krispijn_route={'mode':'play_media','mediatype':row[0],'tmdb_id':row[1]})
+                data.update(krispijn_progress=float(row[4]),krispijn_group='Verder kijken',id=row[1],krispijn_type=kind,title=row[8],name=row[8],overview=f'{int(float(row[4]))}% bekeken. Hervat waar je bent gebleven.',krispijn_route={'mode':'play_media','mediatype':row[0],'tmdb_id':row[1]})
                 if row[0]=='episode':data['krispijn_route'].update(season=row[2],episode=row[3])
                 rows.append(data)
                 if len(rows)>=20:break
             return {'results':rows}
 
         def focus_details(self):
-            welcoming = self.section == 'home' and self.getFocusId() != 60
+            welcoming = self.section == 'home' and self.getFocusId() not in (60,70)
             self.setProperty('welcome', 'true' if welcoming else '')
             if welcoming:
                 self.setProperty('title', 'Een avond voor ons samen')
@@ -156,11 +163,12 @@ def launch(params=None):
             pos=self.getControl(60).getSelectedPosition()
             if not 0<=pos<len(self.rows):return
             row=self.rows[pos]
+            self.setProperty('action','Verder kijken' if row.get('krispijn_progress') else 'Film afspelen' if row['krispijn_type']=='movie' else 'Aflevering afspelen' if row['krispijn_type']=='episode' else 'Bekijk afleveringen' if row['krispijn_type']=='season' else 'Bekijk seizoenen')
             self.setProperty('title',row.get('title') or row.get('name',''))
             self.setProperty('overview',row.get('overview') or 'Kies deze titel om verder te gaan.')
             year=(row.get('release_date') or row.get('first_air_date') or row.get('air_date') or '')[:4]
             score=f"TMDb {float(row.get('vote_average') or 0):.1f}" if row.get('vote_average') else ''
-            self.setProperty('detail','  •  '.join(x for x in [row.get('krispijn_group',''),year,score] if x))
+            self.setProperty('detail','  •  '.join(x for x in [row.get('krispijn_group',''),f"{int(row['krispijn_progress'])}% bekeken" if row.get('krispijn_progress') else '',year,score] if x))
             self.getControl(201).setImage(self.getControl(60).getSelectedItem().getArt('poster'))
 
         def onAction(self,action):
@@ -188,7 +196,7 @@ def launch(params=None):
                     self.history=[];self.load('search',query=query);return
                 if section=='genres':self.filters();return
                 self.history=[];self.load(section)
-            elif control==60 and self.rows:
+            elif control in (60,70) and self.rows:
                 pos=self.getControl(60).getSelectedPosition()
                 if not 0<=pos<len(self.rows):return
                 row=self.rows[pos];play=route(row)

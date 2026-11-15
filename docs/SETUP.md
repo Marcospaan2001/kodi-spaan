@@ -102,3 +102,21 @@ wanneer die gepauzeerd is. Het menu blijft open op de huidige categorie.
 Teruggaan naar het menu alleen stopt de video niet. Als er geen video speelt,
 geeft de knop een korte melding. De bestaande opslag van kijkvoortgang blijft
 via de normale afspeelstop werken.
+
+
+## Ondertiteltitels en kijkvoortgang in 1.1.4
+
+Vlak voordat OpenSubtitles opent, krijgt Kodi opnieuw de oorspronkelijke
+catalogustitel en het filmjaar. Daarmee hoeft OpenSubtitles niet op de lange
+releasenaam terug te vallen. Een beschikbare film-ID kan de service gebruiken
+voor een preciezere match. Bij series blijven serienaam, seizoen en aflevering
+behouden. Serie-IDs worden niet meer ten onrechte als aflevering-IDs meegegeven.
+De bestandsnaam blijft beschikbaar voor de synchronisatiekeuze van ondertitels.
+Een schone titel garandeert niet dat Nederlandse ondertitels beschikbaar zijn.
+
+Posters in Verder kijken en Filmavond tonen een rode voortgangsbalk en het
+bekeken percentage uit de lokale kijkhistorie. Bij de geselecteerde titel staat
+een knop Verder kijken, Film afspelen of Bekijk seizoenen. Vorige en Volgende
+zijn alleen actief wanneer die pagina bestaat. De vaste achtergrond en bestaande
+afbeeldingscache blijven behouden; er komen geen extra catalogusverzoeken bij.
+De stopknop uit 1.1.3 is eveneens opgenomen in deze update.
