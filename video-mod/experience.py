@@ -6,7 +6,7 @@ import threading
 from pathlib import Path
 from urllib.parse import urlencode
 
-NAV=[('home','Filmavond'),('trending','Trending'),('cinema','Nu in de bioscoop'),('movie','Films'),('tv','Series'),('action','Actie'),('scifi','Sciencefiction'),('genres','Genres en filters'),('search','Zoeken'),('continue','Verder kijken'),('settings','Instellen')]
+NAV=[('home','Filmavond'),('stop','Afspelen stoppen'),('trending','Trending'),('cinema','Nu in de bioscoop'),('movie','Films'),('tv','Series'),('action','Actie'),('scifi','Sciencefiction'),('genres','Genres en filters'),('search','Zoeken'),('continue','Verder kijken'),('settings','Instellen')]
 BASE='plugin://plugin.video.krispijn/?'
 
 
@@ -50,7 +50,7 @@ def launch(params=None):
             self.setFocusId(50)
             threading.Thread(target=self.worker,daemon=True).start()
             initial=(params or {}).get('section','home')
-            self.load(initial if initial in dict(NAV) else 'home',query=(params or {}).get('query',''))
+            self.load(initial if initial in dict(NAV) and initial not in ('stop','settings','genres') else 'home',query=(params or {}).get('query',''))
 
         def load(self,section,page=1,query='',extra=None):
             self.section,self.page,self.query=section,page,query
@@ -174,6 +174,13 @@ def launch(params=None):
         def onClick(self,control):
             if control==50:
                 section=NAV[self.getControl(50).getSelectedPosition()][0]
+                if section=='stop':
+                    player=xbmc.Player()
+                    if player.isPlayingVideo():
+                        player.stop()
+                    else:
+                        xbmcgui.Dialog().notification('Familie Krispijn','Er wordt geen video afgespeeld.',time=2500)
+                    return
                 if section=='settings':self.settings();return
                 if section=='search':
                     query=xbmcgui.Dialog().input('Zoek films en series',defaultt=self.query).strip()

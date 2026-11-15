@@ -92,3 +92,13 @@ De standaardservice voor films en series en de zoektaal gelden voor heel Kodi.
 
 Het add-onicoon heeft een nieuwe bestandsnaam om een oud gecachet POV-icoon te
 omzeilen. De oude interne afbeeldingsnamen bevatten ook het Familie Krispijn-logo.
+
+
+## Afspelen stoppen in 1.1.3
+
+In het linkermenu van de videohub staat direct onder Filmavond de knop
+Afspelen stoppen. Daarmee stop je de video die op de achtergrond speelt, ook
+wanneer die gepauzeerd is. Het menu blijft open op de huidige categorie.
+Teruggaan naar het menu alleen stopt de video niet. Als er geen video speelt,
+geeft de knop een korte melding. De bestaande opslag van kijkvoortgang blijft
+via de normale afspeelstop werken.
