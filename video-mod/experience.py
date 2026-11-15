@@ -20,7 +20,7 @@ def route(row):
 
 def launch(params=None):
     import xbmc,xbmcgui,xbmcaddon,xbmcvfs
-    from modules.krispijn_catalogue import from_kodi, CatalogueError
+    from modules.krispijn_catalogue import from_kodi, CatalogueError, seasonal_selection
     from modules.krispijn_accounts import offline_status,manage
     from modules.krispijn_playback_setup import migrate
     addon=xbmcaddon.Addon('plugin.video.krispijn')
@@ -74,34 +74,56 @@ def launch(params=None):
                     job=self.pending;self.pending=None
                 gen,section,page,query,extra=job
                 try:
-                    if section=='continue':data=self.progress()
+                    if section=='home':
+                        try: ongoing=self.progress()['results']
+                        except (sqlite3.Error,ValueError,IndexError): ongoing=[]
+                        if self.closed or gen!=self.generation:continue
+                        self.present({'results':ongoing,'home_label':'Verder kijken · Seizoenskeuze wordt geladen'},section,page)
+                        try: data=self.catalogue.fetch('home',page=page)
+                        except (CatalogueError,OSError):
+                            data={'results':[], 'stale':True}
+                        keys={(r['krispijn_type'],str(r['id'])) for r in ongoing}
+                        picks=[dict(r,krispijn_group=seasonal_selection()[0]) for r in data['results']
+                               if (r['krispijn_type'],str(r['id'])) not in keys][:12]
+                        data=dict(data,results=ongoing+picks,total_pages=1,
+                                  home_label=('Verder kijken · ' if ongoing else '')+seasonal_selection()[0])
+                    elif section=='continue':data=self.progress()
                     else:
                         if section=='action':extra.update(media='movie',genres='28')
                         if section=='scifi':extra.update(media='movie',genres='878')
                         data=self.catalogue.fetch(section if section not in ('action','scifi') else 'movie',page=page,query=query,**extra)
                     if self.closed or gen!=self.generation:continue
-                    self.rows=data['results'];self.pages=data.get('total_pages',1)
-                    items=[]
-                    for row in self.rows:
-                        kind=row['krispijn_type'];title=row.get('title') or row.get('name') or 'Onbekende titel'
-                        if kind=='episode':title=f"{row.get('episode_number','')}. {title}"
-                        item=xbmcgui.ListItem(label=title)
-                        poster=row.get('poster_path') or row.get('still_path') or ''
-                        poster='https://image.tmdb.org/t/p/w342'+poster if poster.startswith('/') else poster
-                        item.setArt({'poster':poster or 'DefaultVideo.png','thumb':poster or 'DefaultVideo.png'})
-                        item.setProperty('score',f"TMDb {float(row.get('vote_average') or 0):.1f}" if row.get('vote_average') else '')
-                        item.setProperty('kind',{'movie':'FILM','tvshow':'SERIE','season':'SEIZOEN','episode':'AFLEVERING'}[kind])
-                        items.append(item)
-                        if kind in ('movie','tvshow'):self.artist[f"{kind}:{row['id']}"]=row
-                    self.getControl(60).addItems(items)
-                    self.setProperty('page',f'Pagina {page} van {self.pages}')
-                    self.setProperty('status',('Bewaarde resultaten: geen verbinding' if data.get('stale') else f'{len(items)} titels') if items else ('Hier staan straks je onafgekeken films en afleveringen.' if section=='continue' else 'Geen resultaten. Probeer een andere zoekterm of categorie.'))
-                    self.setProperty('loading','');self.focus_details()
+                    self.present(data,section,page)
                 except Exception as error:
                     if self.closed or gen!=self.generation:continue
                     self.setProperty('loading','')
                     self.setProperty('status',str(error) if isinstance(error,CatalogueError) else 'Dit overzicht kon niet laden. Kies Opnieuw.')
                     xbmc.log('Krispijn catalogus: '+type(error).__name__,xbmc.LOGERROR)
+
+        def present(self,data,section,page):
+            self.rows=data['results'];self.pages=data.get('total_pages',1)
+            items=[]
+            for row in self.rows:
+                kind=row['krispijn_type'];title=row.get('title') or row.get('name') or 'Onbekende titel'
+                if kind=='episode':title=f"{row.get('episode_number','')}. {title}"
+                item=xbmcgui.ListItem(label=title)
+                poster=row.get('poster_path') or row.get('still_path') or ''
+                poster='https://image.tmdb.org/t/p/w342'+poster if poster.startswith('/') else poster
+                item.setArt({'poster':poster or 'DefaultVideo.png','thumb':poster or 'DefaultVideo.png'})
+                item.setProperty('score',f"TMDb {float(row.get('vote_average') or 0):.1f}" if row.get('vote_average') else '')
+                item.setProperty('group',row.get('krispijn_group',''))
+                item.setProperty('kind',{'movie':'FILM','tvshow':'SERIE','season':'SEIZOEN','episode':'AFLEVERING'}[kind])
+                items.append(item)
+                if kind in ('movie','tvshow') and not row.get('krispijn_route'):self.artist[f"{kind}:{row['id']}"]=row
+            position=max(0,self.getControl(60).getSelectedPosition())
+            self.getControl(60).reset()
+            self.getControl(60).addItems(items)
+            if items:self.getControl(60).selectItem(min(position,len(items)-1))
+            self.setProperty('page',f'Pagina {page} van {self.pages}')
+            self.setProperty('status',('Bewaarde resultaten: geen verbinding' if data.get('stale') else f'{len(items)} titels') if items else ('Hier staan straks je onafgekeken films en afleveringen.' if section=='continue' else 'Geen resultaten. Probeer een andere zoekterm of categorie.'))
+            self.setProperty('loading','')
+            if data.get('home_label'):self.setProperty('status',data['home_label']+(' · Seizoenskeuze niet bereikbaar' if data.get('stale') else ''))
+            self.focus_details()
 
         def progress(self):
             file=profile/'watched.db'
@@ -115,7 +137,7 @@ def launch(params=None):
                 kind='movie' if row[0]=='movie' else 'tvshow';key=f'{kind}:{row[1]}'
                 if key in seen:continue
                 seen.add(key);data=dict(self.artist.get(key,{}))
-                data.update(id=row[1],krispijn_type=kind,title=row[8],name=row[8],overview=f'{int(float(row[4]))}% bekeken. Hervat waar je bent gebleven.',krispijn_route={'mode':'play_media','mediatype':row[0],'tmdb_id':row[1]})
+                data.update(krispijn_group='Verder kijken',id=row[1],krispijn_type=kind,title=row[8],name=row[8],overview=f'{int(float(row[4]))}% bekeken. Hervat waar je bent gebleven.',krispijn_route={'mode':'play_media','mediatype':row[0],'tmdb_id':row[1]})
                 if row[0]=='episode':data['krispijn_route'].update(season=row[2],episode=row[3])
                 rows.append(data)
                 if len(rows)>=20:break
@@ -138,7 +160,7 @@ def launch(params=None):
             self.setProperty('overview',row.get('overview') or 'Kies deze titel om verder te gaan.')
             year=(row.get('release_date') or row.get('first_air_date') or row.get('air_date') or '')[:4]
             score=f"TMDb {float(row.get('vote_average') or 0):.1f}" if row.get('vote_average') else ''
-            self.setProperty('detail','  •  '.join(x for x in [year,score] if x))
+            self.setProperty('detail','  •  '.join(x for x in [row.get('krispijn_group',''),year,score] if x))
             self.getControl(201).setImage(self.getControl(60).getSelectedItem().getArt('poster'))
 
         def onAction(self,action):

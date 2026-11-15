@@ -11,7 +11,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 UPSTREAM_ID = 'plugin.video.pov'
 ADDON_ID = 'plugin.video.krispijn'
-VERSION = '1.1.1'
+VERSION = '1.1.2'
 URL = 'https://raw.githubusercontent.com/kodifitzwell/repo/2c8390c6e65213853a862a00044597946b946132/plugin.video.pov/plugin.video.pov-6.11.03.zip'
 SHA256 = '9ac93ad045910774503cbfeeb45b63bbd9b23837c9e76749885076c9b11edfba'
 
@@ -86,12 +86,13 @@ def make_pov():
     for node in addon.findall("extension[@point='xbmc.addon.metadata']/summary"):
         node.text = 'Films en series voor Familie Krispijn'
     assets = addon.find("extension[@point='xbmc.addon.metadata']/assets")
-    for key, name in (('icon', 'icon.png'), ('fanart', 'fanart.jpg')):
+    for key, name in (('icon', 'icon-krispijn-v2.png'), ('fanart', 'fanart.jpg')):
         node = assets.find(key)
         shutil.copyfile(
             ROOT / 'video-mod/icon.png' if key == 'icon'
             else ROOT / 'skin-mod/overlay/extras/krispijn/background.jpg',
             folder / name)
+        if key == 'icon':shutil.copyfile(folder / name, folder / 'icon.png')
         node.text = name
     path.write_bytes(ET.tostring(addon, encoding='utf-8', xml_declaration=True))
     settings_path = folder / 'resources/settings.xml'
@@ -114,11 +115,11 @@ def make_pov():
     category = ET.SubElement(settings.getroot(), 'category', {'label': 'Familieportretten'})
     ET.SubElement(category, 'setting', {'id': 'krispijn.family.path', 'type': 'text',
                                       'default': '', 'visible': 'false'})
-    for key in ('krispijn.sources.v1', 'krispijn.rd.state', 'krispijn.rd.checked'):
+    for key in ('krispijn.sources.v1', 'krispijn.rd.state', 'krispijn.rd.checked', 'krispijn.languages.v1'):
         ET.SubElement(category, 'setting', {'id':key,'type':'text','default':'','visible':'false'})
     settings_path.write_bytes(ET.tostring(settings.getroot(), encoding='utf-8', xml_declaration=True))
     shutil.copyfile(ROOT / 'video-mod/hub.py', folder / 'resources/lib/modules/krispijn_hub.py')
-    for name in ('catalogue', 'experience', 'accounts', 'playback_setup'):
+    for name in ('catalogue', 'experience', 'accounts', 'playback_setup', 'languages'):
         shutil.copyfile(ROOT / f'video-mod/{name}.py', folder / f'resources/lib/modules/krispijn_{name}.py')
     shutil.copytree(ROOT / 'video-mod/resources', folder / 'resources', dirs_exist_ok=True)
     shutil.copytree(ROOT / 'skin-mod/portraits', folder / 'extras/portraits', dirs_exist_ok=True)
@@ -133,6 +134,16 @@ def make_pov():
         raise ValueError('Onverwacht geen-bronnenpad')
     source_text = source_text.replace(old, '\t\tfrom modules.krispijn_playback_setup import no_sources\n\t\tno_sources(len(getattr(self, \'orig_results\', [])))')
     source_path.write_bytes(source_text.encode('utf-8'))
+    player_path = folder / 'resources/lib/modules/player.py'
+    player_text = player_path.read_text(encoding='utf-8')
+    marker = '\tdef onAVStarted(self):\n\t\tself.playback_event = True'
+    if player_text.count(marker) != 1:
+        raise ValueError('Onverwacht afspeelstartpunt')
+    player_text = player_text.replace(marker, marker + '\n\t\tfrom modules.krispijn_languages import apply_streams\n\t\tapply_streams()')
+    old_subs = "\t\t\t\tposter = self.meta.get('poster') or poster_empty\n\t\t\t\tfrom indexers.subtitles import SubtitleScraper\n\t\t\t\tThread(target=SubtitleScraper(self, poster)).start()"
+    if player_text.count(old_subs) != 1:raise ValueError('Onverwacht ondertitelzoekpad')
+    player_text = player_text.replace(old_subs, '\t\t\t\tfrom modules.krispijn_languages import search_missing\n\t\t\t\tsearch_missing()')
+    player_path.write_bytes(player_text.encode('utf-8'))
     # Label de bestaande TMDb-score correct, zonder extra ratingprovider.
     for indexer in ('movies.py', 'tvshows.py'):
         path = folder / 'resources/lib/menus' / indexer
@@ -158,7 +169,7 @@ def make_pov():
         license_path.write_bytes(license)
     shutil.copyfile(license_path, folder / 'COPYING')
     (folder / 'FORK.md').write_text(
-        '# Krispijn Video 1.1.1\n\nGebaseerd op POV 6.11.03 van kodifitzwell, GPL-3.0.\n'
+        '# Krispijn Video 1.1.2\n\nGebaseerd op POV 6.11.03 van kodifitzwell, GPL-3.0.\n'
         'Broncode: https://github.com/Marcospaan2001/kodi-spaan\n'
         'Bouw: tools/make_pov.py, aanpassingen: video-mod/.\n'
         'Eigen addon-id, Nederlands startmenu, beperkte lokale opstartservice,\n'
@@ -170,7 +181,7 @@ def make_pov():
         ast.parse(file.read_text(encoding='utf-8-sig'), filename=str(file))
     for file in folder.rglob('*.xml'):
         ET.parse(file)
-    print('  Krispijn Video 1.1.1 op basis van POV 6.11.03, bron-SHA256 akkoord')
+    print('  Krispijn Video 1.1.2 op basis van POV 6.11.03, bron-SHA256 akkoord')
     return folder
 
 

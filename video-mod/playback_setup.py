@@ -18,6 +18,8 @@ def ready():
     import xbmcaddon,xbmcgui
     addon=xbmcaddon.Addon('plugin.video.krispijn')
     migrate(addon)
+    from modules.krispijn_languages import defaults
+    defaults()
     if not any(addon.getSetting(key+'.token') for key in ('rd','ad','pm','tb','oc')) and not addon.getSetting('easynews.username'):
         xbmcgui.Dialog().ok('Familie Krispijn','Koppel eerst Real-Debrid via Instellen. Je kunt zonder koppeling wel films en series bekijken in de catalogus.')
         return False

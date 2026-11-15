@@ -59,3 +59,36 @@ een grote galerij van alle zeven portretten zolang de navigatie actief is.
 Ga naar de filmrij voor de titel, score en beschrijving. Geen extra netwerkverzoeken
 of verplichte wachttijd. Het allereerste Kodi-logo van de Android-app valt buiten
 de skin en wordt door deze update niet vervangen.
+
+## Taalvoorkeuren vanaf Krispijn Video 1.1.2
+
+De update zet Kodi eenmalig op Engelse audio en Nederlandse ondertitels.
+De standaardmarkering van een bron krijgt geen voorrang meer boven de audiotaal.
+Deze Kodi-voorkeuren gelden ook buiten Krispijn Video. Tijdens het starten van een
+Krispijn-stream worden aanwezige Engelse en Nederlandse sporen geselecteerd.
+Een handmatige wijziging tijdens het kijken wordt niet periodiek teruggedraaid.
+Ontbreekt Engels, kies dan een andere bron. Ontbreekt Nederlands, dan blijven
+vreemde ondertitels uit en kun je via Ondertitels downloaden OpenSubtitles gebruiken.
+Ondertitels die in het videobeeld zelf zijn ingebrand kunnen niet worden uitgezet.
+
+
+## Filmavond en ondertitels in 1.1.2
+
+Filmavond toont eerst lokale kijkvoortgang en daarna maximaal twaalf seizoensfilms.
+In november en december zijn dat kerstfilms; de selectie wisselt automatisch met
+het seizoen. Trending houdt zijn eigen weekoverzicht. Titels uit Verder kijken
+worden niet dubbel in de seizoenskeuze gezet. Zonder kijkhistorie zie je alleen
+de seizoenskeuze. Het ophalen van die selectie blokkeert de lokale voortgang niet.
+Er is maximaal één catalogusaanvraag nodig, met de bestaande cache van vijftien minuten.
+De seizoenskeuze is redactioneel op thema, geen persoonlijke aanbeveling op basis
+van een online account. Beschikbaarheid van afspeelbronnen is niet gegarandeerd.
+
+Ontbreekt een Nederlands ondertitelspoor, dan opent de add-on automatisch het
+ondertitelzoekvenster van Kodi met OpenSubtitles.com en Nederlands als zoektaal.
+Installeer OpenSubtitles via Instellen en vul daar eenmalig je account in.
+Kies zelf het resultaat dat bij de release past; het eerste resultaat wordt niet
+blind gedownload. Dit voorkomt onnodige fouten in de synchronisatie.
+De standaardservice voor films en series en de zoektaal gelden voor heel Kodi.
+
+Het add-onicoon heeft een nieuwe bestandsnaam om een oud gecachet POV-icoon te
+omzeilen. De oude interne afbeeldingsnamen bevatten ook het Familie Krispijn-logo.

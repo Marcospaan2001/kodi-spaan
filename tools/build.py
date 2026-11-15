@@ -36,7 +36,7 @@ EXCLUDE_NAMES = {".git", ".github", ".gitignore", ".gitattributes", "__pycache__
                  "Thumbs.db", "desktop.ini", ".DS_Store"}
 EXCLUDE_SUFFIXES = {".pyc", ".pyo", ".psd", ".xcf"}
 # Bestanden die Kodi los naast de zip verwacht
-LOOSE_FILES = ("addon.xml", "icon.png", "fanart.jpg", "fanart.png")
+LOOSE_FILES = ("addon.xml", "icon-krispijn-v2.png", "icon.png", "fanart.jpg", "fanart.png")
 # Vaste tijdstempel: dezelfde bron geeft byte-voor-byte dezelfde zip, dus geen
 # onnodige wijzigingen in git en geen nep-updates in Kodi.
 FIXED_TIME = (2020, 1, 1, 0, 0, 0)

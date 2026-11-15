@@ -1,4 +1,5 @@
 """Eén verzoek per cataloguspagina, lokale cache en herkenbare fouten. GPL-3.0."""
+from datetime import date
 import hashlib
 import json
 import os
@@ -35,7 +36,10 @@ class Catalogue:
         kind = media
         if section == 'search':
             endpoint = 'search/multi'; params['query'] = query.strip()
-        elif section in ('home','trending'):
+        elif section == 'home':
+            endpoint='discover/movie'; kind='movie'
+            params.update(seasonal_selection()[1])
+        elif section == 'trending':
             endpoint = 'trending/all/week'
         elif section == 'cinema':
             endpoint='movie/now_playing'; params['region']='NL'; kind='movie'
@@ -86,3 +90,24 @@ def from_kodi():
         root=ET.parse(os.path.join(addon.getAddonInfo('path'),'resources/settings.xml'))
         token=root.find(".//setting[@id='tmdb_read_token']").get('default','')
     return Catalogue(token,os.path.join(xbmcvfs.translatePath(addon.getAddonInfo('profile')),'catalogue'))
+
+
+def seasonal_selection(today=None):
+    """Seizoensselectie voor Nederland, zonder account of extra metadata-aanvragen."""
+    today = today or date.today()
+    base = {'sort_by':'popularity.desc', 'vote_count.gte':'50',
+            'vote_average.gte':'6', 'primary_release_date.lte':today.isoformat()}
+    if today.month in (11, 12):
+        title = 'Samen richting kerst'
+        base['with_keywords'] = '207317'  # TMDb: christmas
+    elif today.month in (1, 2):
+        title = 'Warme winteravonden'; base['with_genres'] = '35|10751'
+    elif today.month in (3, 4, 5):
+        title = 'Voorjaarsavonturen'; base['with_genres'] = '12|16'
+    elif today.month in (6, 7, 8):
+        title = 'Zomerse filmavond'; base['with_genres'] = '12|35'
+    elif today.month == 10:
+        title = 'Spannende herfstavonden'; base['with_genres'] = '9648|53'
+    else:
+        title = 'Samen op de bank'; base['with_genres'] = '18|35'
+    return title, base
