@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<addon id="repository.spaan" name="Spaan Repository" version="1.0.15" provider-name="Spaan">
+<addon id="repository.spaan" name="Spaan Repository" version="1.0.16" provider-name="Spaan">
   <extension point="xbmc.addon.repository" name="Spaan Repository">
     <dir>
       <info compressed="false">https://marcospaan2001.github.io/kodi-spaan/zips/addons.xml</info>
@@ -20,16 +20,6 @@
       <info compressed="false">https://raw.githubusercontent.com/jurialmunkey/repository.jurialmunkey/master/piers/zips/addons.xml</info>
       <checksum>https://raw.githubusercontent.com/jurialmunkey/repository.jurialmunkey/master/piers/zips/addons.xml.md5</checksum>
       <datadir zip="true">https://raw.githubusercontent.com/jurialmunkey/repository.jurialmunkey/master/piers/zips/</datadir>
-    </dir>
-    <dir>
-      <info compressed="false">https://loopaddon.uk/zips19/addons.xml</info>
-      <checksum>https://loopaddon.uk/zips19/addons.xml.md5</checksum>
-      <datadir zip="true">https://loopaddon.uk/zips19/</datadir>
-    </dir>
-    <dir>
-      <info compressed="false">https://raw.githubusercontent.com/Gujal00/smrzips/master/addons.xml</info>
-      <checksum>https://raw.githubusercontent.com/Gujal00/smrzips/master/addons.xml.md5</checksum>
-      <datadir zip="true">https://raw.githubusercontent.com/Gujal00/smrzips/master/zips/</datadir>
     </dir>
   </extension>
   <extension point="xbmc.addon.metadata">

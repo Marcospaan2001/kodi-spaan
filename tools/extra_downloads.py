@@ -6,14 +6,13 @@ import xml.etree.ElementTree as ET
 import zipfile
 
 PACKAGES = (
-    ("repository.loop", "3.0.4", "https://loopaddon.uk/theloop/repository.loop-3.0.4.zip", "9d0addce2bf96831b3d77b85c38f6efda40eddc648b1277b89bf3bdbf20d0431"),
     ("service.subtitles.opensubtitles-com", "1.0.90",
      "https://mirrors.kodi.tv/addons/omega/service.subtitles.opensubtitles-com/service.subtitles.opensubtitles-com-1.0.90.zip",
      "e327c92ac9d09bfcb2330eb217a15632b3b04d655ccf064aaf8a33e3f04c7660"),
 )
 
 def prepare_downloads(docs):
-    for old in (docs / "repository.thecrew-0.3.8.zip", docs / "downloads/repository.thecrew-0.3.8.zip"):
+    for old in (docs / "repository.thecrew-0.3.8.zip", docs / "downloads/repository.thecrew-0.3.8.zip", docs / "repository.loop-3.0.4.zip", docs / "downloads/repository.loop-3.0.4.zip"):
         old.unlink(missing_ok=True)
     folder = docs / "downloads"
     folder.mkdir(parents=True, exist_ok=True)

@@ -222,3 +222,22 @@ Dit is een herstelmaatregel voor mogelijke codec- en kwaliteitsproblemen, geen
 bewezen oplossing voor elke vastloper. Zwart beeld, netwerkproblemen, YouTube-
 veranderingen of Android-rendering kunnen een andere oorzaak hebben. De fout
 na tien seconden is zonder Shield-log niet gereproduceerd.
+
+## Zelfstandig Sport vanaf 1.2.4
+
+Werk Spaan Repository bij naar 1.0.16 en Krispijn Video naar 1.2.4.
+Open Sport en kies Formule 1, Voetbal of Darts, daarna Uitzendingen bekijken.
+De bronzoekers zitten nu in Krispijn zelf. Er is geen Loop-repository of
+Loop-add-on nodig en je verlaat de hub niet voor een andere sportinterface.
+De oude Loop-download en beide daarvoor toegevoegde catalogi zijn verwijderd.
+
+Kies een uitzending en indien nodig een stream. Er worden geen andere sport-add-ons
+geïnstalleerd. Uitzendingen vernieuwen ververst de korte cache. Ophalen kun je
+annuleren. Eigen livestreams toevoegen en verwijderen blijft beschikbaar.
+FawaNews en StreamsCenter worden rechtstreeks bevraagd; zij bepalen het aanbod.
+Lege categorieën zijn mogelijk buiten evenementen. Niet ieder extern playerformaat
+wordt ondersteund. Een gevonden uitzending is geen garantie op een werkende stream.
+
+The Loop wordt niet automatisch van bestaande apparaten verwijderd. Als je die
+nergens anders gebruikt, kun je hem zelf verwijderen via Mijn add-ons. Deze update
+verandert geen Real-Debrid-koppeling, ondertitelaccount of opgeslagen eigen streams.

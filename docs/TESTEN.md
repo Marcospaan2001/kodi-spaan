@@ -38,3 +38,20 @@ Er zijn geen per-titelverzoeken nodig om een cataloguslijst te tekenen. Het zoek
 Voer `python tools/build.py`, `python -m unittest discover -s tests` en `python tools/check_deps.py` uit.
 Controleer na publicatie de versies in addons.xml, de MD5 en de zipdownloads.
 Behoud de Kodi 22-zip zolang die variant niet wordt gewijzigd.
+
+## Sport 1.2.4
+
+Bouw en 18 automatische controles geslaagd. De live broncontrole vond 7
+voetbalvermeldingen bij FawaNews en 10 bij StreamsCenter. Bij een FawaNews-bron
+zijn het HLS-manifest en het eerste MPEG-TS-fragment opgehaald (HTTP 200).
+Een gevonden StreamsCenter-streamadres was niet bereikbaar. Er zijn tijdens
+deze controle geen Formule 1- of dartsuitzendingen gevonden.
+Dit bevestigt bronextractie en mediabereikbaarheid, geen langdurige weergave
+met beeld en geluid op de Shield.
+
+- [ ] Open Sport zonder The Loop geïnstalleerd en bekijk de drie sporten.
+- [ ] Selecteer een beschikbare uitzending; controleer beeld, geluid en stoppen.
+- [ ] Annuleer ophalen: er mag later niet alsnog een stream starten.
+- [ ] Verbreek netwerk: meldingen blijven leesbaar en de hub blijft bereikbaar.
+- [ ] Eigen streamadressen uit vorige versies blijven beschikbaar.
+- [ ] Test Formule 1 en darts tijdens een daadwerkelijk evenement.
