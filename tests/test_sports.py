@@ -50,5 +50,62 @@ class Sports(unittest.TestCase):
                 sport.resolve(dict(url='https://streamcenter.st/watch/example', provider='StreamsCenter'))
 
 
+    def test_offline_cdn_falls_back_and_preserves_headers(self):
+        import io
+        from urllib.error import HTTPError
+        sources = [dict(url='https://a.example/live.m3u8'), dict(url='https://b.example/live.m3u8', headers={'Referer': 'https://event.example/'})]
+        response = io.BytesIO(b'#EXTM3U\n#EXTINF:5,\nsegment.ts\n')
+        response.geturl = lambda: sources[1]['url']
+        with patch.object(sport, 'urlopen', side_effect=[HTTPError(sources[0]['url'], 404, 'offline', {}, None), response]) as request:
+            self.assertEqual(sport.playable_stream(sources), sources[1])
+            self.assertEqual(request.call_args[0][0].get_header('Referer'), 'https://event.example/')
+
+    def test_empty_playlist_and_html_do_not_start_playback(self):
+        import io
+        for body in (b'#EXTM3U\n#EXT-X-TARGETDURATION:5\n', b'<html>Not started</html>'):
+            response = io.BytesIO(body)
+            response.geturl = lambda: 'https://example.org/live.m3u8'
+            with patch.object(sport, 'urlopen', return_value=response):
+                with self.assertRaisesRegex(sport.SportError, 'nog niet beschikbaar'):
+                    sport.playable_stream([dict(url='https://example.org/live.m3u8')])
+
+    def test_relative_master_variant_uses_redirected_base(self):
+        import io
+        master = io.BytesIO(b'#EXTM3U\n#EXT-X-STREAM-INF:BANDWIDTH=1000\nvideo/live.m3u8\n')
+        master.geturl = lambda: 'https://cdn.example/new/master.m3u8'
+        media = io.BytesIO(b'#EXTM3U\n#EXTINF:5,\nsegment.ts\n')
+        media.geturl = lambda: 'https://cdn.example/new/video/live.m3u8'
+        source = dict(url='https://example.org/master.m3u8')
+        with patch.object(sport, 'urlopen', side_effect=[master, media]) as request:
+            self.assertEqual(sport.playable_stream([source]), source)
+            self.assertEqual(request.call_args[0][0].full_url, media.geturl())
+
+
+    def test_sports_landing_has_no_network_work(self):
+        with patch.object(sport, 'events') as events:
+            self.assertEqual(sport.hub_events('', Path('/tmp'), '/addon')['results'], [])
+            events.assert_not_called()
+
+    def test_hub_keeps_stream_route_and_labels_no_live_status(self):
+        row = dict(title='Germany vs Netherlands --- CH 1', detail='UEFA 20:45', sport='Voetbal', url='https://example.org/event', provider='FawaNews')
+        with patch.object(sport, 'events', return_value=([row], [])):
+            data = sport.hub_events('Voetbal', Path('/tmp'), '/addon')
+        result = data['results'][0]
+        self.assertEqual(result['url'], row['url'])
+        self.assertEqual(result['title'], 'Germany vs Netherlands')
+        self.assertEqual(result['krispijn_type'], 'sport_event')
+        self.assertNotIn('LIVE', data['status'])
+
+    def test_quality_is_available_maximum_not_claimed_playback_resolution(self):
+        import io
+        master = io.BytesIO(b'#EXTM3U\n#EXT-X-STREAM-INF:BANDWIDTH=1000,RESOLUTION=1280x720\nlive.m3u8\n')
+        master.geturl = lambda: 'https://example.org/master.m3u8'
+        media = io.BytesIO(b'#EXTM3U\n#EXTINF:5,\nsegment.ts\n')
+        media.geturl = lambda: 'https://example.org/live.m3u8'
+        with patch.object(sport, 'urlopen', side_effect=[master, media]):
+            result = sport.playable_stream([dict(url=master.geturl())])
+        self.assertEqual(result['quality'], 'Bron biedt maximaal 720p')
+
+
 if __name__ == '__main__':
     unittest.main()

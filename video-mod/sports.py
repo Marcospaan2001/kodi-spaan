@@ -28,6 +28,7 @@ def wait_job(title, function):
             from modules.krispijn_sport_sources import SportError
             error = result['error']
             message = str(error) if isinstance(error, SportError) else 'Ophalen mislukt. Probeer het later opnieuw.'
+            progress.close()
             xbmcgui.Dialog().ok('Krispijn Sport', message)
             return None
         return result.get('value')
@@ -47,11 +48,13 @@ def play(name, stream):
         item.setMimeType('application/vnd.apple.mpegurl')
         item.setContentLookup(False)
     xbmc.Player().play(address, item)
+    if stream.get('quality'):
+        xbmcgui.Dialog().notification('Krispijn Sport', stream['quality'], time=5000)
 
 
-def open_sports(close_hub=None):
+def open_sports(close_hub=None, custom_only=False):
     import xbmcaddon, xbmcgui, xbmcvfs
-    from modules.krispijn_sport_sources import SPORTS, events, resolve
+    from modules.krispijn_sport_sources import SPORTS, events, resolve, playable_stream
     dialog = xbmcgui.Dialog()
     addon = xbmcaddon.Addon('plugin.video.krispijn')
     profile = Path(xbmcvfs.translatePath(addon.getAddonInfo('profile')))
@@ -72,9 +75,12 @@ def open_sports(close_hub=None):
             if not isinstance(streams, list):
                 streams = []
             streams = [r for r in streams if isinstance(r, dict) and isinstance(r.get('name'), str) and isinstance(r.get('url'), str)]
-            selected = dialog.select(sport, ['Uitzendingen bekijken', 'Uitzendingen vernieuwen', 'Eigen livestream toevoegen', 'Eigen livestream verwijderen'] + [r['name'] for r in streams])
+            options = (['Eigen livestream toevoegen', 'Eigen livestream verwijderen'] if custom_only else ['Uitzendingen bekijken', 'Uitzendingen vernieuwen', 'Eigen livestream toevoegen', 'Eigen livestream verwijderen'])
+            selected = dialog.select(sport, options + [r['name'] for r in streams])
             if selected < 0:
                 break
+            if custom_only:
+                selected += 2
             if selected in (0, 1):
                 result = wait_job('Uitzendingen ophalen…', lambda: events(sport, profile, refresh=selected == 1))
                 if result is None:
@@ -90,12 +96,9 @@ def open_sports(close_hub=None):
                     if index < 0:
                         break
                     row = rows[index]
-                    sources = wait_job('Stream ophalen…', lambda: resolve(row))
-                    if not sources:
-                        continue
-                    source = 0 if len(sources) == 1 else dialog.select('Kies een stream', ['Stream ' + str(i + 1) for i in range(len(sources))])
-                    if source >= 0:
-                        play(row['title'], sources[source])
+                    stream = wait_job('Beschikbare stream controleren…', lambda: playable_stream(resolve(row)))
+                    if stream is not None:
+                        play(row['title'], stream)
                         return
             elif selected == 2:
                 name = dialog.input('Naam van de livestream').strip()

@@ -55,3 +55,23 @@ met beeld en geluid op de Shield.
 - [ ] Verbreek netwerk: meldingen blijven leesbaar en de hub blijft bereikbaar.
 - [ ] Eigen streamadressen uit vorige versies blijven beschikbaar.
 - [ ] Test Formule 1 en darts tijdens een daadwerkelijk evenement.
+
+## Sporthub en broncontrole 1.2.5
+
+Bij Duitsland tegen Nederland gaven beide gevonden FawaNews-adressen tijdens de
+controle HTTP 404. De gebruiker meldde daarna dat afspelen wel werkte, vermoedelijk
+na de start van de stream. De patch verandert daarom de beschikbaarheidscontrole,
+niet de codecs of de resolutie van die bron.
+
+24 automatische controles dekken onder andere een offline eerste CDN, een werkend
+alternatief, lege playlists, HTML-fouten, relatieve videovarianten na redirects,
+kwaliteitlabels en het openen van Sport zonder netwerkverzoeken.
+De sporttegels en het laden van voetbalkaarten zijn bekeken in het Kodi 21.2-lab.
+De daadwerkelijke beeldkwaliteit en langdurige weergave moeten op de Shield worden
+beoordeeld. Een niet actieve of laagwaardige bron wordt niet door deze patch verbeterd.
+
+- [ ] Kies Sport, vervolgens F1, Voetbal en Darts met de afstandsbediening.
+- [ ] Bekijk bronvermelding en tijden, open een uitzending en ga terug naar de hub.
+- [ ] Controleer dat een niet actieve uitzending een duidelijke melding geeft.
+- [ ] Controleer dat een beschikbaar alternatief automatisch wordt gebruikt.
+- [ ] Bij een masterplaylist met resoluties verschijnt de aangeboden maximale kwaliteit.

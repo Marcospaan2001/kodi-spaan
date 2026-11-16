@@ -11,7 +11,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 UPSTREAM_ID = 'plugin.video.pov'
 ADDON_ID = 'plugin.video.krispijn'
-VERSION = '1.2.4'
+VERSION = '1.2.5'
 URL = 'https://raw.githubusercontent.com/kodifitzwell/repo/2c8390c6e65213853a862a00044597946b946132/plugin.video.pov/plugin.video.pov-6.11.03.zip'
 SHA256 = '9ac93ad045910774503cbfeeb45b63bbd9b23837c9e76749885076c9b11edfba'
 
@@ -174,7 +174,7 @@ def make_pov():
     shutil.copyfile(ROOT / 'video-mod/SPORT-LICENSE.txt', folder / 'SPORT-LICENSE.txt')
     shutil.copyfile(ROOT / 'video-mod/SPORT-SOURCES.md', folder / 'SPORT-SOURCES.md')
     (folder / 'FORK.md').write_text(
-        '# Krispijn Video 1.2.4\n\nGebaseerd op POV 6.11.03 van kodifitzwell, GPL-3.0.\n'
+        '# Krispijn Video 1.2.5\n\nGebaseerd op POV 6.11.03 van kodifitzwell, GPL-3.0.\n'
         'Broncode: https://github.com/Marcospaan2001/kodi-spaan\n'
         'Bouw: tools/make_pov.py, aanpassingen: video-mod/.\n'
         'Eigen addon-id, Nederlands startmenu, beperkte lokale opstartservice,\n'
@@ -186,7 +186,7 @@ def make_pov():
         ast.parse(file.read_text(encoding='utf-8-sig'), filename=str(file))
     for file in folder.rglob('*.xml'):
         ET.parse(file)
-    print('  Krispijn Video 1.2.4 op basis van POV 6.11.03, bron-SHA256 akkoord')
+    print('  Krispijn Video 1.2.5 op basis van POV 6.11.03, bron-SHA256 akkoord')
     return folder
 
 

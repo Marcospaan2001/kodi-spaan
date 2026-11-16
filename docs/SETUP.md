@@ -241,3 +241,29 @@ wordt ondersteund. Een gevonden uitzending is geen garantie op een werkende stre
 The Loop wordt niet automatisch van bestaande apparaten verwijderd. Als je die
 nergens anders gebruikt, kun je hem zelf verwijderen via Mijn add-ons. Deze update
 verandert geen Real-Debrid-koppeling, ondertitelaccount of opgeslagen eigen streams.
+
+## Sportbroncontrole in 1.2.5
+
+Krispijn controleert een gevonden HLS-afspeellijst voordat Kodi start. Bij een
+onbeschikbaar CDN-adres probeert het automatisch het volgende adres. Ook de
+videovariant achter een masterplaylist wordt gecontroleerd. Een lege playlist,
+HTML-foutpagina of HTTP-fout gaat niet meer rechtstreeks naar de speler.
+
+Zijn de adressen onbeschikbaar, dan blijft het sportmenu open met uitleg dat de
+uitzending nog niet beschikbaar of tijdelijk offline is. Probeer rond de starttijd
+opnieuw. De controle is annuleerbaar en verandert geen account- of spelerinstellingen.
+Een geslaagde controle garandeert geen blijvende beschikbaarheid van de videofragmenten.
+Eigen handmatig toegevoegde livestreams behouden hun bestaande afspeelgedrag.
+
+Sport staat nu in de eigen videohub: drie vaste tegels voor Formule 1, Voetbal
+en Darts, met daaronder evenementkaarten. Selecteer een kaart om de stream te
+controleren en af te spelen. Vernieuwen haalt de bronlijst opnieuw op; Eigen
+streams opent het beheer van je lokale adressen. Zonder geselecteerde sport
+worden geen sportbronnen opgevraagd. Trailers en filmpaginering verdwijnen in Sport.
+
+Starttijden worden getoond wanneer de bron ze levert. StreamsCenter-tijden
+worden omgerekend naar de apparaattijdzone. Bij FawaNews is de tijdzone niet
+bevestigd; die tijden blijven brontijden. Er wordt geen onbevestigd Live-label
+getoond. Als een HLS-masterplaylist resoluties vermeldt, verschijnt bij starten
+welke maximale resolutie de bron aanbiedt. Dit is geen meting van de daadwerkelijk
+afgespeelde kwaliteit. Een bron zonder hogere resolutie wordt niet opgeschaald.

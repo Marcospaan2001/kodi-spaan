@@ -46,7 +46,7 @@
       <onright condition="String.IsEqual(Window.Property(home),true)">62</onright>
       <onup>80</onup>
       <ondown>50</ondown>
-      <onright condition="!String.IsEqual(Window.Property(home),true)">60</onright>
+      <onright condition="!String.IsEqual(Window.Property(home),true) + !String.IsEqual(Window.Property(sports),true)">60</onright>
       <itemlayout width="270" height="72">
         <control type="label">
           <left>18</left>
@@ -76,6 +76,7 @@
           <label>$INFO[ListItem.Label]</label>
         </control>
       </focusedlayout>
+      <onright condition="String.IsEqual(Window.Property(sports),true)">90</onright>
     </control>
     <control type="label">
       <left>370</left>
@@ -94,6 +95,7 @@
       <font>font12</font>
       <textcolor>ffffffff</textcolor>
       <label>$INFO[Window.Property(account)]</label>
+      <visible>!String.IsEqual(Window.Property(sports),true)</visible>
     </control>
     <control type="button" id="80">
       <left>1640</left>
@@ -219,7 +221,7 @@
       <ondown condition="!String.IsEqual(Window.Property(home),true)">60</ondown>
       <texturefocus colordiffuse="ffffffff">white.png</texturefocus>
       <texturenofocus colordiffuse="ff30343e">white.png</texturenofocus>
-      <visible>!String.IsEqual(Window.Property(welcome),true) + !String.IsEmpty(Window.Property(action))</visible>
+      <visible>[!String.IsEqual(Window.Property(welcome),true) + !String.IsEmpty(Window.Property(action))] + !String.IsEqual(Window.Property(sports),true)</visible>
       <ondown condition="String.IsEqual(Window.Property(home),true)">62</ondown>
     </control>
     <control type="button" id="74">
@@ -237,7 +239,7 @@
       <ondown condition="!String.IsEqual(Window.Property(home),true)">60</ondown>
       <texturefocus colordiffuse="ffffffff">white.png</texturefocus>
       <texturenofocus colordiffuse="ff30343e">white.png</texturenofocus>
-      <visible>!String.IsEqual(Window.Property(welcome),true) + !String.IsEmpty(Window.Property(action))</visible>
+      <visible>[!String.IsEqual(Window.Property(welcome),true) + !String.IsEmpty(Window.Property(action))] + !String.IsEqual(Window.Property(sports),true)</visible>
       <ondown condition="String.IsEqual(Window.Property(home),true)">62</ondown>
     </control>
     <control type="label">
@@ -248,7 +250,7 @@
       <font>font12</font>
       <textcolor>ffffffff</textcolor>
       <label>$INFO[Window.Property(status)]</label>
-      <visible>!String.IsEqual(Window.Property(home),true)</visible>
+      <visible>[!String.IsEqual(Window.Property(home),true)] + !String.IsEqual(Window.Property(sports),true)</visible>
     </control>
     <control type="label">
       <left>370</left>
@@ -279,7 +281,7 @@
       <onleft>50</onleft>
       <onup>70</onup>
       <ondown>73</ondown>
-      <visible>!String.IsEqual(Window.Property(home),true)</visible>
+      <visible>[!String.IsEqual(Window.Property(home),true)] + !String.IsEqual(Window.Property(sports),true)</visible>
       <itemlayout width="240" height="355">
         <control type="image">
           <left>4</left>
@@ -485,7 +487,7 @@
       <ondown>80</ondown>
       <texturefocus colordiffuse="ffffffff">white.png</texturefocus>
       <texturenofocus colordiffuse="ff30343e">white.png</texturenofocus>
-      <visible>!String.IsEqual(Window.Property(home),true)</visible>
+      <visible>[!String.IsEqual(Window.Property(home),true)] + !String.IsEqual(Window.Property(sports),true)</visible>
       <enable>String.IsEqual(Window.Property(has_previous),true)</enable>
       <disabledcolor>ff555b66</disabledcolor>
     </control>
@@ -504,7 +506,7 @@
       <ondown>80</ondown>
       <texturefocus colordiffuse="ffffffff">white.png</texturefocus>
       <texturenofocus colordiffuse="ff30343e">white.png</texturenofocus>
-      <visible>!String.IsEqual(Window.Property(home),true)</visible>
+      <visible>[!String.IsEqual(Window.Property(home),true)] + !String.IsEqual(Window.Property(sports),true)</visible>
       <enable>String.IsEqual(Window.Property(has_next),true)</enable>
       <disabledcolor>ff555b66</disabledcolor>
     </control>
@@ -523,7 +525,7 @@
       <ondown>80</ondown>
       <texturefocus colordiffuse="ffffffff">white.png</texturefocus>
       <texturenofocus colordiffuse="ff30343e">white.png</texturenofocus>
-      <visible>!String.IsEqual(Window.Property(home),true)</visible>
+      <visible>[!String.IsEqual(Window.Property(home),true)] + !String.IsEqual(Window.Property(sports),true)</visible>
     </control>
     <control type="label">
       <left>1200</left>
@@ -533,7 +535,7 @@
       <font>font12</font>
       <textcolor>ffffffff</textcolor>
       <label>$INFO[Window.Property(page)]</label>
-      <visible>!String.IsEqual(Window.Property(home),true)</visible>
+      <visible>[!String.IsEqual(Window.Property(home),true)] + !String.IsEqual(Window.Property(sports),true)</visible>
     </control>
     <control type="button" id="82">
       <left>1570</left>
@@ -567,8 +569,230 @@
       <ondown condition="!String.IsEqual(Window.Property(home),true)">60</ondown>
       <texturefocus colordiffuse="ffffffff">white.png</texturefocus>
       <texturenofocus colordiffuse="ff30343e">white.png</texturenofocus>
-      <visible>!String.IsEqual(Window.Property(welcome),true) + !String.IsEmpty(Window.Property(action))</visible>
+      <visible>[!String.IsEqual(Window.Property(welcome),true) + !String.IsEmpty(Window.Property(action))] + !String.IsEqual(Window.Property(sports),true)</visible>
       <ondown condition="String.IsEqual(Window.Property(home),true)">62</ondown>
+    </control>
+    <control type="button" id="90">
+      <left>370</left>
+      <top>420</top>
+      <width>460</width>
+      <height>110</height>
+      <label>F1</label>
+      <font>font13</font>
+      <textcolor>ffffffff</textcolor>
+      <focusedcolor>ffffffff</focusedcolor>
+      <textoffsetx>175</textoffsetx>
+      <align>left</align>
+      <onleft>50</onleft>
+      <onright>91</onright>
+      <onup>80</onup>
+      <visible>String.IsEqual(Window.Property(sports),true)</visible>
+      <ondown condition="String.IsEqual(Window.Property(sport_items),true)">63</ondown>
+      <ondown condition="!String.IsEqual(Window.Property(sport_items),true)">93</ondown>
+      <texturefocus colordiffuse="ffffffff">special://home/addons/plugin.video.krispijn/resources/media/sports/f1.png</texturefocus>
+      <texturenofocus colordiffuse="ffb0b0b0">special://home/addons/plugin.video.krispijn/resources/media/sports/f1.png</texturenofocus>
+    </control>
+    <control type="image">
+      <left>370</left>
+      <top>530</top>
+      <width>460</width>
+      <height>5</height>
+      <texture colordiffuse="ffe53935">white.png</texture>
+      <visible>String.IsEqual(Window.Property(sports),true) + String.IsEqual(Window.Property(sport_choice),Formule 1)</visible>
+    </control>
+    <control type="button" id="91">
+      <left>850</left>
+      <top>420</top>
+      <width>460</width>
+      <height>110</height>
+      <label>Voetbal</label>
+      <font>font13</font>
+      <textcolor>ffffffff</textcolor>
+      <focusedcolor>ffffffff</focusedcolor>
+      <textoffsetx>175</textoffsetx>
+      <align>left</align>
+      <onleft>90</onleft>
+      <onright>92</onright>
+      <onup>80</onup>
+      <visible>String.IsEqual(Window.Property(sports),true)</visible>
+      <ondown condition="String.IsEqual(Window.Property(sport_items),true)">63</ondown>
+      <ondown condition="!String.IsEqual(Window.Property(sport_items),true)">93</ondown>
+      <texturefocus colordiffuse="ffffffff">special://home/addons/plugin.video.krispijn/resources/media/sports/voetbal.png</texturefocus>
+      <texturenofocus colordiffuse="ffb0b0b0">special://home/addons/plugin.video.krispijn/resources/media/sports/voetbal.png</texturenofocus>
+    </control>
+    <control type="image">
+      <left>850</left>
+      <top>530</top>
+      <width>460</width>
+      <height>5</height>
+      <texture colordiffuse="ffe53935">white.png</texture>
+      <visible>String.IsEqual(Window.Property(sports),true) + String.IsEqual(Window.Property(sport_choice),Voetbal)</visible>
+    </control>
+    <control type="button" id="92">
+      <left>1330</left>
+      <top>420</top>
+      <width>460</width>
+      <height>110</height>
+      <label>Darts</label>
+      <font>font13</font>
+      <textcolor>ffffffff</textcolor>
+      <focusedcolor>ffffffff</focusedcolor>
+      <textoffsetx>175</textoffsetx>
+      <align>left</align>
+      <onleft>91</onleft>
+      <onright>80</onright>
+      <onup>80</onup>
+      <visible>String.IsEqual(Window.Property(sports),true)</visible>
+      <ondown condition="String.IsEqual(Window.Property(sport_items),true)">63</ondown>
+      <ondown condition="!String.IsEqual(Window.Property(sport_items),true)">93</ondown>
+      <texturefocus colordiffuse="ffffffff">special://home/addons/plugin.video.krispijn/resources/media/sports/darts.png</texturefocus>
+      <texturenofocus colordiffuse="ffb0b0b0">special://home/addons/plugin.video.krispijn/resources/media/sports/darts.png</texturenofocus>
+    </control>
+    <control type="image">
+      <left>1330</left>
+      <top>530</top>
+      <width>460</width>
+      <height>5</height>
+      <texture colordiffuse="ffe53935">white.png</texture>
+      <visible>String.IsEqual(Window.Property(sports),true) + String.IsEqual(Window.Property(sport_choice),Darts)</visible>
+    </control>
+    <control type="label">
+      <left>370</left>
+      <top>547</top>
+      <width>1420</width>
+      <height>30</height>
+      <font>font12</font>
+      <label>$INFO[Window.Property(status)]</label>
+      <textcolor>ffbfc6d1</textcolor>
+      <visible>String.IsEqual(Window.Property(sports),true)</visible>
+    </control>
+    <control type="panel" id="63">
+      <left>370</left>
+      <top>590</top>
+      <width>1440</width>
+      <height>350</height>
+      <orientation>vertical</orientation>
+      <onleft>50</onleft>
+      <ondown>93</ondown>
+      <visible>String.IsEqual(Window.Property(sports),true)</visible>
+      <itemlayout width="480" height="175">
+        <control type="image">
+          <left>0</left>
+          <top>0</top>
+          <width>460</width>
+          <height>160</height>
+          <texture colordiffuse="ff1c2432">white.png</texture>
+        </control>
+        <control type="textbox">
+          <left>18</left>
+          <top>14</top>
+          <width>424</width>
+          <height>72</height>
+          <font>font12</font>
+          <label>$INFO[ListItem.Label]</label>
+          <textcolor>ffffffff</textcolor>
+        </control>
+        <control type="label">
+          <left>18</left>
+          <top>90</top>
+          <width>424</width>
+          <height>26</height>
+          <font>font12</font>
+          <label>$INFO[ListItem.Property(event_detail)]</label>
+          <textcolor>ffe1e4eb</textcolor>
+        </control>
+        <control type="label">
+          <left>18</left>
+          <top>122</top>
+          <width>424</width>
+          <height>24</height>
+          <font>font12</font>
+          <label>$INFO[ListItem.Property(provider)]</label>
+          <textcolor>ffaeb8c9</textcolor>
+        </control>
+      </itemlayout>
+      <focusedlayout width="480" height="175">
+        <control type="image">
+          <left>0</left>
+          <top>0</top>
+          <width>460</width>
+          <height>160</height>
+          <texture colordiffuse="ff92303d">white.png</texture>
+        </control>
+        <control type="textbox">
+          <left>18</left>
+          <top>14</top>
+          <width>424</width>
+          <height>72</height>
+          <font>font12</font>
+          <label>$INFO[ListItem.Label]</label>
+          <textcolor>ffffffff</textcolor>
+        </control>
+        <control type="label">
+          <left>18</left>
+          <top>90</top>
+          <width>424</width>
+          <height>26</height>
+          <font>font12</font>
+          <label>$INFO[ListItem.Property(event_detail)]</label>
+          <textcolor>ffe1e4eb</textcolor>
+        </control>
+        <control type="label">
+          <left>18</left>
+          <top>122</top>
+          <width>424</width>
+          <height>24</height>
+          <font>font12</font>
+          <label>$INFO[ListItem.Property(provider)]</label>
+          <textcolor>ffaeb8c9</textcolor>
+        </control>
+      </focusedlayout>
+      <onup condition="String.IsEqual(Window.Property(sport_choice),Formule 1)">90</onup>
+      <onup condition="String.IsEqual(Window.Property(sport_choice),Voetbal)">91</onup>
+      <onup condition="String.IsEqual(Window.Property(sport_choice),Darts)">92</onup>
+      <onup condition="String.IsEmpty(Window.Property(sport_choice))">90</onup>
+    </control>
+    <control type="button" id="93">
+      <left>370</left>
+      <top>974</top>
+      <width>240</width>
+      <height>44</height>
+      <font>font13</font>
+      <label>Vernieuwen</label>
+      <textcolor>ffffffff</textcolor>
+      <focusedcolor>ff101217</focusedcolor>
+      <onleft>50</onleft>
+      <onright>94</onright>
+      <ondown>80</ondown>
+      <visible>String.IsEqual(Window.Property(sports),true)</visible>
+      <texturefocus colordiffuse="ffffffff">white.png</texturefocus>
+      <texturenofocus colordiffuse="ff30343e">white.png</texturenofocus>
+      <onup condition="String.IsEqual(Window.Property(sport_items),true)">63</onup>
+      <onup condition="String.IsEqual(Window.Property(sport_choice),Formule 1) + !String.IsEqual(Window.Property(sport_items),true)">90</onup>
+      <onup condition="String.IsEqual(Window.Property(sport_choice),Voetbal) + !String.IsEqual(Window.Property(sport_items),true)">91</onup>
+      <onup condition="String.IsEqual(Window.Property(sport_choice),Darts) + !String.IsEqual(Window.Property(sport_items),true)">92</onup>
+      <onup condition="String.IsEmpty(Window.Property(sport_choice))">90</onup>
+    </control>
+    <control type="button" id="94">
+      <left>630</left>
+      <top>974</top>
+      <width>260</width>
+      <height>44</height>
+      <font>font13</font>
+      <label>Eigen streams</label>
+      <textcolor>ffffffff</textcolor>
+      <focusedcolor>ff101217</focusedcolor>
+      <onleft>93</onleft>
+      <onright>80</onright>
+      <ondown>80</ondown>
+      <visible>String.IsEqual(Window.Property(sports),true)</visible>
+      <texturefocus colordiffuse="ffffffff">white.png</texturefocus>
+      <texturenofocus colordiffuse="ff30343e">white.png</texturenofocus>
+      <onup condition="String.IsEqual(Window.Property(sport_items),true)">63</onup>
+      <onup condition="String.IsEqual(Window.Property(sport_choice),Formule 1) + !String.IsEqual(Window.Property(sport_items),true)">90</onup>
+      <onup condition="String.IsEqual(Window.Property(sport_choice),Voetbal) + !String.IsEqual(Window.Property(sport_items),true)">91</onup>
+      <onup condition="String.IsEqual(Window.Property(sport_choice),Darts) + !String.IsEqual(Window.Property(sport_items),true)">92</onup>
+      <onup condition="String.IsEmpty(Window.Property(sport_choice))">90</onup>
     </control>
   </controls>
 </window>

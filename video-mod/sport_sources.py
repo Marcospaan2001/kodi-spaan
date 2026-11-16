@@ -8,6 +8,7 @@ import re
 import time
 from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime
+from pathlib import Path
 from urllib.parse import quote, urlencode, urljoin, urlsplit
 from urllib.request import Request, urlopen
 
@@ -48,7 +49,7 @@ def sport_for(title):
     if re.search(r'\b(f1|formula\s*1|formule\s*1|formula one)\b', value):
         return 'Formule 1'
     # American football and other sports must not enter the football category.
-    if re.search(r'\b(nfl|ncaa|basketball|nba|hockey|nhl|rugby|cricket|tennis|boxing)\b', value):
+    if re.search(r'\b(nfl|ncaa|basketball|nba|hockey|nhl|rugby|cricket|tennis|boxing|golf|pga)\b', value):
         return None
     if re.search(r'soccer|football|voetbal|league|liga|serie a|uefa|fifa|cup of nations|world cup|eredivisie|bundesliga|championship|fa cup|ligue', value):
         return 'Voetbal'
@@ -70,7 +71,7 @@ def parse_fawa(page):
         address = urljoin('http://www.fawanews.sc/', quote(html.unescape(link[1]), safe='/:?=&%'))
         if urlsplit(address).hostname not in ('www.fawanews.sc', 'fawanews.sc'):
             continue
-        rows.append(dict(title=title, detail=league, sport=sport, url=address, provider='FawaNews'))
+        rows.append(dict(title=title, detail=league + (' (brontijd)' if re.search(r'\b\d{1,2}:\d{2}\b', league) else ''), sport=sport, url=address, provider='FawaNews'))
     return rows
 
 
@@ -170,3 +171,67 @@ def resolve(row):
             break
         referer, address = address, urljoin(address, html.unescape(frame[1]))
     raise SportError('Deze bron biedt nu geen ondersteunde stream. Kies een andere uitzending of bron.')
+
+
+def playable_stream(sources):
+    """Probeer CDN-alternatieven voordat een onbeschikbare HLS-bron naar Kodi gaat."""
+    for stream in sources[:4]:
+        address = stream.get('url', '')
+        if urlsplit(address).scheme not in ('http', 'https'):
+            continue
+        headers = dict(stream.get('headers') or {})
+        headers.setdefault('User-Agent', UA)
+        quality = ''
+        try:
+            # Een masterplaylist kan beschikbaar zijn terwijl de mediaplaylist 404 geeft.
+            for depth in range(3):
+                with urlopen(Request(address, headers=headers), timeout=4) as response:
+                    final_url = response.geturl()
+                    body = response.read(512 * 1024 + 1)
+                if len(body) > 512 * 1024:
+                    raise SportError('Ongeldige afspeellijst')
+                text = body.decode('utf-8-sig').lstrip()
+                if not text.startswith('#EXTM3U'):
+                    raise SportError('De bron geeft geen HLS-afspeellijst')
+                lines = [line.strip() for line in text.splitlines()]
+                if '#EXT-X-STREAM-INF:' in text:
+                    heights = [int(h) for h in re.findall(r'RESOLUTION=\d+x(\d+)', text)]
+                    if heights:
+                        quality = 'Bron biedt maximaal ' + str(max(heights)) + 'p'
+                    variant = next((lines[i + 1] for i, line in enumerate(lines[:-1])
+                                    if line.startswith('#EXT-X-STREAM-INF:')
+                                    and lines[i + 1] and not lines[i + 1].startswith('#')), None)
+                    if not variant:
+                        raise SportError('Geen videovariant beschikbaar')
+                    address = urljoin(final_url, variant)
+                    continue
+                if not any(line.startswith('#EXTINF:') for line in lines):
+                    raise SportError('De uitzending is nog niet begonnen')
+                if not any(line and not line.startswith('#') for line in lines):
+                    raise SportError('De uitzending heeft nog geen videofragmenten')
+                # Bewaar master-URL voor Kodi's normale kwaliteitskeuze.
+                return dict(stream, quality=quality) if quality else stream
+        except (OSError, ValueError, UnicodeError, SportError):
+            continue
+    raise SportError('Deze uitzending is nog niet beschikbaar of tijdelijk offline. '
+                     'De bronadressen zijn gecontroleerd. Probeer het rond de starttijd opnieuw '
+                     'of kies een andere uitzending. Er wordt niets aan je instellingen veranderd.')
+
+
+def hub_events(sport, profile, addon_path, refresh=False):
+    if sport not in SPORTS:
+        return {'results': [], 'status': 'Kies hierboven Formule 1, Voetbal of Darts.'}
+    rows, errors = events(sport, profile, refresh)
+    art = ('f1', 'voetbal', 'darts')[SPORTS.index(sport)]
+    results = []
+    for row in rows:
+        title = re.sub(r'\s*---\s*CH\s*\d+\s*$', '', row['title'], flags=re.I)
+        channel = re.search(r'CH\s*(\d+)\s*$', row['title'], re.I)
+        results.append(dict(row, title=title, provider=row['provider'] + (' | Kanaal ' + channel[1] if channel else ''), krispijn_type='sport_event', krispijn_group=sport,
+                            poster_path=str(Path(addon_path) / 'resources/media/sports' / (art + '.png')),
+                            overview=row['detail'] + '\nBron: ' + row['provider'] +
+                            '\nBeschikbaarheid en beeldkwaliteit hangen af van de bron. Een vermelding betekent niet dat de stream al actief is.'))
+    status = f'{sport} | {len(results)} uitzendingen' if results else sport + ' | Nog geen uitzendingen gevonden. Probeer later opnieuw.'
+    if errors:
+        status += ' | Niet bereikbaar: ' + ', '.join(errors)
+    return {'results': results, 'status': status}
